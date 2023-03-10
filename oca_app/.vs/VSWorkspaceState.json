@@ -1,0 +1,16 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\android\\app\\src",
+    "\\android\\app\\src\\main",
+    "\\android\\app\\src\\main\\res",
+    "\\android\\app\\src\\main\\res\\drawable",
+    "\\android\\app\\src\\main\\res\\drawable-v21",
+    "\\android\\app\\src\\main\\res\\mipmap-hdpi",
+    "\\android\\app\\src\\main\\res\\mipmap-mdpi",
+    "\\lib",
+    "\\lib\\pages"
+  ],
+  "SelectedNode": "\\lib\\pages\\login_page.dart",
+  "PreviewInSolutionExplorer": false
+}

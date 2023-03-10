@@ -1,5 +1,11 @@
 ------------------------------------------------------
-Felix
+Félix Ozcoz
+4h practica 1 + propuesta inicial + instalacion Flutter
+2h practica 2 + prototipado 24/02
+2h prototipos 27/02/2023
+2h prototipos 02/03/2023
+2h práctica 3
+TOTAL 12h
 ------------------------------------------------------
 Pablo López
 4h practica 1 , propuesta inicial, instalacion Flutter
