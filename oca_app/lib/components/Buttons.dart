@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 class MyButton extends StatelessWidget{
 
-  final Function()? onTap;
-
-  const MyButton({super.key, required this.onTap});
+  final Function()? onPressed;
+  final String textoAMostrar;
+  const MyButton({super.key, required this.onPressed, required this.textoAMostrar});
 
   @override
   Widget build(BuildContext context) {
@@ -15,10 +15,10 @@ class MyButton extends StatelessWidget{
         color: const Color.fromARGB(255, 129, 191, 205),
         borderRadius: BorderRadius.circular(35),
       ),
-      child: const Center(
+      child: Center(
         child: Text(
-          'Iniciar sesión', 
-          style: TextStyle(
+          textoAMostrar, 
+          style: const TextStyle(
             color: Color.fromARGB(255, 8, 54, 65), 
             fontSize: 30, 
             fontWeight: FontWeight.normal,

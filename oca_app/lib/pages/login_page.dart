@@ -15,7 +15,7 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 28, 100, 116),
+      backgroundColor: const Color.fromARGB(255, 28, 100, 116),
       body: SafeArea(
         child: Center(
           child: Column(
@@ -25,8 +25,8 @@ class LoginPage extends StatelessWidget {
               Image.asset('lib/images/logo.PNG', width: 200, height: 200),
               //const SizedBox(height: 25),
             //OCA LOCA
-            Text('OCA', style: TextStyle(color: Colors.white, fontSize: 60, fontFamily: 'Caudex')),
-            Text('LOCA', style: TextStyle(color: Colors.white, fontSize: 35, fontFamily: 'Caudex')),
+            const Text('OCA', style: TextStyle(color: Colors.white, fontSize: 60, fontFamily: 'Caudex')),
+            const Text('LOCA', style: TextStyle(color: Colors.white, fontSize: 35, fontFamily: 'Caudex')),
               
             //username textfield
             MyForm(
@@ -58,7 +58,7 @@ class LoginPage extends StatelessWidget {
 
               const SizedBox(height: 20),
             //sign in button
-              MyButton(onTap: logUserIn),
+              MyButton(onPressed: logUserIn, textoAMostrar: 'Iniciar sesión'),
             //Sign up
             const SizedBox(height: 130),
                Row(

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:oca_app/pages/settings_menu.dart';
+import 'package:oca_app/pages/user_settings.dart';
 import 'pages/login_page.dart';
 
 void main(){
@@ -12,7 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return  MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LoginPage(),
+      home: UserSettings(),
     );
   }
 }
