@@ -14,3 +14,5 @@ Pablo López
 2h prototipos 27/02/2023
 1h prototipos 02/03/2023
 2h log-in 03/02/2023
+2h menu de ajustes y ajustes
+TOTAL: 15h
