@@ -5,7 +5,8 @@ Félix Ozcoz
 2h prototipos 27/02/2023
 2h prototipos 02/03/2023
 2h práctica 3
-TOTAL 12h
+1h Memoria intermedia organización
+TOTAL 13h
 ------------------------------------------------------
 Pablo López
 4h practica 1 , propuesta inicial, instalacion Flutter
@@ -15,4 +16,5 @@ Pablo López
 1h prototipos 02/03/2023
 2h log-in 03/02/2023
 2h menu de ajustes y ajustes
-TOTAL: 15h
+1h Memoria intermedia organización
+TOTAL: 16h
