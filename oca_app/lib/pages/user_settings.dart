@@ -51,8 +51,8 @@ class UserSettings extends StatelessWidget {
 
               const SizedBox(height: 20),
               MyButton(onPressed: saveSettings, textoAMostrar: "Confirmar"),
-              const SizedBox(height: 10),
-              MyButton(onPressed: saveSettings, textoAMostrar: "Eliminar cuenta"),
+              const SizedBox(height: 30),
+              DeleteButton(onPressed: deleteAccount, textoAMostrar: "Eliminar cuenta"),
             ]
           ),
         )

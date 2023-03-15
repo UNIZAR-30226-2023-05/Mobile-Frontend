@@ -78,6 +78,9 @@ flutter:
     - family: Caudex
       fonts:
         - asset: fonts/Caudex-Regular.ttf
+    - family: Trocchi
+      fonts:
+        - asset: fonts/Trocchi-Regular.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro
