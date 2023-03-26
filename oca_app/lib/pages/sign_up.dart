@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:oca_app/components/Buttons.dart';
 import 'package:oca_app/components/forms.dart';
+import 'package:oca_app/backend_funcs/sign_up_func.dart';
+import 'package:oca_app/pages/user_settings.dart';
+import 'package:oca_app/styles/buttons_styles.dart';
 
 class SignUp extends StatelessWidget {
   SignUp({super.key});
@@ -69,8 +72,27 @@ class SignUp extends StatelessWidget {
                   
                         const Text("Campo obligatorio*", style: TextStyle(color: Colors.black, fontSize: 15)),
                         const SizedBox(height: 15),
-                        SignUpButton(onPressed: () {}, textoAMostrar: "REGISTRARSE"),
-                        
+                        /*
+                        SignUpButton(onPressed: () {
+                          Registro signUp = Registro(usernameController.text, emailController.text, passwordController.text);
+                          signUp.mostrarResultados();
+                          print("Se ha pulsado el botón de registro");
+                          Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => UserSettings()),
+                        );
+                        }, textoAMostrar: "REGISTRARSE"),
+                        */
+                        ElevatedButton(
+                          style: RegistrarseButton,
+                          onPressed: () {}, child: const Text(
+                            "Registrarse", 
+                            style: TextStyle(
+                              color: Colors.white, 
+                              fontSize: 20, 
+                              fontWeight: FontWeight.normal,
+                              fontFamily: 'Chivo',)
+                          ),),
                     ]),
                 ),
               )

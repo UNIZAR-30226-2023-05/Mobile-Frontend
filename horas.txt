@@ -10,12 +10,13 @@ TOTAL 13h
 ------------------------------------------------------
 Pablo López
 4h practica 1 , propuesta inicial, instalacion Flutter
-2h estudio del codigo de Flutter
 2h practica 2 y creacion de mapa de navegacion 24/02
 2h prototipos 27/02/2023
 1h prototipos 02/03/2023
-2h log-in 03/02/2023
+2h log-in 03/03/2023
 2h menu de ajustes y ajustes
 1h Memoria intermedia organización
-2h Pantalla de Registro
-TOTAL: 18h
+2h Pantalla de Registro 15/03/2023
+2h Mapa de navegacion y diagrama de componentes 18/03/2023
+1h añadir clase registro para mandar correctamente los json al servidor 26/03/2023
+TOTAL: 19h 
