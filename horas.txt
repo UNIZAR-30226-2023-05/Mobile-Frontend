@@ -6,7 +6,8 @@ Félix Ozcoz
 2h prototipos 02/03/2023
 2h práctica 3
 1h Memoria intermedia organización
-TOTAL 13h
+2h Conexion con el servidor para registro y login 30/03/2023
+TOTAL 15h
 ------------------------------------------------------
 Pablo López
 4h practica 1 , propuesta inicial, instalacion Flutter
@@ -19,4 +20,5 @@ Pablo López
 2h Pantalla de Registro 15/03/2023
 2h Mapa de navegacion y diagrama de componentes 18/03/2023
 1h añadir clase registro para mandar correctamente los json al servidor 26/03/2023
-TOTAL: 19h 
+2h Conexion con el servidor para registro y login 30/03/2023
+TOTAL: 21h 

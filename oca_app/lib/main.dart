@@ -4,7 +4,7 @@ import 'package:oca_app/pages/sign_up.dart';
 import 'package:oca_app/pages/user_settings.dart';
 import 'pages/login_page.dart';
 
-void main(){
+void main() {
   runApp(const MyApp());
 }
 
@@ -13,9 +13,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SignUp(),
+      home: LoginPage(),
     );
   }
 }

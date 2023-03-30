@@ -1,36 +1,32 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-class Registro {
-  late String nickname;
+class LogIn {
   late String email;
   late String password;
 
-  Registro(String nickname, String email, String password) {
-    this.nickname = nickname;
+  LogIn(String email, String password) {
     this.email = email;
     this.password = password;
   }
 
   Future<void> enviar() async {
     print("Enviando datos");
-    const url = 'https://backendps.vercel.app/users/register';
+    const url = 'https://backendps.vercel.app/users/login';
     final headers = {'Content-Type': 'application/json'};
-    final body = {"nickname": nickname, "email": email, "password": password};
+    final body = {"email": email, "password": password};
 
     final response = await http.post(Uri.parse(url), headers: null, body: body);
 
     if (response.statusCode == 201) {
-      print("Registro exitoso");
-      // Registro exitoso
+      print("Login exitoso");
     } else {
       // ignore: avoid_print, prefer_interpolation_to_compose_strings
-      print("Error en el registro " +
+      print("Error en el Login " +
           response.statusCode.toString() +
           "\n" +
           "\n" +
           response.body);
-      // Error en el registro
     }
   }
 }
