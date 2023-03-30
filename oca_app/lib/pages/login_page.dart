@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:oca_app/components/Buttons.dart';
 import 'package:oca_app/components/forms.dart';
+import 'package:oca_app/pages/main_menu.dart';
 import 'package:oca_app/styles/buttons_styles.dart';
 import 'package:oca_app/backend_funcs/log_in_func.dart';
+import 'package:oca_app/pages/sign_up.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
@@ -73,11 +74,15 @@ class LoginPage extends StatelessWidget {
                 //log in button
                 //MyButton(onPressed: logUserIn, textoAMostrar: 'Iniciar sesión'),
                 ElevatedButton(
-                  style: LoginButton,
+                  style: GenericButton,
                   onPressed: () {
                     LogIn logIn =
                         LogIn(usernameController.text, passwordController.text);
                     logIn.enviar();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Main_Menu_Page()),
+                    );
                   },
                   child: const Text("Iniciar sesión",
                       style: TextStyle(
@@ -99,7 +104,12 @@ class LoginPage extends StatelessWidget {
                     const SizedBox(width: 1),
                     TextButton(
                       //onPressed: () => Navigator.pushNamed(context, '/forgot_password'),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => SignUp()),
+                        );
+                      },
                       child: const Text('Registrate ahora',
                           style: TextStyle(
                               color: Colors.white,

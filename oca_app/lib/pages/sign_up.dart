@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:oca_app/components/Buttons.dart';
 import 'package:oca_app/components/forms.dart';
 import 'package:oca_app/backend_funcs/sign_up_func.dart';
-import 'package:oca_app/pages/user_settings.dart';
 import 'package:oca_app/styles/buttons_styles.dart';
 
 class SignUp extends StatelessWidget {

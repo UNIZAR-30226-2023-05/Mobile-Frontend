@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class Registro {
@@ -15,7 +14,6 @@ class Registro {
   Future<void> enviar() async {
     print("Enviando datos");
     const url = 'https://backendps.vercel.app/users/register';
-    final headers = {'Content-Type': 'application/json'};
     final body = {"nickname": nickname, "email": email, "password": password};
 
     final response = await http.post(Uri.parse(url), headers: null, body: body);
