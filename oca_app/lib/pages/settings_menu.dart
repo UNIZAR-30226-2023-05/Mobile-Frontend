@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:oca_app/pages/statistics.dart';
 import 'package:oca_app/styles/buttons_styles.dart';
 import 'package:oca_app/pages/user_settings.dart';
 
@@ -37,7 +38,10 @@ class SettingsMenu extends StatelessWidget {
           const SizedBox(height: 60),
           ElevatedButton(
               style: GenericButton,
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => Statistics()));
+              },
               child: const Text("Estadisticas",
                   style: TextStyle(
                       color: Colors.white,
