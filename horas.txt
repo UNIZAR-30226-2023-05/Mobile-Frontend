@@ -22,4 +22,5 @@ Pablo López
 1h añadir clase registro para mandar correctamente los json al servidor 26/03/2023
 2h Conexion con el servidor para registro y login 30/03/2023
 1h Enrutamiento de las pantallas, creacion pantalla principal y cambio de botones 30/03/2023
-TOTAL: 22h 
+2h 30m Pantalla de estadisticas y primera version de  tienda.
+TOTAL: 24.30h 
