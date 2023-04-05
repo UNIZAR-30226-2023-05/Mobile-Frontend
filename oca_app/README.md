@@ -14,3 +14,13 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+
+## Pruebas de registro e iniciar sesion
+Se ha definido un usuario estandar de prueba:
+username: userprueba
+e-mail: userprueba@gmail.com
+password: UserPrueba00
+
+## Documentacion Back-end
+https://backendps.vercel.app/api-docs/

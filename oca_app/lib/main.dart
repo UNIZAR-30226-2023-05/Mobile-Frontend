@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
-import 'pages/crear_sala.dart';
+import 'package:oca_app/pages/login_page.dart';
+import 'package:provider/provider.dart';
+import 'package:oca_app/backend_funcs/auth_model.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => AuthModel(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -12,7 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: CreateLobby(),
+      home: LoginPage(),
     );
   }
 }

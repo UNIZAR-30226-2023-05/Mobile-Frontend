@@ -11,7 +11,7 @@ class Registro {
     this.password = password;
   }
 
-  Future<void> enviar() async {
+  Future<bool> enviar() async {
     print("Enviando datos");
     const url = 'https://backendps.vercel.app/users/register';
     final body = {"nickname": nickname, "email": email, "password": password};
@@ -21,6 +21,7 @@ class Registro {
     if (response.statusCode == 201) {
       print("Registro exitoso");
       // Registro exitoso
+      return true;
     } else {
       // ignore: avoid_print, prefer_interpolation_to_compose_strings
       print("Error en el registro " +
@@ -28,6 +29,7 @@ class Registro {
           "\n" +
           "\n" +
           response.body);
+      return false;
       // Error en el registro
     }
   }
