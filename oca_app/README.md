@@ -24,3 +24,7 @@ password: UserPrueba00
 
 ## Documentacion Back-end
 https://backendps.vercel.app/api-docs/
+Si al hacer build en el proyecto, se queja de que existe un build anterior no compatible con el dispositivo, ejecutar:
+-flutter clean
+-flutter pub get
+-volver a hacer el build
