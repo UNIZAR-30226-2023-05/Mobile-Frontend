@@ -10,6 +10,7 @@ class UserSettings extends StatelessWidget {
 
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
+  final repeatpasswordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +52,7 @@ class UserSettings extends StatelessWidget {
               hintText: "Contraseña",
               obscureText: true),
           MyForm(
-              controller: passwordController,
+              controller: repeatpasswordController,
               hintText: "Repetir contraseña",
               obscureText: true),
 
