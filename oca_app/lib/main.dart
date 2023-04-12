@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'pages/crear_sala.dart';
+import 'pages/create_lobby.dart';
 
 void main() {
   runApp(const MyApp());

@@ -28,3 +28,19 @@ final ErrorButton = ButtonStyle(
         RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30.0),
             side: const BorderSide(color: Color.fromARGB(255, 246, 76, 76)))));
+
+final CrearButton = ButtonStyle(
+    minimumSize: MaterialStateProperty.all<Size>(const Size(148, 40)),
+    backgroundColor: MaterialStateProperty.all<Color>(const Color(0xFF81BFCD)),
+    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+        RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18.0),
+            side: const BorderSide(color: Color(0xFF81BFCD)))));
+
+final CancelarButton = ButtonStyle(
+    minimumSize: MaterialStateProperty.all<Size>(const Size(148, 40)),
+    backgroundColor: MaterialStateProperty.all<Color>(const Color(0xFFF64C4C)),
+    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+        RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18.0),
+            side: const BorderSide(color: Color(0xFFF64C4C)))));
