@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:oca_app/backend_funcs/log_in_func.dart';
 import 'package:oca_app/pages/login_page.dart';
+import 'package:oca_app/pages/settings_menu.dart';
 import 'package:provider/provider.dart';
 import 'package:oca_app/backend_funcs/auth_model.dart';
 
