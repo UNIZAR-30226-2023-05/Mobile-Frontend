@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'pages/create_lobby.dart';
+import 'package:oca_app/pages/create_lobby.dart';
+import 'package:oca_app/pages/join_lobby.dart';
+import 'package:oca_app/pages/main_menu.dart';
 
 void main() {
   runApp(const MyApp());

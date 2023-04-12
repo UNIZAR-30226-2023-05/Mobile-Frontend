@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------
-// Nombre del fichero: create_lobby.dart
+// Nombre del fichero: join_lobby.dart
 // Autoridades: Félix Ozcoz
 // Fecha: mm-yy
 // Descripción: ...
@@ -9,8 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:oca_app/components/forms.dart';
 import 'package:oca_app/styles/buttons_styles.dart';
 
-class CreateLobby extends StatelessWidget {
-  CreateLobby({super.key});
+class JoinLobby extends StatelessWidget {
+  JoinLobby({super.key});
 
   final lobbyController = TextEditingController();
 
@@ -31,20 +31,21 @@ class CreateLobby extends StatelessWidget {
               color: const Color.fromARGB(255, 170, 250, 254),
               margin: const EdgeInsets.all(12),
               child: Column(children: [
-                const Text('Crear sala',
+                const Text('Unirse a una sala',
                     style: TextStyle(
                         color: Color.fromARGB(255, 28, 100, 116),
                         fontSize: 36,
                         fontFamily: 'Trocchi')),
                 const SizedBox(height: 20),
-                const Text("¿Desea crear una sala?",
+                const Text("¿Desea unirse a una sala \n existente?",
+                    textAlign: TextAlign.center,
                     style: TextStyle(color: Colors.black, fontSize: 20)),
-                const SizedBox(height: 30),
-                const Text("Nombre de la sala: *",
+                const SizedBox(height: 70),
+                const Text("Código de la sala: *",
                     style: TextStyle(color: Colors.black, fontSize: 20)),
                 MyForm(
                   controller: lobbyController,
-                  hintText: "Introduzca el nombre de la sala",
+                  hintText: "Introduzca el código de la sala",
                   obscureText: false,
                 ),
                 const SizedBox(
@@ -54,54 +55,7 @@ class CreateLobby extends StatelessWidget {
                   "Campo obligatorio*",
                   style: TextStyle(color: Colors.black, fontSize: 15),
                 ),
-                const SizedBox(height: 45),
-                const Text(
-                  "Número de jugadores: *",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 20,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(30),
-                  child: SizedBox(
-                    height: kMinInteractiveDimension,
-                    width: 100,
-                    child: DropdownButtonFormField(
-                      value: "2",
-                      items: (<String>["2", "3", "4", "5", "6"]).map((e) {
-                        return DropdownMenuItem(value: e, child: Text(e));
-                      }).toList(),
-                      onChanged: (value) {
-                        // almacenar el número de jugadores para luego utilizarlo
-                      },
-                      icon: const Icon(
-                        Icons.arrow_drop_down,
-                        size: 30,
-                      ),
-                      style: const TextStyle(fontSize: 20, color: Colors.black),
-                      iconDisabledColor: Colors.black12,
-                      decoration: const InputDecoration(
-                          contentPadding:
-                              EdgeInsets.symmetric(vertical: 0, horizontal: 12),
-                          enabledBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.black12, width: 2)),
-                          border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
-                              borderSide:
-                                  BorderSide(color: Colors.black12, width: 2)),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            borderSide:
-                                BorderSide(color: Colors.black, width: 2.0),
-                          ),
-                          filled: true,
-                          fillColor: Colors.white60),
-                    ),
-                  ),
-                ),
+                const SizedBox(height: 114),
                 Padding(
                   padding: const EdgeInsets.all(20),
                   child: Expanded(
@@ -152,7 +106,6 @@ class CreateLobby extends StatelessWidget {
                       ),
                       Center(
                         child: ElevatedButton(
-                          // podría quitarse
                           style: CancelarButton,
                           onPressed: () {
                             if (lobbyController.text == "") {
