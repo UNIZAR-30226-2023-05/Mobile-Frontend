@@ -1,10 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:oca_app/styles/buttons_styles.dart';
+import 'package:oca_app/components/fichas.dart';
 
 class Oca_game extends StatelessWidget {
   Oca_game({super.key});
 
   final String nombreSala = 'Nombre de la sala';
+  FichaWidget ficha1 = FichaWidget(
+      nombre: 'Ficha 1',
+      posicion: 4,
+      imagen: Image.asset('lib/images/Skin_dorada.png',
+          width: 15, height: 15, fit: BoxFit.contain));
+  FichaWidget ficha2 = FichaWidget(
+      nombre: 'Ficha 2',
+      posicion: 4,
+      imagen: Image.asset('lib/images/Skin_rosa.png',
+          width: 15, height: 15, fit: BoxFit.contain));
 
   @override
   Widget build(BuildContext context) {
@@ -54,8 +65,17 @@ class Oca_game extends StatelessWidget {
                   )
                 ],
               ),
-              Image.asset('lib/images/oca_tablero.PNG',
-                  width: 350, height: 350),
+              Stack(
+                children: [
+                  Image.asset(
+                    'lib/images/oca_tablero.PNG',
+                    width: 350,
+                    height: 350,
+                  ),
+                  Positioned(child: ficha1, left: -8, top: 300),
+                  Positioned(child: ficha2, left: 50, top: 300),
+                ],
+              ),
             ],
           ),
         ));

@@ -1,14 +1,33 @@
 import 'package:flutter/material.dart';
 
-class Ficha {
-  final Image image;
-  final int id;
+class FichaWidget extends StatelessWidget {
+  final String nombre;
   final int posicion;
+  final Image imagen;
 
-  Ficha({required this.image, required this.id, required this.posicion});
+  FichaWidget(
+      {required this.nombre, required this.posicion, required this.imagen});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 80,
+      height: 80,
+      child: Column(
+        children: [
+          imagen,
+          Text(nombre),
+        ],
+      ),
+    );
+  }
+
+  double calcularX(int posicion) {
+    // código para calcular la posición horizontal de la ficha en el tablero
+    return 3;
+  }
+
+  double calcularY(int posicion) {
+    return 3;
+  }
 }
-
-List<Ficha> fichas = [
-  Ficha(id: 1, posicion: 0),
-  Ficha(id: 2, posicion: 0),
-];
