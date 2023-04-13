@@ -5,12 +5,8 @@
 // Descripción: ...
 // -------------------------------------------------------------------
 
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:oca_app/components/forms.dart';
-import 'package:oca_app/backend_funcs/sign_up_func.dart';
-import 'package:oca_app/styles/buttons_styles.dart';
 
 class CreateLobby extends StatelessWidget {
   CreateLobby({super.key});

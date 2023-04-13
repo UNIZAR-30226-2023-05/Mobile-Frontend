@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:oca_app/backend_funcs/log_in_func.dart';
 import 'package:oca_app/pages/login_page.dart';
-import 'package:oca_app/pages/settings_menu.dart';
+import 'package:oca_app/pages/oca_game.dart';
 import 'package:provider/provider.dart';
 import 'package:oca_app/backend_funcs/auth_model.dart';
 
@@ -21,7 +20,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LoginPage(),
+      home: Oca_game(),
     );
   }
 }

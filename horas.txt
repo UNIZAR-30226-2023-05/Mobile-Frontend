@@ -26,4 +26,5 @@ Pablo López
 1h  Gestion segura del token y arregladas interacciones del log in y sign up 05/04/2023
 1h 30m Video y memoria para la practica 4 11/04/2023
 30m Configuracion, Creacion y prueba del APK 12/04/2023
-TOTAL: 27.5h
+1h 30m  Juego Parte 1 / 13/04/2023
+TOTAL: 29h

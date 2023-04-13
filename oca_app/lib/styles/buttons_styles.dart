@@ -20,6 +20,16 @@ final GenericButton = ButtonStyle(
             side:
                 const BorderSide(color: Color.fromARGB(255, 129, 191, 205)))));
 
+final GenericButtonSmall = ButtonStyle(
+    minimumSize: MaterialStateProperty.all<Size>(const Size(100, 40)),
+    backgroundColor: MaterialStateProperty.all<Color>(
+        const Color.fromARGB(255, 129, 191, 205)),
+    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+        RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30.0),
+            side:
+                const BorderSide(color: Color.fromARGB(255, 129, 191, 205)))));
+
 final ErrorButton = ButtonStyle(
     minimumSize: MaterialStateProperty.all<Size>(const Size(300, 60)),
     backgroundColor: MaterialStateProperty.all<Color>(
