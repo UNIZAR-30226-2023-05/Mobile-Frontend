@@ -13,7 +13,6 @@ List<List<int>> matrizCoordenadas = [
   [313, 266],
   [313, 235],
   [313, 205],
-  [313, 205],
   [313, 175],
   [313, 145],
   [313, 115],
@@ -46,7 +45,6 @@ List<List<int>> matrizCoordenadas = [
   [209, 280],
   [238, 280],
   [254, 265],
-  [254, 265],
   [250, 236],
   [250, 206],
   [250, 176],
@@ -59,7 +57,6 @@ List<List<int>> matrizCoordenadas = [
   [116, 100],
   [86, 98],
   [70, 118],
-  [70, 118],
   [75, 145],
   [75, 175],
   [70, 205],
@@ -67,3 +64,184 @@ List<List<int>> matrizCoordenadas = [
   [115, 215],
   [125, 145]
 ];
+
+// Jajajaj lo siento por esto intentare reducirla
+List<int> calcularCoordenadas(int jugador, int posicion) {
+  if (posicion > 62) {
+    posicion = 62;
+  }
+  switch (jugador) {
+    case 1:
+      return matrizCoordenadas[posicion];
+    case 2:
+      if (posicion <= 7) {
+        return [
+          matrizCoordenadas[posicion][0],
+          matrizCoordenadas[posicion][1] + 10
+        ];
+      }
+      if (posicion > 7 && posicion <= 17) {
+        return [
+          matrizCoordenadas[posicion][0] + 10,
+          matrizCoordenadas[posicion][1]
+        ];
+      }
+      if (posicion > 17 && posicion <= 27) {
+        return [
+          matrizCoordenadas[posicion][0],
+          matrizCoordenadas[posicion][1] - 10
+        ];
+      }
+      if (posicion > 27 && posicion <= 35) {
+        return [
+          matrizCoordenadas[posicion][0] - 10,
+          matrizCoordenadas[posicion][1]
+        ];
+      }
+      if (posicion > 35 && posicion <= 43) {
+        return [
+          matrizCoordenadas[posicion][0],
+          matrizCoordenadas[posicion][1] + 10
+        ];
+      }
+      if (posicion > 43 && posicion <= 49) {
+        return [
+          matrizCoordenadas[posicion][0] + 10,
+          matrizCoordenadas[posicion][1]
+        ];
+      }
+      if (posicion > 49 && posicion <= 55) {
+        return [
+          matrizCoordenadas[posicion][0],
+          matrizCoordenadas[posicion][1] - 10
+        ];
+      }
+      if (posicion > 55 && posicion <= 59) {
+        return [
+          matrizCoordenadas[posicion][0] - 10,
+          matrizCoordenadas[posicion][1]
+        ];
+      }
+      if (posicion > 59 && posicion <= 62) {
+        return [
+          matrizCoordenadas[posicion][0],
+          matrizCoordenadas[posicion][1] + 10
+        ];
+      }
+      return [0, 0];
+    case 3:
+      if (posicion <= 7) {
+        return [
+          matrizCoordenadas[posicion][0],
+          matrizCoordenadas[posicion][1] + 20
+        ];
+      }
+      if (posicion > 7 && posicion <= 17) {
+        return [
+          matrizCoordenadas[posicion][0] + 20,
+          matrizCoordenadas[posicion][1]
+        ];
+      }
+      if (posicion > 17 && posicion <= 27) {
+        return [
+          matrizCoordenadas[posicion][0],
+          matrizCoordenadas[posicion][1] - 20
+        ];
+      }
+      if (posicion > 27 && posicion <= 35) {
+        return [
+          matrizCoordenadas[posicion][0] - 20,
+          matrizCoordenadas[posicion][1]
+        ];
+      }
+      if (posicion > 35 && posicion <= 43) {
+        return [
+          matrizCoordenadas[posicion][0],
+          matrizCoordenadas[posicion][1] + 20
+        ];
+      }
+      if (posicion > 43 && posicion <= 49) {
+        return [
+          matrizCoordenadas[posicion][0] + 20,
+          matrizCoordenadas[posicion][1]
+        ];
+      }
+      if (posicion > 49 && posicion <= 55) {
+        return [
+          matrizCoordenadas[posicion][0],
+          matrizCoordenadas[posicion][1] - 20
+        ];
+      }
+      if (posicion > 55 && posicion <= 59) {
+        return [
+          matrizCoordenadas[posicion][0] - 20,
+          matrizCoordenadas[posicion][1]
+        ];
+      }
+      if (posicion > 59 && posicion <= 62) {
+        return [
+          matrizCoordenadas[posicion][0],
+          matrizCoordenadas[posicion][1] + 20
+        ];
+      }
+      return [0, 0];
+    case 4:
+      if (posicion <= 7) {
+        return [
+          matrizCoordenadas[posicion][0],
+          matrizCoordenadas[posicion][1] + 30
+        ];
+      }
+      if (posicion > 7 && posicion <= 17) {
+        return [
+          matrizCoordenadas[posicion][0] + 30,
+          matrizCoordenadas[posicion][1]
+        ];
+      }
+      if (posicion > 17 && posicion <= 27) {
+        return [
+          matrizCoordenadas[posicion][0],
+          matrizCoordenadas[posicion][1] - 30
+        ];
+      }
+      if (posicion > 27 && posicion <= 35) {
+        return [
+          matrizCoordenadas[posicion][0] - 30,
+          matrizCoordenadas[posicion][1]
+        ];
+      }
+      if (posicion > 35 && posicion <= 43) {
+        return [
+          matrizCoordenadas[posicion][0],
+          matrizCoordenadas[posicion][1] + 30
+        ];
+      }
+      if (posicion > 43 && posicion <= 49) {
+        return [
+          matrizCoordenadas[posicion][0] + 30,
+          matrizCoordenadas[posicion][1]
+        ];
+      }
+      if (posicion > 49 && posicion <= 55) {
+        return [
+          matrizCoordenadas[posicion][0],
+          matrizCoordenadas[posicion][1] - 30
+        ];
+      }
+      if (posicion > 55 && posicion <= 59) {
+        return [
+          matrizCoordenadas[posicion][0] - 30,
+          matrizCoordenadas[posicion][1]
+        ];
+      }
+      if (posicion > 59 && posicion <= 62) {
+        return [
+          matrizCoordenadas[posicion][0],
+          matrizCoordenadas[posicion][1] + 30
+        ];
+      }
+      return [0, 0];
+    default:
+      return [0, 0];
+  }
+}
