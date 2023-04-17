@@ -16,7 +16,7 @@ class FichaWidget extends StatelessWidget {
       child: Column(
         children: [
           imagen,
-          Text(nombre),
+          //Text(nombre),
         ],
       ),
     );

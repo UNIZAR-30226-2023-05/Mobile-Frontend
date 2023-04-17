@@ -69,11 +69,11 @@ class Oca_game extends StatelessWidget {
                 children: [
                   Image.asset(
                     'lib/images/oca_tablero.PNG',
-                    width: 350,
-                    height: 350,
+                    width: 400,
+                    height: 400,
                   ),
-                  Positioned(child: ficha1, left: -8, top: 300),
-                  Positioned(child: ficha2, left: 50, top: 300),
+                  Positioned(child: ficha1, left: 135, top: 145),
+                  Positioned(child: ficha2, left: 50, top: 342),
                 ],
               ),
             ],
