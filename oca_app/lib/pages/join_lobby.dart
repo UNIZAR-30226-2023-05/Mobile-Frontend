@@ -22,10 +22,13 @@ class JoinLobby extends StatelessWidget {
       body: SafeArea(
           child: Center(
         child: Column(children: [
-          const SizedBox(height: 70),
+          const SizedBox(
+            height: 70,
+            width: double.infinity,
+          ),
           Container(
-            width: 390,
-            height: 700,
+            width: 390, //390,
+            height: 700, // 700,
             color: Colors.white,
             child: Container(
               color: const Color.fromARGB(255, 170, 250, 254),
@@ -37,10 +40,9 @@ class JoinLobby extends StatelessWidget {
                         fontSize: 36,
                         fontFamily: 'Trocchi')),
                 const SizedBox(height: 20),
-                const Text("¿Desea unirse a una sala \n existente?",
-                    textAlign: TextAlign.center,
+                const Text("¿Desea unirse a una sala existente?",
                     style: TextStyle(color: Colors.black, fontSize: 20)),
-                const SizedBox(height: 70),
+                const SizedBox(height: 30),
                 const Text("Código de la sala: *",
                     style: TextStyle(color: Colors.black, fontSize: 20)),
                 MyForm(
@@ -55,16 +57,22 @@ class JoinLobby extends StatelessWidget {
                   "Campo obligatorio*",
                   style: TextStyle(color: Colors.black, fontSize: 15),
                 ),
-                const SizedBox(height: 114),
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Expanded(
-                    child: Row(children: [
-                      const SizedBox(
-                        height: 200,
-                      ),
-                      Center(
-                        child: ElevatedButton(
+                const SizedBox(height: 45),
+                const Text(
+                  "Número de jugadores: *",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Row(children: [
+                        ElevatedButton(
                           style: CrearButton,
                           onPressed: () {
                             if (lobbyController.text == "") {
@@ -100,12 +108,11 @@ class JoinLobby extends StatelessWidget {
                                 fontFamily: 'Chivo',
                               )),
                         ),
-                      ),
-                      const SizedBox(
-                        width: 30,
-                      ),
-                      Center(
-                        child: ElevatedButton(
+                        const SizedBox(
+                          width: 30,
+                        ),
+                        ElevatedButton(
+                          // podría quitarse
                           style: CancelarButton,
                           onPressed: () {
                             if (lobbyController.text == "") {
@@ -134,8 +141,8 @@ class JoinLobby extends StatelessWidget {
                                 fontFamily: 'Chivo',
                               )),
                         ),
-                      )
-                    ]),
+                      ]),
+                    ),
                   ),
                 ),
               ]),

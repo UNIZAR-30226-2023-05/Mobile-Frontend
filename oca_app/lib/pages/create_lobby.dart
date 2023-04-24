@@ -22,10 +22,13 @@ class CreateLobby extends StatelessWidget {
       body: SafeArea(
           child: Center(
         child: Column(children: [
-          const SizedBox(height: 70),
+          const SizedBox(
+            height: 70,
+            width: double.infinity,
+          ),
           Container(
-            width: 390,
-            height: 700,
+            width: 390, //390,
+            height: 700, // 700,
             color: Colors.white,
             child: Container(
               color: const Color.fromARGB(255, 170, 250, 254),
@@ -42,10 +45,13 @@ class CreateLobby extends StatelessWidget {
                 const SizedBox(height: 30),
                 const Text("Nombre de la sala: *",
                     style: TextStyle(color: Colors.black, fontSize: 20)),
-                MyForm(
-                  controller: lobbyController,
-                  hintText: "Introduzca el nombre de la sala",
-                  obscureText: false,
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: MyForm(
+                    controller: lobbyController,
+                    hintText: "Introduzca nombre de la sala",
+                    obscureText: false,
+                  ),
                 ),
                 const SizedBox(
                   height: 20,
@@ -63,7 +69,7 @@ class CreateLobby extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(30),
+                  padding: const EdgeInsets.only(left: 20, right: 20, top: 30),
                   child: SizedBox(
                     height: kMinInteractiveDimension,
                     width: 100,
@@ -85,6 +91,8 @@ class CreateLobby extends StatelessWidget {
                           contentPadding:
                               EdgeInsets.symmetric(vertical: 0, horizontal: 12),
                           enabledBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
                               borderSide:
                                   BorderSide(color: Colors.black12, width: 2)),
                           border: OutlineInputBorder(
@@ -102,15 +110,14 @@ class CreateLobby extends StatelessWidget {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Expanded(
-                    child: Row(children: [
-                      const SizedBox(
-                        height: 200,
-                      ),
-                      Center(
-                        child: ElevatedButton(
+                Expanded(
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Row(children: [
+                        ElevatedButton(
                           style: CrearButton,
                           onPressed: () {
                             if (lobbyController.text == "") {
@@ -146,12 +153,10 @@ class CreateLobby extends StatelessWidget {
                                 fontFamily: 'Chivo',
                               )),
                         ),
-                      ),
-                      const SizedBox(
-                        width: 30,
-                      ),
-                      Center(
-                        child: ElevatedButton(
+                        const SizedBox(
+                          width: 30,
+                        ),
+                        ElevatedButton(
                           // podría quitarse
                           style: CancelarButton,
                           onPressed: () {
@@ -181,8 +186,8 @@ class CreateLobby extends StatelessWidget {
                                 fontFamily: 'Chivo',
                               )),
                         ),
-                      )
-                    ]),
+                      ]),
+                    ),
                   ),
                 ),
               ]),
