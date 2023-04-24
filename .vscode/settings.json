@@ -1,0 +1,4 @@
+{
+    "cmake.sourceDirectory": "${workspaceFolder}/oca_app/linux",
+    "cmake.configureOnOpen": false
+}

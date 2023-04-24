@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:oca_app/pages/crear_sala.dart';
+import 'package:oca_app/pages/create_lobby.dart';
+import 'package:oca_app/pages/join_lobby.dart';
 import 'package:oca_app/pages/settings_menu.dart';
 import 'package:oca_app/styles/buttons_styles.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -87,7 +88,10 @@ class Main_Menu_Page extends StatelessWidget {
                 const SizedBox(height: 40),
                 ElevatedButton(
                     style: GenericButton,
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => JoinLobby()));
+                    },
                     child: const Text(
                       "Unirse a una sala",
                       style: TextStyle(fontSize: 25, fontFamily: 'Caudex'),
