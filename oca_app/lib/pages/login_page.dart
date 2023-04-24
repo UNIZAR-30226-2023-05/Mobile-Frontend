@@ -75,14 +75,34 @@ class LoginPage extends StatelessWidget {
                 //MyButton(onPressed: logUserIn, textoAMostrar: 'Iniciar sesión'),
                 ElevatedButton(
                   style: GenericButton,
-                  onPressed: () {
+                  onPressed: () async {
                     LogIn logIn =
                         LogIn(usernameController.text, passwordController.text);
-                    logIn.enviar();
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Main_Menu_Page()),
-                    );
+                    if (await logIn.enviar()) {
+                      // ignore: use_build_context_synchronously
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Main_Menu_Page()),
+                      );
+                    } else {
+                      // ignore: use_build_context_synchronously
+                      showDialog(
+                          context: context,
+                          builder: (builder) => AlertDialog(
+                                title: const Text("Error"),
+                                content:
+                                    const Text("Los datos no son correctos"),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text("OK"),
+                                  )
+                                ],
+                              ));
+                    }
                   },
                   child: const Text("Iniciar sesión",
                       style: TextStyle(

@@ -4,6 +4,7 @@ import 'package:oca_app/pages/join_lobby.dart';
 import 'package:oca_app/pages/settings_menu.dart';
 import 'package:oca_app/styles/buttons_styles.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:oca_app/pages/shop.dart';
 
 class Main_Menu_Page extends StatelessWidget {
   Main_Menu_Page({super.key});
@@ -75,9 +76,9 @@ class Main_Menu_Page extends StatelessWidget {
                     style: GenericButton,
                     onPressed: () {
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => CreateLobby()));
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => CreateLobby()));
                     },
                     child: const Text(
                       "Crear una sala",
@@ -103,11 +104,23 @@ class Main_Menu_Page extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Shop()));
+                          },
                           icon: const Icon(Icons.shopping_cart,
                               color: Colors.white, size: 45)),
                       IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            /*
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Shop()));
+                                    */
+                          },
                           icon: const Icon(MdiIcons.accountGroup,
                               color: Colors.white, size: 45)),
                     ],

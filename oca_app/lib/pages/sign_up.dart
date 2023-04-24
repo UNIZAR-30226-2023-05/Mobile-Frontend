@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:oca_app/components/forms.dart';
 import 'package:oca_app/backend_funcs/sign_up_func.dart';
+import 'package:oca_app/pages/main_menu.dart';
 import 'package:oca_app/styles/buttons_styles.dart';
 
 class SignUp extends StatelessWidget {
@@ -80,23 +81,12 @@ class SignUp extends StatelessWidget {
                 const Text("Campo obligatorio*",
                     style: TextStyle(color: Colors.black, fontSize: 15)),
                 const SizedBox(height: 15),
-                /*
-                        SignUpButton(onPressed: () {
-                          Registro signUp = Registro(usernameController.text, emailController.text, passwordController.text);
-                          signUp.mostrarResultados();
-                          print("Se ha pulsado el botón de registro");
-                          Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => UserSettings()),
-                        );
-                        }, textoAMostrar: "REGISTRARSE"),
-                        */
                 // Quedan casos por indicar:
                 //  - ya existe usuario con ese nombre
                 //  - ¿restricciones de formato de contraseña? (p.e. minúsculas, mayúsculas, números, ....)
                 ElevatedButton(
                   style: RegistrarseButton,
-                  onPressed: () {
+                  onPressed: () async {
                     if (usernameController.text == "" ||
                         emailController.text == "" ||
                         passwordController.text == "" ||
@@ -135,7 +125,30 @@ class SignUp extends StatelessWidget {
                     } else {
                       Registro signUp = Registro(usernameController.text,
                           emailController.text, passwordController.text);
-                      signUp.enviar();
+                      if (await signUp.enviar()) {
+                        // ignore: use_build_context_synchronously
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Main_Menu_Page()),
+                        );
+                      } else {
+                        // ignore: use_build_context_synchronously
+                        showDialog(
+                            context: context,
+                            builder: (builder) => AlertDialog(
+                                  title: const Text("Error"),
+                                  content: const Text("Error en el registro"),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text("OK"),
+                                    )
+                                  ],
+                                ));
+                      }
                     }
                   },
                   child: const Text("Registrarse",
