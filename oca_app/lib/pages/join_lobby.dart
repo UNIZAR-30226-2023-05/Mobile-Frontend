@@ -40,15 +40,19 @@ class JoinLobby extends StatelessWidget {
                         fontSize: 36,
                         fontFamily: 'Trocchi')),
                 const SizedBox(height: 20),
-                const Text("¿Desea unirse a una sala existente?",
+                const Text("¿Desea unirse a una \n sala existente?",
+                    textAlign: TextAlign.center,
                     style: TextStyle(color: Colors.black, fontSize: 20)),
                 const SizedBox(height: 30),
                 const Text("Código de la sala: *",
                     style: TextStyle(color: Colors.black, fontSize: 20)),
-                MyForm(
-                  controller: lobbyController,
-                  hintText: "Introduzca el código de la sala",
-                  obscureText: false,
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: MyForm(
+                    controller: lobbyController,
+                    hintText: "Introduzca nombre de la sala",
+                    obscureText: false,
+                  ),
                 ),
                 const SizedBox(
                   height: 20,
@@ -58,13 +62,6 @@ class JoinLobby extends StatelessWidget {
                   style: TextStyle(color: Colors.black, fontSize: 15),
                 ),
                 const SizedBox(height: 45),
-                const Text(
-                  "Número de jugadores: *",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 20,
-                  ),
-                ),
                 Expanded(
                   child: Padding(
                     padding:
