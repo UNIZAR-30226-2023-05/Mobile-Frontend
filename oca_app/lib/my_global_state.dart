@@ -7,7 +7,7 @@
 //*****************************************************************
 
 class MyGlobalState {
-  static MyGlobalState _instance; // instancia única en la aplicación
+  static late MyGlobalState _instance; // instancia única en la aplicación
 
   late String _email;
   late String _nickname;

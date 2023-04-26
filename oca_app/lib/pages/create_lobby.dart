@@ -8,6 +8,7 @@
 import 'package:flutter/material.dart';
 import 'package:oca_app/components/forms.dart';
 import 'package:oca_app/styles/buttons_styles.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class CreateLobby extends StatelessWidget {
   CreateLobby({super.key});
@@ -120,6 +121,7 @@ class CreateLobby extends StatelessWidget {
                         ElevatedButton(
                           style: CrearButton,
                           onPressed: () {
+                            /*
                             if (lobbyController.text == "") {
                               showDialog(
                                   context: context,
@@ -139,7 +141,7 @@ class CreateLobby extends StatelessWidget {
                             }
                             //} else {
                             // gestionar el nombre de la sala
-                            /*
+                            
                       Registro signUp = Registro(usernameController.text,
                           emailController.text, passwordController.text);
                       signUp.enviar();
