@@ -84,12 +84,6 @@ class LoginPage extends StatelessWidget {
                       // ignore: use_build_context_synchronously
                       if (await fillUserInstance(
                           await getUserID(emailController.text))) {
-                        User_instance user_instance = User_instance.instance;
-                        print(user_instance.nickname +
-                            " " +
-                            user_instance.email +
-                            " " +
-                            user_instance.id.toString());
                         // ignore: use_build_context_synchronously
                         Navigator.push(
                           context,
