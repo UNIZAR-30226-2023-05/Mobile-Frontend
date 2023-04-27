@@ -6,7 +6,7 @@ class SolicitudAmistad {
   late String id_usuario_envia;
   late String id_usuario_recibe;
 
-  SolicitudAmistad(String id_usuario_envia, String id_usuario_recibe) {
+  SolicitudAmistad(String email_user_send, String email_user_recibe) {
     this.id_usuario_envia = id_usuario_envia;
     this.id_usuario_recibe = id_usuario_recibe;
   }
