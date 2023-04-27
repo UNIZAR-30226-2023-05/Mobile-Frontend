@@ -6,7 +6,9 @@
 // -------------------------------------------------------------------
 
 import 'package:flutter/material.dart';
+import 'package:oca_app/components/User_instance.dart';
 import 'package:oca_app/components/forms.dart';
+import 'package:oca_app/components/socket_class.dart';
 import 'package:oca_app/styles/buttons_styles.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
@@ -17,6 +19,8 @@ class CreateLobby extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SocketSingleton ss = SocketSingleton(
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTY4MjYzNTgxMCwiZXhwIjoxNjgyODk1MDEwfQ.kfs1v4OwElWg5Kj3cUKOz1zixEew0-G3i2RCgwNb8lE");
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xFF1C6474),

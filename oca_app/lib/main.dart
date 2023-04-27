@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LoginPage(
+      home: CreateLobby(
           //user_email: "userprueba@gmail.com",
           ),
     );

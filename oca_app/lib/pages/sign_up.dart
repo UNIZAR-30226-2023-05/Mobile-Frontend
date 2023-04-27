@@ -83,9 +83,6 @@ class SignUp extends StatelessWidget {
                 const Text("Campo obligatorio*",
                     style: TextStyle(color: Colors.black, fontSize: 15)),
                 const SizedBox(height: 15),
-                // Quedan casos por indicar:
-                //  - ya existe usuario con ese nombre
-                //  - ¿restricciones de formato de contraseña? (p.e. minúsculas, mayúsculas, números, ....)
                 ElevatedButton(
                   style: RegistrarseButton,
                   onPressed: () async {
