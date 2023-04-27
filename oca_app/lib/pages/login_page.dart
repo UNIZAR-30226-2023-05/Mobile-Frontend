@@ -4,12 +4,14 @@ import 'package:oca_app/pages/main_menu.dart';
 import 'package:oca_app/styles/buttons_styles.dart';
 import 'package:oca_app/backend_funcs/log_in_func.dart';
 import 'package:oca_app/pages/sign_up.dart';
+import 'package:oca_app/backend_funcs/peticiones_api.dart';
+import 'package:oca_app/components/User_instance.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
 
   //text editing controllers
-  final usernameController = TextEditingController();
+  final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
   //sign user in method
@@ -42,7 +44,7 @@ class LoginPage extends StatelessWidget {
 
                 //username textfield
                 MyForm(
-                  controller: usernameController,
+                  controller: emailController,
                   hintText: 'E-mail',
                   obscureText: false,
                 ),
@@ -77,14 +79,18 @@ class LoginPage extends StatelessWidget {
                   style: GenericButton,
                   onPressed: () async {
                     LogIn logIn =
-                        LogIn(usernameController.text, passwordController.text);
+                        LogIn(emailController.text, passwordController.text);
                     if (await logIn.enviar()) {
                       // ignore: use_build_context_synchronously
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => Main_Menu_Page()),
-                      );
+                      if (await fillUserInstance(
+                          await getUserID(emailController.text))) {
+                        // ignore: use_build_context_synchronously
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Main_Menu_Page()),
+                        );
+                      }
                     } else {
                       // ignore: use_build_context_synchronously
                       showDialog(

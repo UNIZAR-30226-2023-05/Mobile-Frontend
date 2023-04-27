@@ -6,34 +6,29 @@
 //       gestión de comunicación con backend
 //*****************************************************************
 
-class MyGlobalState {
-  static late MyGlobalState _instance; // instancia única en la aplicación
+class User_instance {
+  static User_instance? _instance; // instancia única en la aplicación
 
   late String _email;
   late String _nickname;
   late int _id;
+  late int _monedas;
+  late String _profile_pic;
+  late String _token;
 
-  MyGlobalState._(); // Constructor privado
+  User_instance._(); // Constructor privado
 
-  MyGlobalState.create(String email, String nickname, int id) {
-    _email = email;
-    _nickname = nickname;
-    _id = id;
-  }
   /*
   INFO:
   Devuelve la instancia única de la clase.
-  Al llamar al método instance en la clase MyGlobalState, 
+  Al llamar al método instance en la clase User_instance, 
   se devuelve la única instancia de la clase. De esta manera, 
   se puede acceder a los datos o propiedades almacenados en dicha 
   instancia desde cualquier parte de la aplicación.
   */
-  static MyGlobalState get instance {
-    if (_instance == null) {
-      // si no existe instancia la crea la primera vez que se utiliza
-      _instance = MyGlobalState._();
-    }
-    return _instance;
+  static User_instance get instance {
+    _instance ??= User_instance._(); // inicializa _instance solo si es null
+    return _instance!;
   }
 
   String get email => _email;
@@ -44,4 +39,13 @@ class MyGlobalState {
 
   int get id => _id;
   set id(int value) => _id = value;
+
+  int get monedas => _monedas;
+  set monedas(int value) => _monedas = value;
+
+  String get profile_pic => _profile_pic;
+  set profile_pic(String value) => _profile_pic = value;
+
+  String get token => _token;
+  set token(String value) => _token = value;
 }

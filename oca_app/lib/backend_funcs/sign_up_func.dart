@@ -1,4 +1,6 @@
 import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:oca_app/components/User_instance.dart';
 
 class Registro {
   late String nickname;
@@ -20,6 +22,16 @@ class Registro {
 
     if (response.statusCode == 201) {
       print("Registro exitoso");
+
+      final jsonResponse = jsonDecode(response.body);
+      print(jsonResponse);
+      /*
+      final String token = jsonResponse['token'];
+      print(token);
+
+      User_instance user_instance = User_instance.instance;
+      user_instance.token = token;
+      */
       // Registro exitoso
       return true;
     } else {
