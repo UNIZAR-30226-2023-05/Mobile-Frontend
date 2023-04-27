@@ -3,6 +3,8 @@ import 'package:oca_app/components/products.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class Shop extends StatelessWidget {
+  final String user_email;
+  const Shop({super.key, required this.user_email});
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
