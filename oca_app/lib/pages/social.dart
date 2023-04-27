@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
+import 'package:oca_app/backend_funcs/social_func.dart';
 
 class Social extends StatelessWidget {
-  Social({super.key});
+  String user_email;
+  Social({super.key, required this.user_email});
 
-  void goToUserSettings() {}
+  var solicitudController = TextEditingController();
 
   void gotoAddFriend(BuildContext context) {
     showPlatformDialog(
@@ -12,7 +14,7 @@ class Social extends StatelessWidget {
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Color.fromARGB(255, 190, 250, 254),
-          title: Center(
+          title: const Center(
             child: Column(
               children: [
                 Row(
@@ -47,9 +49,10 @@ class Social extends StatelessWidget {
               children: [
                 // Aquí puedes colocar los widgets para introducir datos
                 TextField(
-                    // Configura tus campos de texto u otros widgets
-                    ),
-                Row(
+                  // Configura tus campos de texto u otros widgets
+                  controller: solicitudController,
+                ),
+                const Row(
                   children: [
                     SizedBox(
                       height: 10,
@@ -68,7 +71,54 @@ class Social extends StatelessWidget {
           actions: [
             ElevatedButton(
               onPressed: () {
-                // Lógica para agregar el amigo
+                SolicitudAmistad solicitud = SolicitudAmistad(
+                  user_email,
+                  solicitudController.text,
+                );
+
+                if (solicitud.enviar() == true) {
+                  showPlatformDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        backgroundColor: Color.fromARGB(255, 190, 250, 254),
+                        title: const Center(
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Text("Solicitud enviada",
+                                      style: TextStyle(
+                                          fontSize: 30,
+                                          color:
+                                              Color.fromARGB(255, 28, 100, 115),
+                                          fontFamily: 'Trocchi')),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 30,
+                              ),
+                              Text("La solicitud se ha enviado correctamente",
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.black,
+                                  )),
+                            ],
+                          ),
+                        ),
+                        actions: [
+                          ElevatedButton(
+                            onPressed: () {
+                              // Lógica para aceptar la acción
+                              Navigator.pop(context);
+                            },
+                            child: Text('Aceptar'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                }
                 Navigator.pop(context);
               },
               child: Text('Agregar'),

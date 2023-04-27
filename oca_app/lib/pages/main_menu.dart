@@ -1,12 +1,16 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/material.dart';
 import 'package:oca_app/pages/crear_sala.dart';
 import 'package:oca_app/pages/settings_menu.dart';
 import 'package:oca_app/styles/buttons_styles.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:oca_app/pages/shop.dart';
+import 'package:oca_app/pages/social.dart';
 
 class Main_Menu_Page extends StatelessWidget {
-  Main_Menu_Page({super.key});
+  String user_email;
+  Main_Menu_Page({super.key, required this.user_email});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +30,8 @@ class Main_Menu_Page extends StatelessWidget {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => SettingsMenu()));
+                                builder: (context) =>
+                                    SettingsMenu(user_email: user_email)));
                       },
                       icon: const Icon(Icons.settings,
                           color: Colors.white, size: 45)),
@@ -75,9 +80,9 @@ class Main_Menu_Page extends StatelessWidget {
                     style: GenericButton,
                     onPressed: () {
                       Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => CreateLobby()));
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => CreateLobby()));
                     },
                     child: const Text(
                       "Crear una sala",
@@ -104,18 +109,18 @@ class Main_Menu_Page extends StatelessWidget {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => Shop()));
+                                    builder: (context) =>
+                                        Shop(user_email: user_email)));
                           },
                           icon: const Icon(Icons.shopping_cart,
                               color: Colors.white, size: 45)),
                       IconButton(
                           onPressed: () {
-                            /*
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => Shop()));
-                                    */
+                                    builder: (context) =>
+                                        Social(user_email: user_email)));
                           },
                           icon: const Icon(MdiIcons.accountGroup,
                               color: Colors.white, size: 45)),

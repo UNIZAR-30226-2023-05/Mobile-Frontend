@@ -130,7 +130,8 @@ class SignUp extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => Main_Menu_Page()),
+                              builder: (context) => Main_Menu_Page(
+                                  user_email: emailController.text)),
                         );
                       } else {
                         // ignore: use_build_context_synchronously

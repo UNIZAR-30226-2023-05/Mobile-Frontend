@@ -9,7 +9,7 @@ class LoginPage extends StatelessWidget {
   LoginPage({super.key});
 
   //text editing controllers
-  final usernameController = TextEditingController();
+  final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
   //sign user in method
@@ -42,7 +42,7 @@ class LoginPage extends StatelessWidget {
 
                 //username textfield
                 MyForm(
-                  controller: usernameController,
+                  controller: emailController,
                   hintText: 'E-mail',
                   obscureText: false,
                 ),
@@ -77,13 +77,14 @@ class LoginPage extends StatelessWidget {
                   style: GenericButton,
                   onPressed: () async {
                     LogIn logIn =
-                        LogIn(usernameController.text, passwordController.text);
+                        LogIn(emailController.text, passwordController.text);
                     if (await logIn.enviar()) {
                       // ignore: use_build_context_synchronously
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => Main_Menu_Page()),
+                            builder: (context) => Main_Menu_Page(
+                                user_email: emailController.text)),
                       );
                     } else {
                       // ignore: use_build_context_synchronously

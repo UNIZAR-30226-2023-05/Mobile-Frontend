@@ -22,7 +22,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Social(),
+      home: LoginPage(
+          //user_email: "userprueba@gmail.com",
+          ),
     );
   }
 }
