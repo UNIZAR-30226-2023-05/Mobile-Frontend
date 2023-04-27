@@ -28,5 +28,5 @@ Pablo López
 30m Configuracion, Creacion y prueba del APK 12/04/2023
 2h apartado social 23/04/2023
 1h 30m apartado social, conexion backend 24/04/2023
-2h redefinicion de la conexion con backend 27/04/2023
+2h 30m redefinicion de la conexion con backend 27/04/2023
 TOTAL: 28.5h
