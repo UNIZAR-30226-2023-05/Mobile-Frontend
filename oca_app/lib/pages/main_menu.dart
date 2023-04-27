@@ -10,8 +10,7 @@ import 'package:oca_app/pages/shop.dart';
 import 'package:oca_app/pages/social.dart';
 
 class Main_Menu_Page extends StatelessWidget {
-  String user_email;
-  Main_Menu_Page({super.key, required this.user_email});
+  Main_Menu_Page({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +30,7 @@ class Main_Menu_Page extends StatelessWidget {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    SettingsMenu(user_email: user_email)));
+                                builder: (context) => SettingsMenu()));
                       },
                       icon: const Icon(Icons.settings,
                           color: Colors.white, size: 45)),
@@ -113,8 +111,7 @@ class Main_Menu_Page extends StatelessWidget {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        Shop(user_email: user_email)));
+                                    builder: (context) => Shop()));
                           },
                           icon: const Icon(Icons.shopping_cart,
                               color: Colors.white, size: 45)),
@@ -123,8 +120,7 @@ class Main_Menu_Page extends StatelessWidget {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        Social(user_email: user_email)));
+                                    builder: (context) => Social()));
                           },
                           icon: const Icon(MdiIcons.accountGroup,
                               color: Colors.white, size: 45)),

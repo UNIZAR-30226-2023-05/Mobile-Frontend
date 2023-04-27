@@ -3,6 +3,7 @@ import 'package:oca_app/components/forms.dart';
 import 'package:oca_app/backend_funcs/sign_up_func.dart';
 import 'package:oca_app/pages/main_menu.dart';
 import 'package:oca_app/styles/buttons_styles.dart';
+import 'package:oca_app/backend_funcs/peticiones_api.dart';
 
 class SignUp extends StatelessWidget {
   SignUp({super.key});
@@ -126,13 +127,15 @@ class SignUp extends StatelessWidget {
                       Registro signUp = Registro(usernameController.text,
                           emailController.text, passwordController.text);
                       if (await signUp.enviar()) {
-                        // ignore: use_build_context_synchronously
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Main_Menu_Page(
-                                  user_email: emailController.text)),
-                        );
+                        if (await fillUserInstance(
+                            await getUserID(emailController.text))) {
+                          // ignore: use_build_context_synchronously
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Main_Menu_Page()),
+                          );
+                        }
                       } else {
                         // ignore: use_build_context_synchronously
                         showDialog(

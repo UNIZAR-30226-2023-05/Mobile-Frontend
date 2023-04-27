@@ -14,6 +14,7 @@ class User_instance {
   late int _id;
   late int _monedas;
   late String _profile_pic;
+  late String _token;
 
   User_instance._(); // Constructor privado
 
@@ -44,4 +45,7 @@ class User_instance {
 
   String get profile_pic => _profile_pic;
   set profile_pic(String value) => _profile_pic = value;
+
+  String get token => _token;
+  set token(String value) => _token = value;
 }

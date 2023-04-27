@@ -4,8 +4,7 @@ import 'package:oca_app/styles/buttons_styles.dart';
 import 'package:oca_app/pages/user_settings.dart';
 
 class SettingsMenu extends StatelessWidget {
-  String user_email;
-  SettingsMenu({super.key, required this.user_email});
+  SettingsMenu({super.key});
 
   void goToUserSettings() {}
 

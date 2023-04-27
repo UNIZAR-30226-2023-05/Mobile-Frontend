@@ -5,6 +5,7 @@ import 'package:oca_app/styles/buttons_styles.dart';
 import 'package:oca_app/backend_funcs/log_in_func.dart';
 import 'package:oca_app/pages/sign_up.dart';
 import 'package:oca_app/backend_funcs/peticiones_api.dart';
+import 'package:oca_app/components/User_instance.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
@@ -83,12 +84,17 @@ class LoginPage extends StatelessWidget {
                       // ignore: use_build_context_synchronously
                       if (await fillUserInstance(
                           await getUserID(emailController.text))) {
+                        User_instance user_instance = User_instance.instance;
+                        print(user_instance.nickname +
+                            " " +
+                            user_instance.email +
+                            " " +
+                            user_instance.id.toString());
                         // ignore: use_build_context_synchronously
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => Main_Menu_Page(
-                                  user_email: emailController.text)),
+                              builder: (context) => Main_Menu_Page()),
                         );
                       }
                     } else {

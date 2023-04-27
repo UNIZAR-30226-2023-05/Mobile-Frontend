@@ -3,8 +3,7 @@ import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:oca_app/backend_funcs/social_func.dart';
 
 class Social extends StatelessWidget {
-  String user_email;
-  Social({super.key, required this.user_email});
+  Social({super.key});
 
   var solicitudController = TextEditingController();
 
@@ -72,7 +71,7 @@ class Social extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 SolicitudAmistad solicitud = SolicitudAmistad(
-                  user_email,
+                  "String",
                   solicitudController.text,
                 );
 

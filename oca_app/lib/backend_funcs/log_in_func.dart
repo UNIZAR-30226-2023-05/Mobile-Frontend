@@ -1,6 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:oca_app/components/User_instance.dart';
 
 class LogIn {
   late String email;
@@ -22,11 +22,12 @@ class LogIn {
       print("Login exitoso");
 
       final jsonResponse = jsonDecode(response.body);
+      print(jsonResponse);
       final String token = jsonResponse['token'];
       print(token);
 
-      const storage = FlutterSecureStorage();
-      await storage.write(key: 'authToken', value: token);
+      User_instance user_instance = User_instance.instance;
+      user_instance.token = token;
 
       return true;
     } else {
