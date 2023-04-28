@@ -1,11 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:oca_app/backend_funcs/social_func.dart';
+import 'package:oca_app/components/User_instance.dart';
+import 'package:oca_app/backend_funcs/peticiones_api.dart';
 
-class Social extends StatelessWidget {
-  Social({super.key});
+class Social extends StatefulWidget {
+  @override
+  State<Social> createState() => _SocialState();
+}
 
+class _SocialState extends State<Social> {
   var solicitudController = TextEditingController();
+  User_instance user_instance = User_instance.instance;
+  late Future<List<String>> futureSolicitudes;
+
+  //Esto es una funcion que se ejecuta siempre que se inicia la pantalla social
+  @override
+  void initState() {
+    super.initState();
+    futureSolicitudes = solicitudesPendientes(user_instance.id);
+    print(futureSolicitudes);
+  }
+
+  void refreshSolicitudes() async {
+    setState(() {
+      futureSolicitudes = solicitudesPendientes(user_instance.id);
+    });
+  }
 
   void gotoAddFriend(BuildContext context) {
     showPlatformDialog(
@@ -69,18 +90,18 @@ class Social extends StatelessWidget {
           ),
           actions: [
             ElevatedButton(
-              onPressed: () {
-                SolicitudAmistad solicitud = SolicitudAmistad(
-                  "String",
-                  solicitudController.text,
-                );
-
-                if (solicitud.enviar() == true) {
+              onPressed: () async {
+                if (await enviarSolicitudAmistad(
+                    await getUserID(user_instance.email),
+                    await getUserID(solicitudController.text))) {
+                  Navigator.pop(context);
+                  // ignore: use_build_context_synchronously
                   showPlatformDialog(
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        backgroundColor: Color.fromARGB(255, 190, 250, 254),
+                        backgroundColor:
+                            const Color.fromARGB(255, 190, 250, 254),
                         title: const Center(
                           child: Column(
                             children: [
@@ -88,7 +109,7 @@ class Social extends StatelessWidget {
                                 children: [
                                   Text("Solicitud enviada",
                                       style: TextStyle(
-                                          fontSize: 30,
+                                          fontSize: 28,
                                           color:
                                               Color.fromARGB(255, 28, 100, 115),
                                           fontFamily: 'Trocchi')),
@@ -111,14 +132,58 @@ class Social extends StatelessWidget {
                               // Lógica para aceptar la acción
                               Navigator.pop(context);
                             },
-                            child: Text('Aceptar'),
+                            child: const Text('Aceptar'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                } else {
+                  Navigator.pop(context);
+                  // ignore: use_build_context_synchronously
+                  showPlatformDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        backgroundColor:
+                            const Color.fromARGB(255, 190, 250, 254),
+                        title: const Center(
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Text("Error en la solicitud",
+                                      style: TextStyle(
+                                          fontSize: 28,
+                                          color:
+                                              Color.fromARGB(255, 28, 100, 115),
+                                          fontFamily: 'Trocchi')),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 30,
+                              ),
+                              Text("La solicitud no se ha enviado",
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.black,
+                                  )),
+                            ],
+                          ),
+                        ),
+                        actions: [
+                          ElevatedButton(
+                            onPressed: () {
+                              // Lógica para aceptar la acción
+                              Navigator.pop(context);
+                            },
+                            child: const Text('Aceptar'),
                           ),
                         ],
                       );
                     },
                   );
                 }
-                Navigator.pop(context);
               },
               child: Text('Agregar'),
             ),
@@ -143,14 +208,14 @@ class Social extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
             Row(
               children: [
                 Container(
                   margin: EdgeInsets.only(left: 16, top: 10),
-                  child: Text(
+                  child: const Text(
                     "AMIGOS",
                     style: TextStyle(
                       color: Colors.white,
@@ -160,10 +225,10 @@ class Social extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.only(left: 220, top: 10),
+                  margin: EdgeInsets.only(left: 200, top: 10),
                   child: IconButton(
                     onPressed: () {},
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.search,
                       color: Colors.white,
                       size: 45,
@@ -172,24 +237,80 @@ class Social extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(
-              height: 30,
+            const SizedBox(
+              height: 10,
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(18.0),
               child: Stack(
                 children: [
                   SizedBox(
-                    height: 650.0, // establece la altura del Sized Box
+                    height: 650.0,
                     child: Container(
                       color: Colors.white,
-                      child: ListView.builder(
-                        itemCount:
-                            20, // establece la cantidad de elementos en la lista
-                        itemBuilder: (BuildContext context, int index) {
-                          return ListTile(
-                            title: Text('Elemento $index'),
-                          );
+                      child: FutureBuilder<List<String>>(
+                        future: futureSolicitudes,
+                        builder: (BuildContext context,
+                            AsyncSnapshot<List<String>> snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Center(child: CircularProgressIndicator());
+                          } else {
+                            if (snapshot.hasError) {
+                              return Center(
+                                  child:
+                                      Text('Error al cargar las solicitudes'));
+                            } else {
+                              List<String>? solicitudes = snapshot.data;
+                              return SingleChildScrollView(
+                                child: Column(
+                                  children: List.generate(
+                                      solicitudes?.length ?? 0, (index) {
+                                    return Container(
+                                      decoration: BoxDecoration(
+                                        border: Border(
+                                          bottom: BorderSide(
+                                            color: Colors.grey,
+                                            width: 1.0,
+                                          ),
+                                        ),
+                                      ),
+                                      child: ListTile(
+                                        leading: Icon(Icons
+                                            .person), // Icono al principio del ListTile
+                                        title: Row(
+                                          children: [
+                                            Expanded(
+                                              child: Text(
+                                                'Solicitud entrante:',
+                                                style: TextStyle(
+                                                    color: Colors.green),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ),
+                                            Expanded(
+                                              child: Text(
+                                                solicitudes![index],
+                                                style: TextStyle(
+                                                    color: Colors.black),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        trailing: IconButton(
+                                          icon: Icon(Icons.check),
+                                          onPressed: () {
+                                            // Aquí, coloca la lógica para aceptar la solicitud de amistad
+                                          },
+                                        ),
+                                      ),
+                                    );
+                                  }),
+                                ),
+                              );
+                            }
+                          }
                         },
                       ),
                     ),
