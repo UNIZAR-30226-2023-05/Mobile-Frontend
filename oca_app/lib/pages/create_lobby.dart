@@ -19,8 +19,8 @@ class CreateLobby extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SocketSingleton ss = SocketSingleton(
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTY4MjYzNTgxMCwiZXhwIjoxNjgyODk1MDEwfQ.kfs1v4OwElWg5Kj3cUKOz1zixEew0-G3i2RCgwNb8lE");
+    SocketSingleton ss = SocketSingleton();
+    ss.crearSala();
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xFF1C6474),

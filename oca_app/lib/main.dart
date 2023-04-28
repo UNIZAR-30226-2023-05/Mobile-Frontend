@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:oca_app/backend_funcs/auth_model.dart';
 import 'package:oca_app/pages/social.dart';
 import 'package:oca_app/components/User_instance.dart';
+import 'package:connectivity/connectivity.dart';
 
 void main() {
   User_instance userInstance;
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: CreateLobby(
+      home: LoginPage(
           //user_email: "userprueba@gmail.com",
           ),
     );
