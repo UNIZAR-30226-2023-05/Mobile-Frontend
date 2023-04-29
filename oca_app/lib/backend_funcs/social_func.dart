@@ -118,3 +118,36 @@ Future<List<Map<String, dynamic>>> listaAmigos(int id_usuario) async {
     return [];
   }
 }
+
+Future<bool> rechazarSolcitudAmistad(
+    int id_usuario_envia, int id_usuario_recibe) async {
+  print("Enviando datos");
+  const url = 'https://backendps.vercel.app/social/friends';
+  final body = {
+    "id_usuario_envia": id_usuario_recibe,
+    "id_usuario_recibe": id_usuario_envia
+  };
+
+  final response = await http.delete(
+    Uri.parse(url),
+    headers: {'Content-Type': 'application/json'},
+    body: jsonEncode(body),
+  );
+
+  if (response.statusCode == 200) {
+    print("Solicitud exitosa");
+    return true;
+  } else {
+    // ignore: avoid_print, prefer_interpolation_to_compose_strings
+    print("Error en la solicitud " +
+        response.statusCode.toString() +
+        "\n" +
+        "\n" +
+        response.body +
+        "\n" +
+        id_usuario_envia.toString() +
+        "\n" +
+        id_usuario_recibe.toString());
+    return false;
+  }
+}

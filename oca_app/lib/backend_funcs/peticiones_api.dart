@@ -23,11 +23,38 @@ class ApiService {
   // Aquí puedes agregar otras funciones que requieran el token
 }
 
-Future<int> getUserID(String email) async {
+Future<int> getUserIDemail(String email) async {
   var headers = {'Content-Type': 'application/json'};
   var request = http.Request(
       'GET', Uri.parse('https://backendps.vercel.app/users/register'));
   request.body = json.encode({"email": email});
+  request.headers.addAll(headers);
+
+  final response = await request.send();
+  final respStr = await response.stream.bytesToString();
+  var respJson = jsonDecode(respStr);
+
+  if (response.statusCode == 200) {
+    print("USER ID exitoso\n");
+    print(respStr);
+
+    return respJson['id_usuario']; //jsonDecode(response.body)['id'];
+  } else {
+    // ignore: avoid_print, prefer_interpolation_to_compose_strings
+    print("Error en getuserid " +
+        response.statusCode.toString() +
+        "\n" +
+        "\n" +
+        response.toString());
+    return -1;
+  }
+}
+
+Future<int> getUserIDnickname(String nickname) async {
+  var headers = {'Content-Type': 'application/json'};
+  var request = http.Request(
+      'GET', Uri.parse('https://backendps.vercel.app/users/register'));
+  request.body = json.encode({"nickname": nickname});
   request.headers.addAll(headers);
 
   final response = await request.send();

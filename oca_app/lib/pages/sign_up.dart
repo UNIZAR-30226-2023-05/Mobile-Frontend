@@ -133,7 +133,7 @@ class SignUp extends StatelessWidget {
                         if (await logIn.enviar()) {
                           // ignore: use_build_context_synchronously
                           if (await fillUserInstance(
-                              await getUserID(emailController.text))) {
+                              await getUserIDemail(emailController.text))) {
                             // ignore: use_build_context_synchronously
                             Navigator.push(
                               context,
