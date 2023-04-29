@@ -6,27 +6,26 @@
 // -------------------------------------------------------------------
 
 import 'package:flutter/material.dart';
+import 'package:oca_app/backend_funcs/room_data_handler.dart';
 import 'package:oca_app/components/User_instance.dart';
 import 'package:oca_app/components/forms.dart';
 import 'package:oca_app/components/socket_class.dart';
 import 'package:oca_app/pages/main_menu.dart';
 import 'package:oca_app/styles/buttons_styles.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:oca_app/backend_funcs/room_data_handler.dart';
 
 class CreateRoomPage extends StatelessWidget {
   CreateRoomPage({super.key});
 
-  final nameRoomCtrl = TextEditingController();
+  final roomNameCtrl = TextEditingController();
   final String NMIN_PLAYERS = "2";
   final nPlayersList = <String>["2", "3", "4", "5", "6"];
 
   @override
   Widget build(BuildContext context) {
-    int nPlayers = int.parse(NMIN_PLAYERS);
+    int _nPlayers = int.parse(NMIN_PLAYERS);
 
-    //SocketSingleton ss = SocketSingleton();
-
-    //ss.createRoom();
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xFF1C6474),
@@ -59,7 +58,7 @@ class CreateRoomPage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(10),
                   child: MyForm(
-                    controller: nameRoomCtrl,
+                    controller: roomNameCtrl,
                     hintText: "Introduzca nombre de la sala",
                     obscureText: false,
                   ),
@@ -91,7 +90,7 @@ class CreateRoomPage extends StatelessWidget {
                       }).toList(),
                       onChanged: (value) {
                         // guardar número de jugadores, por defeto 2
-                        nPlayers = int.parse(value!);
+                        _nPlayers = int.parse(value!);
                       },
                       icon: const Icon(
                         Icons.arrow_drop_down,
@@ -132,7 +131,7 @@ class CreateRoomPage extends StatelessWidget {
                         ElevatedButton(
                           style: CrearButton,
                           onPressed: () {
-                            if (nameRoomCtrl.text == "") {
+                            if (roomNameCtrl.text == "") {
                               showDialog(
                                   context: context,
                                   builder: (context) => AlertDialog(
@@ -151,8 +150,23 @@ class CreateRoomPage extends StatelessWidget {
                             } else {
                               // Primera y única instanciación de clase socket
                               SocketSingleton ss = SocketSingleton();
-                              ss.createRoom();
+                              int newIdRoom =
+                                  ss.createRoom(roomNameCtrl.text, _nPlayers);
+
+                              User_instance ui = User_instance.instance;
+                              ui.idRoom = newIdRoom; // setter
+
+                              print("ui.idRoom = ${ui.idRoom}");
+
+                              /*
+                              // Redirección a la sala de juegos
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Main_Menu_Page()));
                               // redirección a la sala de juegos
+                              suco2@gmail.com
+                              */
                             }
                           },
                           child: const Text("Crear",

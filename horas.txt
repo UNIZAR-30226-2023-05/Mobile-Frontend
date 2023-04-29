@@ -12,6 +12,7 @@ Félix Ozcoz
 3h Implementación e incorporación de websockets con librería socket_io_client (sin estar operativos)
 4h Pruebas de comunicación con banckend usando websockets
 1h Reestructuración de almacenamiento datos de usuario y websockets en aplicación
+3h Implementación de creación de sala en 'Crear Sala'
 
 TOTAL 27h 30min
 ------------------------------------------------------

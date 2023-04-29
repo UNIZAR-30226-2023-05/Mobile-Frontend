@@ -16,7 +16,6 @@ class SocketSingleton {
   static late final IO.Socket socket;
 
   factory SocketSingleton() {
-    print("dentro de factory");
     return _singleton.._initSocket();
   }
 
@@ -39,14 +38,29 @@ class SocketSingleton {
     socket.onDisconnect((data) => print("desconectado $data"));
   }
 
-  void createRoom() {
-    Map<String, dynamic> miJson = {'nickname': 'pepe'};
+  int createRoom(String roomName, int nPlayers) {
+    User_instance ui = User_instance.instance;
+
+    Map<String, dynamic> miJson = {'nickname': '${ui.nickname}'};
     String miJsonString = json.encode(miJson);
 
-    socket.emitWithAck('createRoom', [miJson, 'misala2', 3, 'clasicc'],
+    int id = -1; // idRooms
+
+    socket.emitWithAck('createRoom', [miJson, roomName, nPlayers, 'clasicc'],
         ack: (data) {
-      print('Respuesta recibida: $data');
+      // Convertir el objeto JSON a map
+      Map<String, dynamic> response = Map<String, dynamic>.from(data);
+
+      // Check error
+      if (response['status'] != "ok") {
+        throw FlutterError(response['message']);
+        // el código termina con el error
+      }
+
+      id = response['id'];
     });
+
+    return id;
   }
 
   void joinRoom() {}

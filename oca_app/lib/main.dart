@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:oca_app/components/socket_class.dart';
 import 'package:oca_app/pages/join_room.dart';
 import 'package:oca_app/pages/create_room.dart';
 import 'package:oca_app/backend_funcs/log_in_func.dart';
