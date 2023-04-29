@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:oca_app/components/User_instance.dart';
-import 'package:oca_app/pages/join_lobby.dart';
-import 'package:oca_app/pages/create_lobby.dart';
+import 'package:oca_app/pages/join_room.dart';
+import 'package:oca_app/pages/create_room.dart';
 import 'package:oca_app/backend_funcs/log_in_func.dart';
 import 'package:oca_app/pages/login_page.dart';
 import 'package:oca_app/pages/settings_menu.dart';
@@ -13,7 +13,7 @@ import 'dart:convert';
 
 class SocketSingleton {
   static final SocketSingleton _singleton = SocketSingleton._internal();
-  static late IO.Socket socket;
+  static late final IO.Socket socket;
 
   factory SocketSingleton() {
     print("dentro de factory");
@@ -39,7 +39,7 @@ class SocketSingleton {
     socket.onDisconnect((data) => print("desconectado $data"));
   }
 
-  void crearSala() {
+  void createRoom() {
     Map<String, dynamic> miJson = {'nickname': 'pepe'};
     String miJsonString = json.encode(miJson);
 
@@ -48,4 +48,6 @@ class SocketSingleton {
       print('Respuesta recibida: $data');
     });
   }
+
+  void joinRoom() {}
 }

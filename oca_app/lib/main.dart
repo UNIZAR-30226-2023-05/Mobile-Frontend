@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:oca_app/pages/join_lobby.dart';
-import 'package:oca_app/pages/create_lobby.dart';
+import 'package:oca_app/pages/join_room.dart';
+import 'package:oca_app/pages/create_room.dart';
 import 'package:oca_app/backend_funcs/log_in_func.dart';
 import 'package:oca_app/pages/login_page.dart';
 import 'package:oca_app/pages/settings_menu.dart';

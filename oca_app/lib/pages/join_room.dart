@@ -9,8 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:oca_app/components/forms.dart';
 import 'package:oca_app/styles/buttons_styles.dart';
 
-class JoinLobby extends StatelessWidget {
-  JoinLobby({super.key});
+class JoinRoomPage extends StatelessWidget {
+  JoinRoomPage({super.key});
 
   final lobbyController = TextEditingController();
 

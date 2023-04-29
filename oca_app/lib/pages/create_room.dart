@@ -9,18 +9,24 @@ import 'package:flutter/material.dart';
 import 'package:oca_app/components/User_instance.dart';
 import 'package:oca_app/components/forms.dart';
 import 'package:oca_app/components/socket_class.dart';
+import 'package:oca_app/pages/main_menu.dart';
 import 'package:oca_app/styles/buttons_styles.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
-class CreateLobby extends StatelessWidget {
-  CreateLobby({super.key});
+class CreateRoomPage extends StatelessWidget {
+  CreateRoomPage({super.key});
 
-  final lobbyController = TextEditingController();
+  final nameRoomCtrl = TextEditingController();
+  final String NMIN_PLAYERS = "2";
+  final nPlayersList = <String>["2", "3", "4", "5", "6"];
 
   @override
   Widget build(BuildContext context) {
-    SocketSingleton ss = SocketSingleton();
-    ss.crearSala();
+    int nPlayers = int.parse(NMIN_PLAYERS);
+
+    //SocketSingleton ss = SocketSingleton();
+
+    //ss.createRoom();
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xFF1C6474),
@@ -53,7 +59,7 @@ class CreateLobby extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(10),
                   child: MyForm(
-                    controller: lobbyController,
+                    controller: nameRoomCtrl,
                     hintText: "Introduzca nombre de la sala",
                     obscureText: false,
                   ),
@@ -79,12 +85,13 @@ class CreateLobby extends StatelessWidget {
                     height: kMinInteractiveDimension,
                     width: 100,
                     child: DropdownButtonFormField(
-                      value: "2",
-                      items: (<String>["2", "3", "4", "5", "6"]).map((e) {
+                      value: NMIN_PLAYERS, // número mínimo 2
+                      items: nPlayersList.map((e) {
                         return DropdownMenuItem(value: e, child: Text(e));
                       }).toList(),
                       onChanged: (value) {
-                        // almacenar el número de jugadores para luego utilizarlo
+                        // guardar número de jugadores, por defeto 2
+                        nPlayers = int.parse(value!);
                       },
                       icon: const Icon(
                         Icons.arrow_drop_down,
@@ -125,14 +132,13 @@ class CreateLobby extends StatelessWidget {
                         ElevatedButton(
                           style: CrearButton,
                           onPressed: () {
-                            /*
-                            if (lobbyController.text == "") {
+                            if (nameRoomCtrl.text == "") {
                               showDialog(
                                   context: context,
                                   builder: (context) => AlertDialog(
                                         title: const Text("Error"),
                                         content: const Text(
-                                            "Rellena todos los campos"),
+                                            "La sala creada debe tener un nombre no vacío."),
                                         actions: [
                                           TextButton(
                                             onPressed: () {
@@ -142,14 +148,12 @@ class CreateLobby extends StatelessWidget {
                                           )
                                         ],
                                       ));
+                            } else {
+                              // Primera y única instanciación de clase socket
+                              SocketSingleton ss = SocketSingleton();
+                              ss.createRoom();
+                              // redirección a la sala de juegos
                             }
-                            //} else {
-                            // gestionar el nombre de la sala
-                            
-                      Registro signUp = Registro(usernameController.text,
-                          emailController.text, passwordController.text);
-                      signUp.enviar();
-                      */
                           },
                           child: const Text("Crear",
                               style: TextStyle(
@@ -163,26 +167,13 @@ class CreateLobby extends StatelessWidget {
                           width: 30,
                         ),
                         ElevatedButton(
-                          // podría quitarse
                           style: CancelarButton,
                           onPressed: () {
-                            if (lobbyController.text == "") {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                        title: const Text("Error"),
-                                        content: const Text(
-                                            "Rellena todos los campos"),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: const Text("OK"),
-                                          )
-                                        ],
-                                      ));
-                            }
+                            // Vuelve a  menú principal
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Main_Menu_Page()));
                           },
                           child: const Text("Cancelar",
                               style: TextStyle(
