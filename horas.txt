@@ -7,7 +7,13 @@ Félix Ozcoz
 2h práctica 3
 1h Memoria intermedia organización
 2h Conexion con el servidor para registro y login 30/03/2023
-TOTAL 15h
+3h Creación de pantallas: Crear Sala y Unirse Sala 
+1h 30m Video y memoria para la practica 4 11/04/2023
+3h Implementación e incorporación de websockets con librería socket_io_client (sin estar operativos)
+4h Pruebas de comunicación con banckend usando websockets
+1h Reestructuración de almacenamiento datos de usuario y websockets en aplicación
+
+TOTAL 27h 30min
 ------------------------------------------------------
 Pablo López
 4h practica 1 , propuesta inicial, instalacion Flutter
