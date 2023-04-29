@@ -12,14 +12,18 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'dart:convert';
 
 class SocketSingleton {
-  static final SocketSingleton _singleton = SocketSingleton._internal();
+  static final SocketSingleton _instance = SocketSingleton._internal();
   static late final IO.Socket socket;
 
   factory SocketSingleton() {
-    return _singleton.._initSocket();
+    return instance.._initSocket();
   }
 
   SocketSingleton._internal();
+
+  static SocketSingleton get instance {
+    return _instance;
+  }
 
   void _initSocket() {
     User_instance user_instance = User_instance.instance;
@@ -40,14 +44,54 @@ class SocketSingleton {
 
   int createRoom(String roomName, int nPlayers) {
     User_instance ui = User_instance.instance;
-
-    Map<String, dynamic> miJson = {'nickname': '${ui.nickname}'};
+    // Map<String, dynamic> miJson = {'nickname': '${ui.nickname}'};
+    Map<String, dynamic> miJson = {'nickname': 'jc'};
     String miJsonString = json.encode(miJson);
 
     int id = -1; // idRooms
 
     socket.emitWithAck('createRoom', [miJson, roomName, nPlayers, 'clasicc'],
         ack: (data) {
+      // Convertir el objeto JSON a map
+      Map<String, dynamic> response = Map<String, dynamic>.from(data);
+      print(response);
+      // Check error
+      if (response['status'] != "ok") {
+        throw FlutterError(response['message']);
+        // el código termina con el error
+      }
+
+      id = int.parse(response['id']);
+    });
+
+    return id;
+  }
+
+  void joinRoom(int idRoom) {
+    User_instance ui = User_instance.instance;
+    Map<String, dynamic> miJson = {'nickname': 'joselu'};
+    String miJsonString = json.encode(miJson);
+
+    socket.emitWithAck('joinRoom', [idRoom, miJson], ack: (data) {
+      // Convertir el objeto JSON a map
+      Map<String, dynamic> response = Map<String, dynamic>.from(data);
+      print(response);
+
+      // Check error
+      if (response['status'] != "ok") {
+        throw FlutterError(response['message']);
+        // el código termina con el error
+      }
+    });
+  }
+
+  // Falta: Manejar el mensaje de salida
+  void leaveRoom() {
+    User_instance ui = User_instance.instance;
+    Map<String, dynamic> miJson = {'nickname': '${ui.nickname}'};
+    String miJsonString = json.encode(miJson);
+
+    socket.emitWithAck('leaveTheRoom', [ui.idRoom, miJson], ack: (data) {
       // Convertir el objeto JSON a map
       Map<String, dynamic> response = Map<String, dynamic>.from(data);
 
@@ -57,11 +101,42 @@ class SocketSingleton {
         // el código termina con el error
       }
 
-      id = response['id'];
+      // Manejar mensaje de salida
     });
-
-    return id;
   }
 
-  void joinRoom() {}
+  // Disponible sólo para el creador de la sala
+  void destroyRoom() {
+    User_instance ui = User_instance.instance;
+    Map<String, dynamic> miJson = {'nickname': '${ui.nickname}'};
+    String miJsonString = json.encode(miJson);
+
+    socket.emitWithAck('destroyRoom', [ui.idRoom, miJson], ack: (data) {
+      // Convertir el objeto JSON a map
+      Map<String, dynamic> response = Map<String, dynamic>.from(data);
+
+      // Check error
+      if (response['status'] != "ok") {
+        throw FlutterError(response['message']);
+        // el código termina con el error
+      }
+    });
+  }
+
+  // Disponible sólo para el creador de la sala
+  void removePlayerFromRoom(String playerNameToRemove) {
+    User_instance ui = User_instance.instance;
+
+    socket.emitWithAck('removePlayerFromRoom', [ui.idRoom, playerNameToRemove],
+        ack: (data) {
+      // Convertir el objeto JSON a map
+      Map<String, dynamic> response = Map<String, dynamic>.from(data);
+
+      // Check error
+      if (response['status'] != "ok") {
+        throw FlutterError(response['message']);
+        // el código termina con el error
+      }
+    });
+  }
 }

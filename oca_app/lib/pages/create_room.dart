@@ -19,12 +19,13 @@ class CreateRoomPage extends StatelessWidget {
   CreateRoomPage({super.key});
 
   final roomNameCtrl = TextEditingController();
-  final String NMIN_PLAYERS = "2";
+  final String NMIN_PLAYERS = "2"; // número de jugadores mínimo
   final nPlayersList = <String>["2", "3", "4", "5", "6"];
 
   @override
   Widget build(BuildContext context) {
     int _nPlayers = int.parse(NMIN_PLAYERS);
+    SocketSingleton ss = SocketSingleton.instance;
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -149,13 +150,12 @@ class CreateRoomPage extends StatelessWidget {
                                       ));
                             } else {
                               // Primera y única instanciación de clase socket
-                              SocketSingleton ss = SocketSingleton();
                               int newIdRoom =
                                   ss.createRoom(roomNameCtrl.text, _nPlayers);
 
                               User_instance ui = User_instance.instance;
                               ui.idRoom = newIdRoom; // setter
-
+                              print("id recibido = $newIdRoom");
                               print("ui.idRoom = ${ui.idRoom}");
 
                               /*

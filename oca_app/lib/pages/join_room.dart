@@ -7,15 +7,19 @@
 
 import 'package:flutter/material.dart';
 import 'package:oca_app/components/forms.dart';
+import 'package:oca_app/components/socket_class.dart';
+import 'package:oca_app/pages/main_menu.dart';
 import 'package:oca_app/styles/buttons_styles.dart';
 
 class JoinRoomPage extends StatelessWidget {
   JoinRoomPage({super.key});
 
-  final lobbyController = TextEditingController();
+  final idRoomCtrl = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    SocketSingleton ss = SocketSingleton.instance;
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xFF1C6474),
@@ -49,7 +53,7 @@ class JoinRoomPage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(10),
                   child: MyForm(
-                    controller: lobbyController,
+                    controller: idRoomCtrl,
                     hintText: "Introduzca nombre de la sala",
                     obscureText: false,
                   ),
@@ -72,7 +76,7 @@ class JoinRoomPage extends StatelessWidget {
                         ElevatedButton(
                           style: CrearButton,
                           onPressed: () {
-                            if (lobbyController.text == "") {
+                            if (idRoomCtrl.text == "") {
                               showDialog(
                                   context: context,
                                   builder: (context) => AlertDialog(
@@ -88,16 +92,11 @@ class JoinRoomPage extends StatelessWidget {
                                           )
                                         ],
                                       ));
+                            } else {
+                              ss.joinRoom(int.parse(idRoomCtrl.text));
                             }
-                            //} else {
-                            // gestionar el nombre de la sala
-                            /*
-                      Registro signUp = Registro(usernameController.text,
-                          emailController.text, passwordController.text);
-                      signUp.enviar();
-                      */
                           },
-                          child: const Text("Crear",
+                          child: const Text("Unirse",
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
@@ -112,23 +111,11 @@ class JoinRoomPage extends StatelessWidget {
                           // podría quitarse
                           style: CancelarButton,
                           onPressed: () {
-                            if (lobbyController.text == "") {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                        title: const Text("Error"),
-                                        content: const Text(
-                                            "Rellena todos los campos"),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: const Text("OK"),
-                                          )
-                                        ],
-                                      ));
-                            }
+                            // Vuelve a  menú principal
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Main_Menu_Page()));
                           },
                           child: const Text("Cancelar",
                               style: TextStyle(
