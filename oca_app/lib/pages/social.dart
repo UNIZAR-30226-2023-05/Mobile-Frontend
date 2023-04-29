@@ -3,6 +3,7 @@ import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:oca_app/backend_funcs/social_func.dart';
 import 'package:oca_app/components/User_instance.dart';
 import 'package:oca_app/backend_funcs/peticiones_api.dart';
+import 'dart:async';
 
 class Social extends StatefulWidget {
   @override
@@ -12,20 +13,24 @@ class Social extends StatefulWidget {
 class _SocialState extends State<Social> {
   var solicitudController = TextEditingController();
   User_instance user_instance = User_instance.instance;
-  late Future<List<String>> futureSolicitudes;
+  final solicitudesController =
+      StreamController<List<Map<String, dynamic>>>.broadcast();
 
   //Esto es una funcion que se ejecuta siempre que se inicia la pantalla social
   @override
   void initState() {
     super.initState();
-    futureSolicitudes = solicitudesPendientes(user_instance.id);
-    print(futureSolicitudes);
+    solicitudesPendientes(user_instance.id).then((solicitudes) {
+      listaAmigos(user_instance.id).then((amigos) {
+        solicitudesController.add([...solicitudes, ...amigos]);
+      });
+    });
   }
 
-  void refreshSolicitudes() async {
-    setState(() {
-      futureSolicitudes = solicitudesPendientes(user_instance.id);
-    });
+  Future<void> fetchData() async {
+    final solicitudes = await solicitudesPendientes(user_instance.id);
+    final amigos = await listaAmigos(user_instance.id);
+    solicitudesController.add([...solicitudes, ...amigos]);
   }
 
   void gotoAddFriend(BuildContext context) {
@@ -129,6 +134,7 @@ class _SocialState extends State<Social> {
                         actions: [
                           ElevatedButton(
                             onPressed: () {
+                              fetchData();
                               // Lógica para aceptar la acción
                               Navigator.pop(context);
                             },
@@ -227,7 +233,9 @@ class _SocialState extends State<Social> {
                 Container(
                   margin: EdgeInsets.only(left: 200, top: 10),
                   child: IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      fetchData();
+                    },
                     icon: const Icon(
                       Icons.search,
                       color: Colors.white,
@@ -247,53 +255,50 @@ class _SocialState extends State<Social> {
                   SizedBox(
                     height: 650.0,
                     child: Container(
-                      color: Colors.white,
-                      child: FutureBuilder<List<String>>(
-                        future: futureSolicitudes,
-                        builder: (BuildContext context,
-                            AsyncSnapshot<List<String>> snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Center(child: CircularProgressIndicator());
-                          } else {
-                            if (snapshot.hasError) {
-                              return Center(
-                                  child:
-                                      Text('Error al cargar las solicitudes'));
+                        color: Colors.white,
+                        child: StreamBuilder<List<Map<String, dynamic>>>(
+                          stream: solicitudesController.stream,
+                          initialData: [],
+                          builder: (BuildContext context,
+                              AsyncSnapshot<List<Map<String, dynamic>>>
+                                  snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Center(child: CircularProgressIndicator());
                             } else {
-                              List<String>? solicitudes = snapshot.data;
-                              return SingleChildScrollView(
-                                child: Column(
-                                  children: List.generate(
-                                      solicitudes?.length ?? 0, (index) {
+                              if (snapshot.hasError) {
+                                return Center(
+                                    child: Text(
+                                        'Error al cargar las solicitudes'));
+                              } else {
+                                List<Map<String, dynamic>>? data =
+                                    snapshot.data;
+                                if (data != null && data.isNotEmpty) {
+                                  List<Widget> solicitudesAmistad = data
+                                      .where((element) =>
+                                          element['tipo'] == 'solicitud')
+                                      .map<Widget>((element) {
                                     return Container(
                                       decoration: BoxDecoration(
-                                        border: Border(
-                                          bottom: BorderSide(
-                                            color: Colors.grey,
-                                            width: 1.0,
-                                          ),
-                                        ),
+                                        border: Border(bottom: BorderSide()),
                                       ),
                                       child: ListTile(
-                                        leading: Icon(Icons
-                                            .person), // Icono al principio del ListTile
-                                        title: Row(
+                                        leading: Icon(Icons.person),
+                                        title: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
-                                            Expanded(
-                                              child: Text(
-                                                'Solicitud entrante:',
-                                                style: TextStyle(
-                                                    color: Colors.green),
-                                                textAlign: TextAlign.center,
+                                            Text(
+                                              'Solicitud entrante:',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.green,
                                               ),
                                             ),
-                                            Expanded(
-                                              child: Text(
-                                                solicitudes![index],
-                                                style: TextStyle(
-                                                    color: Colors.black),
-                                                textAlign: TextAlign.center,
+                                            Text(
+                                              element['nickname'],
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.normal,
                                               ),
                                             ),
                                           ],
@@ -306,14 +311,35 @@ class _SocialState extends State<Social> {
                                         ),
                                       ),
                                     );
-                                  }),
-                                ),
-                              );
+                                  }).toList();
+
+                                  List<Widget> amigos = data
+                                      .where((element) =>
+                                          element['tipo'] == 'amigo')
+                                      .map<Widget>((element) {
+                                    return Container(
+                                      decoration: BoxDecoration(
+                                        border: Border(bottom: BorderSide()),
+                                      ),
+                                      child: ListTile(
+                                        leading: Icon(Icons.person),
+                                        title: Text("${element['nickname']}"),
+                                      ),
+                                    );
+                                  }).toList();
+
+                                  return ListView(
+                                    children: solicitudesAmistad + amigos,
+                                  );
+                                } else {
+                                  return Center(
+                                      child: Text(
+                                          'No tienes amigos, agrega uno dandole a la lupa'));
+                                }
+                              }
                             }
-                          }
-                        },
-                      ),
-                    ),
+                          },
+                        )),
                   ),
                   Positioned(
                     bottom: 0,

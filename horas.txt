@@ -30,5 +30,6 @@ Pablo López
 1h 30m apartado social, conexion backend 24/04/2023
 2h 30m redefinicion de la conexion con backend 27/04/2023
 3h     Funciones social 27/04/2023
-1h     social           28/04/2023
+1h social 28/04/2023
+1h social casi acabado 29/04/2023
 TOTAL: 28.5h

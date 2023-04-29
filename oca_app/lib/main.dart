@@ -13,11 +13,11 @@ import 'package:oca_app/components/User_instance.dart';
 void main() {
   User_instance userInstance = User_instance.instance;
 /*
-  userInstance.id = 46;
+  userInstance.id = 62;
   userInstance.nickname = "userprueba";
   userInstance.email = "userprueba@gmail.com";
   userInstance.token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJwcnVlYmFAZ21haWwuY29tIiwiaWF0IjoxNjgyNjExNDI2LCJleHAiOjE2ODI4NzA2MjZ9.cVDNudhN_6vfXMy7qUaJnAE8YYK5fWOZzwOLoXf9QPU";
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJwcnVlYmFAZ21haWwuY29tIiwiaWF0IjoxNjgyNzU4NTYwLCJleHAiOjE2ODMwMTc3NjB9.z1GXvDeeWlpOwCUfHa_F7k9_d4A2knUkkuxnqQUZ4tA";
 */
   runApp(
     ChangeNotifierProvider(

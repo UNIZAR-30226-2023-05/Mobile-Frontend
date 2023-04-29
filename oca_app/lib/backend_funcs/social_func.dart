@@ -34,7 +34,7 @@ Future<bool> enviarSolicitudAmistad(
   }
 }
 
-Future<List<String>> solicitudesPendientes(int id_usuario) async {
+Future<List<Map<String, dynamic>>> solicitudesPendientes(int id_usuario) async {
   print("Enviando datos");
   var url =
       'https://backendps.vercel.app/social/friends/' + id_usuario.toString();
@@ -55,14 +55,56 @@ Future<List<String>> solicitudesPendientes(int id_usuario) async {
     if (listaAux.isEmpty) {
       return [];
     } else {
-      List<String> solicitudes = listaAux
-          .map((element) =>
-              element['usuario_solicitud_id_usuario_enviaTousuario'] != null
-                  ? element['usuario_solicitud_id_usuario_enviaTousuario']
-                      ['nickname'] as String
-                  : '')
-          .toList();
+      List<Map<String, dynamic>> solicitudes = listaAux.map((element) {
+        return {
+          'nickname': element['usuario_solicitud_id_usuario_enviaTousuario']
+              ['nickname'] as String,
+          'tipo': 'solicitud', // Agrega esta línea
+        };
+      }).toList();
       return solicitudes;
+    }
+  } else {
+    // ignore: avoid_print, prefer_interpolation_to_compose_strings
+    print("Error en la solicitud " +
+        response.statusCode.toString() +
+        "\n" +
+        "\n" +
+        response.body +
+        "\n" +
+        id_usuario.toString());
+    return [];
+  }
+}
+
+Future<List<Map<String, dynamic>>> listaAmigos(int id_usuario) async {
+  print("Enviando datos");
+  var url =
+      'https://backendps.vercel.app/social/friends/' + id_usuario.toString();
+
+  final response = await http.get(
+    Uri.parse(url),
+    headers: {'Content-Type': 'application/json'},
+  );
+
+  final respJson = jsonDecode(response.body);
+  if (response.statusCode == 200) {
+    print("Solicitud exitosa");
+    print(respJson);
+
+    Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+    List<dynamic> listaAux = jsonResponse['amigos'] ?? [];
+
+    if (listaAux.isEmpty) {
+      return [];
+    } else {
+      List<Map<String, dynamic>> amigos = listaAux.map((element) {
+        return {
+          'nickname': element as String,
+          'tipo': 'amigo', // Agrega esta línea
+        };
+      }).toList();
+      return amigos;
     }
   } else {
     // ignore: avoid_print, prefer_interpolation_to_compose_strings
