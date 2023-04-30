@@ -80,3 +80,17 @@ Future<bool> fillUserInstance(int user_id) async {
     return false;
   }
 }
+
+// Eliminar cuenta de un usuario, utilizado desde 'Ajustes'
+Future<void> eliminarCuenta(int idUsuario) async {
+  final url =
+      Uri.parse('https://backendps.vercel.app/users/register/$idUsuario');
+
+  final response = await http.delete(url);
+
+  if (response.statusCode == 200) {
+    print('Eliminación exitosa');
+  } else {
+    print('Error al eliminar: ${response.statusCode}');
+  }
+}

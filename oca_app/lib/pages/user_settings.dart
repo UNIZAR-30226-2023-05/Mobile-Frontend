@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:oca_app/backend_funcs/peticiones_api.dart';
+import 'package:oca_app/components/User_instance.dart';
 import 'package:oca_app/components/forms.dart';
+import 'package:oca_app/pages/login_page.dart';
 import 'package:oca_app/styles/buttons_styles.dart';
 
 class UserSettings extends StatelessWidget {
@@ -60,7 +63,9 @@ class UserSettings extends StatelessWidget {
           //MyButton(onPressed: saveSettings, textoAMostrar: "Confirmar"),
           ElevatedButton(
               style: GenericButton,
-              onPressed: () {},
+              onPressed: () {
+                // Constraseñas iguales y Nombre de usuario distinto de vacío
+              },
               child: const Text("Confirmar",
                   style: TextStyle(
                       color: Colors.white,
@@ -71,7 +76,39 @@ class UserSettings extends StatelessWidget {
               onPressed: deleteAccount, textoAMostrar: "Eliminar cuenta"),*/
           ElevatedButton(
               style: ErrorButton,
-              onPressed: () {},
+              onPressed: () {
+                User_instance ui = User_instance.instance;
+                // Petición al backend para que borre la cuenta
+                // Indicar que se ha eliminado la cuenta y volver a LoginPage
+                showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                          title: const Text("Cuenta borrada"),
+                          // Muestra alerta non-null, pero siempre se inicializa
+                          content: Text(
+                              "La cuenta de usuario con nombre ${ui.nickname} ha sido eliminada"),
+                          actions: [
+                            TextButton(
+                              child: Text("Borrar"),
+                              onPressed: () {
+                                eliminarCuenta(ui.id); // conexión con BBDD
+                                ui.dispose(); // eliminar instancia del usuario
+                                Navigator.push // volver al pantalla incial
+                                    (
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => LoginPage()));
+                              },
+                            ),
+                            TextButton(
+                              child: Text("Cancel"),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                            )
+                          ],
+                        ));
+              },
               child: const Text("Eliminar cuenta",
                   style: TextStyle(
                       color: Colors.white,

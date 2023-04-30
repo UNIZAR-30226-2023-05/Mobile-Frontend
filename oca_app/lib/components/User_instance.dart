@@ -19,6 +19,11 @@ class User_instance {
 
   User_instance._(); // Constructor privado
 
+  // Destructor de la clase  (utilizado al eliminar la instancia)
+  void dispose() {
+    _instance = null;
+  }
+
   /*
   INFO:
   Devuelve la instancia única de la clase.
