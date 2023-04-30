@@ -13,7 +13,8 @@ Félix Ozcoz
 4h Pruebas de comunicación con banckend usando websockets
 1h Reestructuración de almacenamiento datos de usuario y websockets en aplicación
 3h Implementación de creación de sala en 'Crear Sala': comunicación con backend
-TOTAL 27h 30min
+1h Implementación de borrado y reinicio de información de usuario desde 'Ajustes'
+TOTAL 29h 30min
 ------------------------------------------------------
 Pablo López
 4h practica 1 , propuesta inicial, instalacion Flutter
