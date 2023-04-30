@@ -1,5 +1,5 @@
 //*****************************************************************
-// File:   my_global_state.dart
+// File:   User_instance.dart
 // Author: Félix Ozcoz y Pablo López
 // Date:   Abril 2023
 // Coms: Almacén de información identificativa del usuario para
@@ -15,6 +15,7 @@ class User_instance {
   late int _monedas;
   late String _profile_pic;
   late String _token;
+  late int _idRoom;
 
   User_instance._(); // Constructor privado
 
@@ -48,4 +49,7 @@ class User_instance {
 
   String get token => _token;
   set token(String value) => _token = value;
+
+  int get idRoom => _idRoom;
+  set idRoom(int value) => _idRoom = value;
 }

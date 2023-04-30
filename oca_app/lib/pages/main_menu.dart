@@ -1,8 +1,8 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:flutter/material.dart';
-import 'package:oca_app/pages/create_lobby.dart';
-import 'package:oca_app/pages/join_lobby.dart';
+import 'package:oca_app/pages/create_room.dart';
+import 'package:oca_app/pages/join_room.dart';
 import 'package:oca_app/pages/settings_menu.dart';
 import 'package:oca_app/styles/buttons_styles.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -81,7 +81,7 @@ class Main_Menu_Page extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => CreateLobby()));
+                              builder: (context) => CreateRoomPage()));
                     },
                     child: const Text(
                       "Crear una sala",
@@ -92,8 +92,10 @@ class Main_Menu_Page extends StatelessWidget {
                 ElevatedButton(
                     style: GenericButton,
                     onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => JoinLobby()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => JoinRoomPage()));
                     },
                     child: const Text(
                       "Unirse a una sala",

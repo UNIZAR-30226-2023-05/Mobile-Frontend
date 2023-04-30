@@ -1,6 +1,7 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:oca_app/components/User_instance.dart';
+import 'package:oca_app/components/socket_class.dart';
 
 class LogIn {
   late String email;
@@ -28,6 +29,8 @@ class LogIn {
 
       User_instance user_instance = User_instance.instance;
       user_instance.token = token;
+
+      SocketSingleton(); // inicializar el socket al logearse
 
       return true;
     } else {
