@@ -94,3 +94,21 @@ Future<void> eliminarCuenta(int idUsuario) async {
     print('Error al eliminar: ${response.statusCode}');
   }
 }
+
+Future<void> actualizarAtributosUsuario(String name, String passwd) async {
+  final url = Uri.parse('https://backendps.vercel.app/users/register');
+  final headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'Authorization': 'Bearer ${User_instance.instance.token}',
+  };
+  final body = jsonEncode({'id_usuario': name, 'password': passwd});
+
+  final response = await http.put(url, headers: headers, body: body);
+
+  if (response.statusCode == 200) {
+    print('Datos enviados correctamente');
+  } else {
+    print('Error al enviar los datos');
+  }
+}

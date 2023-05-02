@@ -35,7 +35,7 @@ class SocketSingleton {
     String authToken = userInstance.token;
     // en eina: http://10.1.49.205:3000
     // en casa: http://192.168.1.51:3000
-    socket = IO.io('http://10.1.49.205:3000', <String, dynamic>{
+    socket = IO.io('http://192.168.1.51:3000', <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': false,
       'auth': {'token': '$authToken'}
@@ -49,31 +49,28 @@ class SocketSingleton {
   }
 
   Future<int> createRoom(String roomName, int nPlayers) async {
-    final completer = Completer<dynamic>();
-    //final completer = Completer<Map<String, dynamic>>(); // para guardar todo el JSON
+    // Se utiliza para esperar respuesta del servidor, necesario
+    // porque emitWithAck es un procedimiento
+    final completer = Completer<Map<String, dynamic>>();
+    late Map<String, dynamic> response; // guarda respuesta del servidor
 
     // Handler del callback
-    void myCallback(Map<String, dynamic> response) {
-      final int id = response['id'];
-      completer.complete(id);
-    }
+    // void myCallback(Map<String, dynamic> response) {
+    //   completer.complete(response);
+    // }
 
     User_instance ui = User_instance.instance;
     // Map<String, dynamic> miJson = {'nickname': '${ui.nickname}'};
-    Map<String, dynamic> miJson = {'nickname': 'f'};
-    String miJsonString = json.encode(miJson);
+    Map<String, dynamic> miJson = {'nickname': 'g'};
 
     socket.emitWithAck('createRoom', [miJson, roomName, nPlayers, 'clasicc'],
-        ack: myCallback);
+        ack: (response) {
+      completer.complete(response);
+    });
 
-    // Hasta que no haya inicializado el campo no se resulve, y se hace
-    // cuando el servidor ha manadado la respuesta
-    final int id = await completer.future;
-    print("id = $id");
-    // Accede a los campos de la respuesta
-    //print('campo1: ${respuesta['campo1']}');
-    //print('campo2: ${respuesta['campo2']}');
-    return id;
+    response = await completer.future;
+    print(response);
+    return response['id'];
   }
 
   void joinRoom(int idRoom) {

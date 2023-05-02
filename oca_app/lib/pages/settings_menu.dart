@@ -27,8 +27,10 @@ class SettingsMenu extends StatelessWidget {
           ElevatedButton(
               style: GenericButton,
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => UserSettings()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => UserSettingsPage()));
               },
               child: const Text("Ajustes del perfil",
                   style: TextStyle(

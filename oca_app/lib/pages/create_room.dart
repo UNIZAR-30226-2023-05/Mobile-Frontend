@@ -6,14 +6,12 @@
 // -------------------------------------------------------------------
 
 import 'package:flutter/material.dart';
-import 'package:oca_app/backend_funcs/room_data_handler.dart';
 import 'package:oca_app/components/User_instance.dart';
 import 'package:oca_app/components/forms.dart';
 import 'package:oca_app/components/socket_class.dart';
 import 'package:oca_app/pages/main_menu.dart';
 import 'package:oca_app/styles/buttons_styles.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
-import 'package:oca_app/backend_funcs/room_data_handler.dart';
 
 class CreateRoomPage extends StatelessWidget {
   CreateRoomPage({super.key});
@@ -90,8 +88,7 @@ class CreateRoomPage extends StatelessWidget {
                         return DropdownMenuItem(value: e, child: Text(e));
                       }).toList(),
                       onChanged: (value) {
-                        // guardar número de jugadores, por defeto 2
-                        _nPlayers = int.parse(value!);
+                        _nPlayers = int.parse(value!); // guardar nº jugadores
                       },
                       icon: const Icon(
                         Icons.arrow_drop_down,
@@ -149,15 +146,10 @@ class CreateRoomPage extends StatelessWidget {
                                         ],
                                       ));
                             } else {
-                              // Primera y única instanciación de clase socket
                               int newIdRoom = await ss.createRoom(
                                   roomNameCtrl.text, _nPlayers);
-
-                              User_instance ui = User_instance.instance;
-                              ui.idRoom = newIdRoom; // setter
-                              print("id recibido = $newIdRoom");
-                              print("ui.idRoom = ${ui.idRoom}");
-
+                              // Actualización de id de sala
+                              User_instance.instance.idRoom = newIdRoom;
                               /*
                               // Redirección a la sala de juegos
                               Navigator.push(

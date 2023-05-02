@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:oca_app/backend_funcs/peticiones_api.dart';
 import 'package:oca_app/components/User_instance.dart';
@@ -5,21 +7,22 @@ import 'package:oca_app/components/forms.dart';
 import 'package:oca_app/pages/login_page.dart';
 import 'package:oca_app/styles/buttons_styles.dart';
 
-class UserSettings extends StatelessWidget {
-  UserSettings({super.key});
+class UserSettingsPage extends StatelessWidget {
+  UserSettingsPage({super.key});
 
   void saveSettings() {}
   void deleteAccount() {}
 
-  final usernameController = TextEditingController();
-  final passwordController = TextEditingController();
-  final repeatpasswordController = TextEditingController();
+  // Controladores de formularios
+  final nameCtrl = TextEditingController();
+  final passwdCtrl = TextEditingController();
+  final repeatpasswdCtrl = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: Color.fromARGB(255, 28, 100, 116),
+      backgroundColor: const Color.fromARGB(255, 28, 100, 116),
       body: SafeArea(
           child: Center(
         child: Column(children: [
@@ -47,15 +50,15 @@ class UserSettings extends StatelessWidget {
           //MyButton(onPressed: goToUserSettings, textoAMostrar: "Ajustes del perfil"),
           //MyButton(onPressed: goToUserSettings, textoAMostrar: "Estadisticas"),
           MyForm(
-              controller: usernameController,
+              controller: nameCtrl,
               hintText: "Nombre de usuario",
               obscureText: false),
           MyForm(
-              controller: passwordController,
+              controller: passwdCtrl,
               hintText: "Contraseña",
               obscureText: true),
           MyForm(
-              controller: repeatpasswordController,
+              controller: repeatpasswdCtrl,
               hintText: "Repetir contraseña",
               obscureText: true),
 
@@ -65,6 +68,10 @@ class UserSettings extends StatelessWidget {
               style: GenericButton,
               onPressed: () {
                 // Constraseñas iguales y Nombre de usuario distinto de vacío
+                bool updateAccount = _checkFormRestrictions(context);
+                if (!updateAccount){
+                  
+                }
               },
               child: const Text("Confirmar",
                   style: TextStyle(
@@ -79,17 +86,17 @@ class UserSettings extends StatelessWidget {
               onPressed: () {
                 User_instance ui = User_instance.instance;
                 // Petición al backend para que borre la cuenta
-                // Indicar que se ha eliminado la cuenta y volver a LoginPage
+                // Eliminar instancia de información de usuario y volver a Login
                 showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
-                          title: const Text("Cuenta borrada"),
+                          title: const Text("Eliminar cuenta"),
                           // Muestra alerta non-null, pero siempre se inicializa
-                          content: Text(
-                              "La cuenta de usuario con nombre ${ui.nickname} ha sido eliminada"),
+                          content:
+                              Text("¿ Desea eliminar la cuenta con nombre X ?"),
                           actions: [
                             TextButton(
-                              child: Text("Borrar"),
+                              child: const Text("Borrar"),
                               onPressed: () {
                                 eliminarCuenta(ui.id); // conexión con BBDD
                                 ui.dispose(); // eliminar instancia del usuario
@@ -101,7 +108,7 @@ class UserSettings extends StatelessWidget {
                               },
                             ),
                             TextButton(
-                              child: Text("Cancel"),
+                              child: Text("Cancelar"),
                               onPressed: () {
                                 Navigator.pop(context);
                               },
@@ -117,5 +124,59 @@ class UserSettings extends StatelessWidget {
         ]),
       )),
     );
+  }
+
+  // En principio las constraseñas pueden ser cualesquiera menos vacías
+  bool _checkFormRestrictions(BuildContext context) {
+    String name = nameCtrl.text;
+    String passwd = passwdCtrl.text;
+    String repPasswd = repeatpasswdCtrl.text;
+
+    if (name == "" || passwd == "" || repeatpasswdCtrl == "") {
+      _alertEmptyFields(context);
+      return false;
+    } else if (passwd != repPasswd) {
+      _alertDifferentPasswd(context);
+      return false;
+    }
+
+    // útlimo caso está bien, ambas contraseñas coinciden
+    return true;
+  }
+
+  void _alertEmptyFields(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: const Text("Error"),
+              // Muestra alerta non-null, pero siempre se inicializa
+              content: Text("Rellena todos los campos"),
+              actions: [
+                TextButton(
+                  child: const Text("OK"),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            ));
+  }
+
+  void _alertDifferentPasswd(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: const Text("Error"),
+              // Muestra alerta non-null, pero siempre se inicializa
+              content: const Text("Las contraseñas no coinciden"),
+              actions: [
+                TextButton(
+                  child: const Text("OK"),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            ));
   }
 }
