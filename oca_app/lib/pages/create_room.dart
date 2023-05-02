@@ -131,7 +131,7 @@ class CreateRoomPage extends StatelessWidget {
                       child: Row(children: [
                         ElevatedButton(
                           style: CrearButton,
-                          onPressed: () {
+                          onPressed: () async {
                             if (roomNameCtrl.text == "") {
                               showDialog(
                                   context: context,
@@ -150,8 +150,8 @@ class CreateRoomPage extends StatelessWidget {
                                       ));
                             } else {
                               // Primera y única instanciación de clase socket
-                              int newIdRoom =
-                                  ss.createRoom(roomNameCtrl.text, _nPlayers);
+                              int newIdRoom = await ss.createRoom(
+                                  roomNameCtrl.text, _nPlayers);
 
                               User_instance ui = User_instance.instance;
                               ui.idRoom = newIdRoom; // setter

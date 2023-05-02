@@ -14,6 +14,7 @@ Félix Ozcoz
 1h Reestructuración de almacenamiento datos de usuario y websockets en aplicación
 3h Implementación de creación de sala en 'Crear Sala': comunicación con backend
 1h Implementación de borrado y reinicio de información de usuario desde 'Ajustes'
+30min Arreglar bug desincronización en comunicación con websockets
 TOTAL 29h 30min
 ------------------------------------------------------
 Pablo López
