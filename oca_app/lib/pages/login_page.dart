@@ -5,7 +5,6 @@ import 'package:oca_app/styles/buttons_styles.dart';
 import 'package:oca_app/backend_funcs/log_in_func.dart';
 import 'package:oca_app/pages/sign_up.dart';
 import 'package:oca_app/backend_funcs/peticiones_api.dart';
-import 'package:oca_app/components/User_instance.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});

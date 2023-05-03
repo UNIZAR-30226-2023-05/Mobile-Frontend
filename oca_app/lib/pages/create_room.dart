@@ -11,7 +11,6 @@ import 'package:oca_app/components/forms.dart';
 import 'package:oca_app/components/socket_class.dart';
 import 'package:oca_app/pages/main_menu.dart';
 import 'package:oca_app/styles/buttons_styles.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class CreateRoomPage extends StatelessWidget {
   CreateRoomPage({super.key});

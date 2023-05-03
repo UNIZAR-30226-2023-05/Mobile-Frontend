@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:oca_app/components/forms.dart';
-import 'package:oca_app/pages/main_menu.dart';
-import 'package:oca_app/styles/buttons_styles.dart';
-import 'package:oca_app/backend_funcs/log_in_func.dart';
-import 'package:oca_app/pages/sign_up.dart';
 
 class Statistics extends StatelessWidget {
-  Statistics({super.key});
+  const Statistics({super.key});
 
   void goToUserSettings() {}
 

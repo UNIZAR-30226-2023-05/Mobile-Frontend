@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: WaitingRoom(
+      home: LoginPage(
           //user_email: "userprueba@gmail.com",
           ),
     );

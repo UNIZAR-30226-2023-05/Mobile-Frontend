@@ -1,10 +1,7 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:oca_app/components/User_instance.dart';
 
-const String baseUrl = 'http://10.1.63.32:3000';
-// const String baseUrl = 'http://192.168.1.51:3000';
-// const String baseUrl = 'https://backendps.vercel.app';
+const baseUrl = 'http://192.168.1.51:3000';
 
 class Registro {
   late String _nickname;

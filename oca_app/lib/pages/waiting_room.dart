@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:oca_app/styles/buttons_styles.dart';
 
-class WaitingRoom extends StatelessWidget {
-  WaitingRoom({super.key});
+class WaitingRoom extends StatefulWidget {
+  final int nPlayers = 1;
+  final playersPlaying = <bool>[false, false, false, false, false, false];
 
-  // Indica si el jugador i-esimo está jugando
-  var playersPlaying = <bool>[true, true, true, true, true, true];
-  // Indica el número de jugadores en la sala
-  var nPlayers = 0;
+  WaitingRoom({Key? key}) : super(key: key);
 
-  // false, false, false, false, false, false
+  @override
+  _WaitingRoomState createState() => _WaitingRoomState();
+}
 
+class _WaitingRoomState extends State<WaitingRoom> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,55 +91,51 @@ class WaitingRoom extends StatelessWidget {
               padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
               child: SizedBox(
                 height: 300,
-                child: Expanded(
-                  child: Container(
-                    color: Colors.white,
-                    child: Column(children: [
-                      Visibility(
-                          visible: playersPlaying[0],
-                          child: Container(
-                            height: 50,
-                            width: double.infinity,
-                            color: Colors.black,
-                          )),
-                      Visibility(
-                          visible: playersPlaying[0],
-                          child: Container(
-                            height: 50,
-                            width: double.infinity,
-                            color: Colors.green,
-                          )),
-                      Visibility(
-                          visible: playersPlaying[1],
-                          child: Container(
-                            height: 50,
-                            width: double.infinity,
-                            color: Colors.black,
-                          )),
-                      Visibility(
-                          visible: playersPlaying[2],
-                          child: Container(
-                            height: 50,
-                            width: double.infinity,
-                            color: Colors.purple,
-                          )),
-                      Visibility(
-                          visible: playersPlaying[3],
-                          child: Container(
-                            height: 50,
-                            width: double.infinity,
-                            color: Colors.black,
-                          )),
-                      Visibility(
-                          visible: playersPlaying[4],
-                          child: Container(
-                            height: 50,
-                            width: double.infinity,
-                            color: Colors.black,
-                          ))
-                    ]),
-                  ),
-                ),
+                width: double.infinity,
+                child: Column(children: [
+                  Visibility(
+                      visible: widget.playersPlaying[0],
+                      child: Container(
+                        height: 50,
+                        width: double.infinity,
+                        color: Colors.black,
+                      )),
+                  Visibility(
+                      visible: widget.playersPlaying[0],
+                      child: Container(
+                        height: 50,
+                        width: double.infinity,
+                        color: Colors.green,
+                      )),
+                  Visibility(
+                      visible: widget.playersPlaying[1],
+                      child: Container(
+                        height: 50,
+                        width: double.infinity,
+                        color: Colors.black,
+                      )),
+                  Visibility(
+                      visible: widget.playersPlaying[2],
+                      child: Container(
+                        height: 50,
+                        width: double.infinity,
+                        color: Colors.purple,
+                      )),
+                  Visibility(
+                      visible: widget.playersPlaying[3],
+                      child: Container(
+                        height: 50,
+                        width: double.infinity,
+                        color: Colors.black,
+                      )),
+                  Visibility(
+                      visible: widget.playersPlaying[4],
+                      child: Container(
+                        height: 50,
+                        width: double.infinity,
+                        color: Colors.black,
+                      ))
+                ]),
               ),
             ),
             // BOTÓN "EMPEZAR PARTIDA" *****************
