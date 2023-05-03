@@ -94,25 +94,37 @@ Future<void> eliminarCuenta(int idUsuario) async {
   }
 }
 
-Future<void> actualizarAtributosUsuario(String name, String passwd) async {
+Future<String> actualizarAtributosUsuario(String name, String passwd) async {
   final url = Uri.parse('$baseUrl/users/register');
-  print(url);
+  late String body;
+
   final headers = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
     'Authorization': 'Bearer ${User_instance.instance.token}',
   };
-  final body = jsonEncode({
-    'id_usuario': User_instance.instance.id,
-    'nickname': name,
-    'password': passwd
-  });
+
+  // Evitar enviar información redundante
+  if (User_instance.instance.nickname == name) {
+    body = jsonEncode(
+        {'id_usuario': User_instance.instance.id, 'password': passwd});
+  } else {
+    body = jsonEncode({
+      'id_usuario': User_instance.instance.id,
+      'nickname': name,
+      'password': passwd
+    });
+  }
 
   final response = await http.put(url, headers: headers, body: body);
 
-  if (response.statusCode == 200) {
-    print('Datos enviados correctamente');
-  } else {
-    print('Error al enviar los datos');
+  final responseJson = jsonDecode(response.body);
+
+  // Handle response
+  switch (response.statusCode) {
+    case 200: // Ok
+      return responseJson['message'];
+    default: // Error
+      return responseJson['msg'];
   }
 }

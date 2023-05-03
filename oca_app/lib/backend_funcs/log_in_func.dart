@@ -7,18 +7,19 @@ const String baseUrl = 'http://192.168.1.51:3000';
 // const String baseUrl = 'https://backendps.vercel.app';
 
 class LogIn {
-  late String email;
-  late String password;
+  late String _email;
+  late String _password;
 
   LogIn(String email, String password) {
-    this.email = email;
-    this.password = password;
+    _email = email;
+    _password = password;
   }
 
   Future<bool> enviar() async {
     print("Enviando datos");
+
     const url = '$baseUrl/users/login';
-    final body = {"email": email, "password": password};
+    final body = {"email": _email, "password": _password};
 
     final response = await http.post(Uri.parse(url), headers: null, body: body);
 
@@ -30,8 +31,7 @@ class LogIn {
       final String token = jsonResponse['token'];
       print(token);
 
-      User_instance user_instance = User_instance.instance;
-      user_instance.token = token;
+      User_instance.instance.token = token;
 
       SocketSingleton(); // inicializar el socket al logearse
 

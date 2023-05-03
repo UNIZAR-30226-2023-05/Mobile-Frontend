@@ -64,10 +64,14 @@ class UserSettingsPage extends StatelessWidget {
           //MyButton(onPressed: saveSettings, textoAMostrar: "Confirmar"),
           ElevatedButton(
               style: GenericButton,
-              onPressed: () {
+              onPressed: () async {
                 // Constraseñas iguales y Nombre de usuario distinto de vacío
                 if (_checkFormRestrictions(context)) {
-                  actualizarAtributosUsuario(nameCtrl.text, passwdCtrl.text);
+                  final responseMsg = await actualizarAtributosUsuario(
+                      nameCtrl.text, passwdCtrl.text);
+                  // Mostrar pop-up con mensaje que corresponda
+                  // ignore: use_build_context_synchronously
+                  _alertResponseMessage(context, responseMsg);
                 }
               },
               child: const Text("Confirmar",
@@ -89,8 +93,8 @@ class UserSettingsPage extends StatelessWidget {
                     builder: (context) => AlertDialog(
                           title: const Text("Eliminar cuenta"),
                           // Muestra alerta non-null, pero siempre se inicializa
-                          content:
-                              Text("¿ Desea eliminar la cuenta con nombre X ?"),
+                          content: const Text(
+                              "¿ Desea eliminar la cuenta con nombre X ?"),
                           actions: [
                             TextButton(
                               child: const Text("Borrar"),
@@ -105,7 +109,7 @@ class UserSettingsPage extends StatelessWidget {
                               },
                             ),
                             TextButton(
-                              child: Text("Cancelar"),
+                              child: const Text("Cancelar"),
                               onPressed: () {
                                 Navigator.pop(context);
                               },
@@ -137,17 +141,18 @@ class UserSettingsPage extends StatelessWidget {
       return false;
     }
 
-    // útlimo caso está bien, ambas contraseñas coinciden
+    // Campos rellenos y contraseñas coinciden
     return true;
   }
 
+  // Muestra un pop-up indicando que los campos son vacíos
   void _alertEmptyFields(BuildContext context) {
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
               title: const Text("Error"),
               // Muestra alerta non-null, pero siempre se inicializa
-              content: Text("Rellena todos los campos"),
+              content: const Text("Rellena todos los campos"),
               actions: [
                 TextButton(
                   child: const Text("OK"),
@@ -159,6 +164,8 @@ class UserSettingsPage extends StatelessWidget {
             ));
   }
 
+  // Muestra un pop-up con un mensaje indicando que las contraseñas
+  // no coinciden
   void _alertDifferentPasswd(BuildContext context) {
     showDialog(
         context: context,
@@ -166,6 +173,24 @@ class UserSettingsPage extends StatelessWidget {
               title: const Text("Error"),
               // Muestra alerta non-null, pero siempre se inicializa
               content: const Text("Las contraseñas no coinciden"),
+              actions: [
+                TextButton(
+                  child: const Text("OK"),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            ));
+  }
+
+  // Muestra un pop-up con el mensaje que devuelve la respuesta http
+  void _alertResponseMessage(BuildContext context, String message) {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              // Muestra alerta non-null, pero siempre se inicializa
+              content: Text(message),
               actions: [
                 TextButton(
                   child: const Text("OK"),

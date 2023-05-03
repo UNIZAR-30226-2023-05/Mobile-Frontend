@@ -18,6 +18,7 @@ class Registro {
 
   Future<bool> enviar() async {
     print("Enviando datos");
+    
     const url = '$baseUrl/users/register';
     final body = {
       "nickname": _nickname,
