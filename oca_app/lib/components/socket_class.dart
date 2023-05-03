@@ -2,14 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:oca_app/components/User_instance.dart';
-import 'package:oca_app/pages/join_room.dart';
-import 'package:oca_app/pages/create_room.dart';
-import 'package:oca_app/backend_funcs/log_in_func.dart';
-import 'package:oca_app/pages/login_page.dart';
-import 'package:oca_app/pages/settings_menu.dart';
-import 'package:provider/provider.dart';
-import 'package:oca_app/backend_funcs/auth_model.dart';
-import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'dart:convert';
 
@@ -33,19 +25,27 @@ class SocketSingleton {
   void _initSocket() {
     User_instance userInstance = User_instance.instance;
     String authToken = userInstance.token;
-    // en eina: http://10.1.49.205:3000
     // en casa: http://192.168.1.51:3000
-    socket = IO.io('http://192.168.1.51:3000', <String, dynamic>{
+    socket = IO.io('http://10.1.63.32:3000', <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': false,
       'auth': {'token': '$authToken'}
     });
 
     socket.connect();
-    socket.onConnect((data) => print("conectado $data"));
-    socket.onConnectTimeout((data) => print("timeout $data"));
-    socket.onConnectError((data) => print("Error: $data"));
-    socket.onDisconnect((data) => print("desconectado $data"));
+    // Registro de eventos
+
+    // Eventos relativos a conexión
+    socket.onConnect((data) => {});
+    socket.onConnectTimeout((data) => {});
+    socket.onConnectError((data) => {});
+    socket.onDisconnect((data) => {});
+
+    // Eventos relativos a partida
+    socket.on('estadoPartida', (data) => null);
+    socket.on('ordenTurnos', (data) => null);
+    socket.on('sigTurno', (data) => null);
+    socket.on('finPartida ', (data) => null);
   }
 
   Future<int> createRoom(String roomName, int nPlayers) async {
@@ -54,14 +54,8 @@ class SocketSingleton {
     final completer = Completer<Map<String, dynamic>>();
     late Map<String, dynamic> response; // guarda respuesta del servidor
 
-    // Handler del callback
-    // void myCallback(Map<String, dynamic> response) {
-    //   completer.complete(response);
-    // }
-
-    User_instance ui = User_instance.instance;
-    // Map<String, dynamic> miJson = {'nickname': '${ui.nickname}'};
-    Map<String, dynamic> miJson = {'nickname': 'g'};
+    Map<String, dynamic> miJson = {'nickname': User_instance.instance.nickname};
+    // Map<String, dynamic> miJson = {'nickname': 'a'};
 
     socket.emitWithAck('createRoom', [miJson, roomName, nPlayers, 'clasicc'],
         ack: (response) {
@@ -73,76 +67,61 @@ class SocketSingleton {
     return response['id'];
   }
 
-  void joinRoom(int idRoom) {
-    User_instance ui = User_instance.instance;
-    Map<String, dynamic> miJson = {'nickname': 'joselu'};
-    String miJsonString = json.encode(miJson);
+  // -1 si no puede unirse a la sala
+  Future<void> joinRoom(int idRoom) async {
+    final completer = Completer<Map<String, dynamic>>();
+    late Map<String, dynamic> response; // guarda respuesta del servidor
 
-    socket.emitWithAck('joinRoom', [idRoom, miJson], ack: (data) {
-      // Convertir el objeto JSON a map
-      Map<String, dynamic> response = Map<String, dynamic>.from(data);
-      print(response);
+    Map<String, dynamic> miJson = {'nickname': User_instance.instance.nickname};
+    // Map<String, dynamic> miJson = {'nickname': 'c'};
 
-      // Check error
-      if (response['status'] != "ok") {
-        throw FlutterError(response['message']);
-        // el código termina con el error
-      }
+    socket.emitWithAck('joinRoom', [idRoom, miJson], ack: (response) {
+      completer.complete(response);
     });
+
+    response = await completer.future;
+    print(response);
   }
 
   // Falta: Manejar el mensaje de salida
-  void leaveRoom() {
-    User_instance ui = User_instance.instance;
-    Map<String, dynamic> miJson = {'nickname': '${ui.nickname}'};
-    String miJsonString = json.encode(miJson);
+  Future<void> leaveRoom() async {
+    final completer = Completer<Map<String, dynamic>>();
+    late Map<String, dynamic> response; // guarda respuesta del servidor
 
-    socket.emitWithAck('leaveTheRoom', [ui.idRoom, miJson], ack: (data) {
-      // Convertir el objeto JSON a map
-      Map<String, dynamic> response = Map<String, dynamic>.from(data);
-
-      // Check error
-      if (response['status'] != "ok") {
-        throw FlutterError(response['message']);
-        // el código termina con el error
-      }
-
-      // Manejar mensaje de salida
+    socket.emitWithAck('leaveTheRoom', [User_instance.instance.idRoom],
+        ack: (response) {
+      completer.complete(response);
     });
+
+    response = await completer.future;
+    print(response);
   }
 
   // Disponible sólo para el creador de la sala
-  void destroyRoom() {
-    User_instance ui = User_instance.instance;
-    Map<String, dynamic> miJson = {'nickname': '${ui.nickname}'};
-    String miJsonString = json.encode(miJson);
+  Future<void> destroyRoom() async {
+    final completer = Completer<Map<String, dynamic>>();
+    late Map<String, dynamic> response; // guarda respuesta del servidor
 
-    socket.emitWithAck('destroyRoom', [ui.idRoom, miJson], ack: (data) {
-      // Convertir el objeto JSON a map
-      Map<String, dynamic> response = Map<String, dynamic>.from(data);
-
-      // Check error
-      if (response['status'] != "ok") {
-        throw FlutterError(response['message']);
-        // el código termina con el error
-      }
+    socket.emitWithAck('destroyRoom', [User_instance.instance.idRoom],
+        ack: (response) {
+      completer.complete(response);
     });
+
+    response = await completer.future;
+    print(response);
   }
 
   // Disponible sólo para el creador de la sala
-  void removePlayerFromRoom(String playerNameToRemove) {
-    User_instance ui = User_instance.instance;
+  Future<void> removePlayerFromRoom(String playerNameToRemove) async {
+    final completer = Completer<Map<String, dynamic>>();
+    late Map<String, dynamic> response; // guarda respuesta del servidor0
 
-    socket.emitWithAck('removePlayerFromRoom', [ui.idRoom, playerNameToRemove],
-        ack: (data) {
-      // Convertir el objeto JSON a map
-      Map<String, dynamic> response = Map<String, dynamic>.from(data);
-
-      // Check error
-      if (response['status'] != "ok") {
-        throw FlutterError(response['message']);
-        // el código termina con el error
-      }
+    socket.emitWithAck('removePlayerFromRoom', [1, 'JuanCarlosChupapijas'],
+        ack: (response) {
+      completer.complete(response);
     });
+
+    response = await completer.future;
+    print(response);
   }
 }

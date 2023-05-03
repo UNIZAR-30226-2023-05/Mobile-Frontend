@@ -3,7 +3,8 @@ import 'dart:convert';
 import 'package:oca_app/components/User_instance.dart';
 import 'package:oca_app/components/socket_class.dart';
 
-const String baseUrl = 'http://192.168.1.51:3000';
+const String baseUrl = 'http://10.1.63.32:3000';
+// const String baseUrl = 'http://192.168.1.51:3000';
 // const String baseUrl = 'https://backendps.vercel.app';
 
 class LogIn {

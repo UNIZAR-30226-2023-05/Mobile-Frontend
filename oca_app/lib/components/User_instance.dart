@@ -9,13 +9,19 @@
 class User_instance {
   static User_instance? _instance; // instancia única en la aplicación
 
+  // Información identificativa de usuario
   late String _email;
   late String _nickname;
   late int _id;
+  late String _token;
+
+  // Información adicional de usuario
   late int _monedas;
   late String _profile_pic;
-  late String _token;
+
+  // Información de control de salas
   late int _idRoom;
+  late bool _soyLider;
 
   User_instance._(); // Constructor privado
 
@@ -57,4 +63,7 @@ class User_instance {
 
   int get idRoom => _idRoom;
   set idRoom(int value) => _idRoom = value;
+
+  bool get soyLider => _soyLider;
+  set soyLider(bool value) => _soyLider = value;
 }

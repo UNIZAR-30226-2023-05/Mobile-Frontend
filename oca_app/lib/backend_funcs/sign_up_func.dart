@@ -2,7 +2,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:oca_app/components/User_instance.dart';
 
-const String baseUrl = 'http://192.168.1.51:3000';
+const String baseUrl = 'http://10.1.63.32:3000';
+// const String baseUrl = 'http://192.168.1.51:3000';
 // const String baseUrl = 'https://backendps.vercel.app';
 
 class Registro {
@@ -18,7 +19,7 @@ class Registro {
 
   Future<bool> enviar() async {
     print("Enviando datos");
-    
+
     const url = '$baseUrl/users/register';
     final body = {
       "nickname": _nickname,

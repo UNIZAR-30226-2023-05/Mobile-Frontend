@@ -6,6 +6,7 @@
 // -------------------------------------------------------------------
 
 import 'package:flutter/material.dart';
+import 'package:oca_app/components/User_instance.dart';
 import 'package:oca_app/components/forms.dart';
 import 'package:oca_app/components/socket_class.dart';
 import 'package:oca_app/pages/main_menu.dart';
@@ -75,25 +76,12 @@ class JoinRoomPage extends StatelessWidget {
                       child: Row(children: [
                         ElevatedButton(
                           style: CrearButton,
-                          onPressed: () {
+                          onPressed: () async {
                             if (idRoomCtrl.text == "") {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                        title: const Text("Error"),
-                                        content: const Text(
-                                            "Rellena todos los campos"),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: const Text("OK"),
-                                          )
-                                        ],
-                                      ));
+                              _alertEmptyFields(context);
                             } else {
-                              ss.joinRoom(int.parse(idRoomCtrl.text));
+                              // Comprobar que sigue un formato
+                              await ss.joinRoom(int.parse(idRoomCtrl.text));
                             }
                           },
                           child: const Text("Unirse",
@@ -110,12 +98,17 @@ class JoinRoomPage extends StatelessWidget {
                         ElevatedButton(
                           // podría quitarse
                           style: CancelarButton,
-                          onPressed: () {
+                          onPressed: () async {
+                            //print(User_instance.instance.idRoom);
+                            await ss
+                                .removePlayerFromRoom("JuanCarlosChupapijas");
+                            /*
                             // Vuelve a  menú principal
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => Main_Menu_Page()));
+                          */
                           },
                           child: const Text("Cancelar",
                               style: TextStyle(
@@ -135,5 +128,24 @@ class JoinRoomPage extends StatelessWidget {
         ]),
       )),
     );
+  }
+
+  // Muestra un pop-up indicando que los campos son vacíos
+  void _alertEmptyFields(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: const Text("Error"),
+              // Muestra alerta non-null, pero siempre se inicializa
+              content: const Text("Rellena todos los campos"),
+              actions: [
+                TextButton(
+                  child: const Text("OK"),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            ));
   }
 }

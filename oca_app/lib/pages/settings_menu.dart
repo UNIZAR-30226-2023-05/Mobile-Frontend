@@ -4,7 +4,7 @@ import 'package:oca_app/styles/buttons_styles.dart';
 import 'package:oca_app/pages/user_settings.dart';
 
 class SettingsMenu extends StatelessWidget {
-  SettingsMenu({super.key});
+  const SettingsMenu({super.key});
 
   void goToUserSettings() {}
 
@@ -12,7 +12,7 @@ class SettingsMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: Color.fromARGB(255, 28, 100, 116),
+      backgroundColor: const Color.fromARGB(255, 28, 100, 116),
       body: SafeArea(
           child: Center(
         child: Column(children: [
