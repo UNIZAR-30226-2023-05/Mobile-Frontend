@@ -66,10 +66,8 @@ class UserSettingsPage extends StatelessWidget {
               style: GenericButton,
               onPressed: () {
                 // Constraseñas iguales y Nombre de usuario distinto de vacío
-                bool updateAccount = _checkFormRestrictions(context);
-                if (!updateAccount) {
-                  // return false
-                  
+                if (_checkFormRestrictions(context)) {
+                  actualizarAtributosUsuario(nameCtrl.text, passwdCtrl.text);
                 }
               },
               child: const Text("Confirmar",

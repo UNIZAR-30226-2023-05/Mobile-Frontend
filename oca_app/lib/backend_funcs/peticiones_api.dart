@@ -96,12 +96,17 @@ Future<void> eliminarCuenta(int idUsuario) async {
 
 Future<void> actualizarAtributosUsuario(String name, String passwd) async {
   final url = Uri.parse('$baseUrl/users/register');
+  print(url);
   final headers = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
     'Authorization': 'Bearer ${User_instance.instance.token}',
   };
-  final body = jsonEncode({'id_usuario': name, 'password': passwd});
+  final body = jsonEncode({
+    'id_usuario': User_instance.instance.id,
+    'nickname': name,
+    'password': passwd
+  });
 
   final response = await http.put(url, headers: headers, body: body);
 
