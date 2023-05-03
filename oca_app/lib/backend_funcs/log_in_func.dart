@@ -3,6 +3,9 @@ import 'dart:convert';
 import 'package:oca_app/components/User_instance.dart';
 import 'package:oca_app/components/socket_class.dart';
 
+const String baseUrl = 'http://192.168.1.51:3000';
+// const String baseUrl = 'https://backendps.vercel.app';
+
 class LogIn {
   late String email;
   late String password;
@@ -14,7 +17,7 @@ class LogIn {
 
   Future<bool> enviar() async {
     print("Enviando datos");
-    const url = 'https://backendps.vercel.app/users/login';
+    const url = '$baseUrl/users/login';
     final body = {"email": email, "password": password};
 
     final response = await http.post(Uri.parse(url), headers: null, body: body);

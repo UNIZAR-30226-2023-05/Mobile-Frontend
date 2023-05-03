@@ -4,9 +4,10 @@ import 'package:http/http.dart' as http;
 
 import 'package:oca_app/components/User_instance.dart';
 
-class ApiService {
-  final String baseUrl = 'https://backendps.vercel.app';
+const String baseUrl = 'http://192.168.1.51:3000';
+// const String baseUrl = 'https://backendps.vercel.app';
 
+class ApiService {
   //FUNCION GENERICA PARA USAR EL TOKEN, PUEDES AGREGAR MAS FUNCIONES
   Future<http.Response> getData(String token) async {
     final headers = {
@@ -25,8 +26,7 @@ class ApiService {
 
 Future<int> getUserID(String email) async {
   var headers = {'Content-Type': 'application/json'};
-  var request = http.Request(
-      'GET', Uri.parse('https://backendps.vercel.app/users/register'));
+  var request = http.Request('GET', Uri.parse('$baseUrl/users/register'));
   request.body = json.encode({"email": email});
   request.headers.addAll(headers);
 
@@ -52,8 +52,8 @@ Future<int> getUserID(String email) async {
 
 Future<bool> fillUserInstance(int user_id) async {
   print("Enviando datos" + user_id.toString());
-  String url = 'https://backendps.vercel.app/users/' +
-      user_id.toString(); //el dolar se llama interpolacion
+  String url =
+      '$baseUrl/users/' + user_id.toString(); //el dolar se llama interpolacion
 
   //Esto es para enviar body en una llamada GET
   final response = await http.get(Uri.parse(url), headers: null);
@@ -83,8 +83,7 @@ Future<bool> fillUserInstance(int user_id) async {
 
 // Eliminar cuenta de un usuario, utilizado desde 'Ajustes'
 Future<void> eliminarCuenta(int idUsuario) async {
-  final url =
-      Uri.parse('https://backendps.vercel.app/users/register/$idUsuario');
+  final url = Uri.parse('$baseUrl/users/register/$idUsuario');
 
   final response = await http.delete(url);
 
@@ -96,7 +95,7 @@ Future<void> eliminarCuenta(int idUsuario) async {
 }
 
 Future<void> actualizarAtributosUsuario(String name, String passwd) async {
-  final url = Uri.parse('https://backendps.vercel.app/users/register');
+  final url = Uri.parse('$baseUrl/users/register');
   final headers = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',

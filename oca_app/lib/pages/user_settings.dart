@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:oca_app/backend_funcs/peticiones_api.dart';
 import 'package:oca_app/components/User_instance.dart';
@@ -69,7 +67,8 @@ class UserSettingsPage extends StatelessWidget {
               onPressed: () {
                 // Constraseñas iguales y Nombre de usuario distinto de vacío
                 bool updateAccount = _checkFormRestrictions(context);
-                if (!updateAccount){
+                if (!updateAccount) {
+                  // return false
                   
                 }
               },
