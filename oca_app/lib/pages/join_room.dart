@@ -8,6 +8,7 @@
 import 'package:flutter/material.dart';
 import 'package:oca_app/components/forms.dart';
 import 'package:oca_app/components/socket_class.dart';
+import 'package:oca_app/pages/main_menu.dart';
 import 'package:oca_app/styles/buttons_styles.dart';
 
 class JoinRoomPage extends StatelessWidget {
@@ -98,15 +99,11 @@ class JoinRoomPage extends StatelessWidget {
                           style: CancelarButton,
                           onPressed: () async {
                             //print(User_instance.instance.idRoom);
-                            await ss
-                                .removePlayerFromRoom("JuanCarlosChupapijas");
-                            /*
                             // Vuelve a  menú principal
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => Main_Menu_Page()));
-                          */
                           },
                           child: const Text("Cancelar",
                               style: TextStyle(

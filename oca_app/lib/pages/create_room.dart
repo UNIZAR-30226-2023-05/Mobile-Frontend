@@ -16,12 +16,12 @@ class CreateRoomPage extends StatelessWidget {
   CreateRoomPage({super.key});
 
   final roomNameCtrl = TextEditingController();
-  final String NMIN_PLAYERS = "2"; // número de jugadores mínimo
+  final String NMINPLAYERS = "2"; // número de jugadores mínimo
   final nPlayersList = <String>["2", "3", "4", "5", "6"];
 
   @override
   Widget build(BuildContext context) {
-    int _nPlayers = int.parse(NMIN_PLAYERS);
+    int nPlayers = int.parse(NMINPLAYERS);
     SocketSingleton ss = SocketSingleton.instance;
 
     return Scaffold(
@@ -82,12 +82,12 @@ class CreateRoomPage extends StatelessWidget {
                     height: kMinInteractiveDimension,
                     width: 100,
                     child: DropdownButtonFormField(
-                      value: NMIN_PLAYERS, // número mínimo 2
+                      value: NMINPLAYERS, // número mínimo 2
                       items: nPlayersList.map((e) {
                         return DropdownMenuItem(value: e, child: Text(e));
                       }).toList(),
                       onChanged: (value) {
-                        _nPlayers = int.parse(value!); // guardar nº jugadores
+                        nPlayers = int.parse(value!); // guardar nº jugadores
                       },
                       icon: const Icon(
                         Icons.arrow_drop_down,
@@ -146,7 +146,7 @@ class CreateRoomPage extends StatelessWidget {
                                       ));
                             } else {
                               int newIdRoom = await ss.createRoom(
-                                  roomNameCtrl.text, _nPlayers);
+                                  roomNameCtrl.text, nPlayers);
                               // Actualización de id de sala
                               User_instance.instance.idRoom = newIdRoom;
                               /*
@@ -173,12 +173,14 @@ class CreateRoomPage extends StatelessWidget {
                         ),
                         ElevatedButton(
                           style: CancelarButton,
-                          onPressed: () {
+                          onPressed: () async {
+                            await ss.destroyRoom();
                             // Vuelve a  menú principal
+                            /*
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => Main_Menu_Page()));
+                                    builder: (context) => Main_Menu_Page()));*/
                           },
                           child: const Text("Cancelar",
                               style: TextStyle(
