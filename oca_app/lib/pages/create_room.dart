@@ -10,6 +10,7 @@ import 'package:oca_app/components/User_instance.dart';
 import 'package:oca_app/components/forms.dart';
 import 'package:oca_app/components/socket_class.dart';
 import 'package:oca_app/pages/main_menu.dart';
+import 'package:oca_app/pages/waiting_room.dart';
 import 'package:oca_app/styles/buttons_styles.dart';
 
 class CreateRoomPage extends StatelessWidget {
@@ -149,15 +150,12 @@ class CreateRoomPage extends StatelessWidget {
                                   roomNameCtrl.text, nPlayers);
                               // Actualización de id de sala
                               User_instance.instance.idRoom = newIdRoom;
-                              /*
+
                               // Redirección a la sala de juegos
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => Main_Menu_Page()));
-                              // redirección a la sala de juegos
-                              suco2@gmail.com
-                              */
+                                      builder: (context) => WaitingRoom()));
                             }
                           },
                           child: const Text("Crear",
@@ -174,6 +172,7 @@ class CreateRoomPage extends StatelessWidget {
                         ElevatedButton(
                           style: CancelarButton,
                           onPressed: () async {
+                            //await ss.removePlayerFromRoom("JuanCarlos");
                             await ss.destroyRoom();
                             // Vuelve a  menú principal
                             /*

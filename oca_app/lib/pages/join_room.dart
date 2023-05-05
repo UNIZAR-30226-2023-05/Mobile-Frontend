@@ -98,12 +98,14 @@ class JoinRoomPage extends StatelessWidget {
                           // podría quitarse
                           style: CancelarButton,
                           onPressed: () async {
+                            await ss.leaveRoom();
                             //print(User_instance.instance.idRoom);
                             // Vuelve a  menú principal
+                            /*
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => Main_Menu_Page()));
+                                    builder: (context) => Main_Menu_Page()));*/
                           },
                           child: const Text("Cancelar",
                               style: TextStyle(

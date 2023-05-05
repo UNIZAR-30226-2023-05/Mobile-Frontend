@@ -10,9 +10,11 @@ const url = 'http://192.168.1.51:3000';
 class SocketSingleton {
   static SocketSingleton? _instance;
   static late IO.Socket socket;
-  // Utilizado para conexión con WaitingRoom
-  GlobalKey<State<WaitingRoom>>? myKey;
-  WaitingRoom? myWidget;
+  final StreamController<String> _streamController = StreamController<String>.broadcast();
+
+  void enviarEvento(String evento) {
+    _streamController.sink.add(evento);
+  }
 
   factory SocketSingleton() {
     return instance.._initSocket();
@@ -25,12 +27,6 @@ class SocketSingleton {
   static SocketSingleton get instance {
     _instance ??= SocketSingleton._internal();
     return _instance!;
-  }
-
-// método init para crear el GlobalKey y el widget asociado
-  void init() {
-    myKey = GlobalKey<State<WaitingRoom>>();
-    myWidget = WaitingRoom(key: myKey!);
   }
 
   void _initSocket() {
@@ -52,6 +48,11 @@ class SocketSingleton {
     socket.onDisconnect((data) => {});
 
     // Eventos relativos a partida
+    socket.on('updatePlayers', (data) {
+      print("updatePlayers: $data");
+      _streamController.sink.add("hola");
+      print("desoues de sin.add()");
+    });
     socket.on('estadoPartida', (data) => null);
     socket.on('ordenTurnos', (data) => null);
     socket.on('sigTurno', (data) => null);
@@ -61,6 +62,7 @@ class SocketSingleton {
   // -------- EVENTOS DE SALA --------
 
   // Creación de sala
+  // response: {id: int, message: "...", status: [ok,error]}
   Future<int> createRoom(String roomName, int nPlayers) async {
     final completer = Completer<Map<String, dynamic>>();
     late Map<String, dynamic> response; // guarda respuesta del servidor
@@ -73,11 +75,21 @@ class SocketSingleton {
     });
 
     response = await completer.future;
+    if(response['status'] == 'ok'){
+      print("createRoom correcto");
+      // Actualizar información sobre sala
+      User_instance.instance.idRoom = response['id'];
+      User_instance.instance.soyLider = true;
+    }else{
+      print("Error: ${response['message']}");
+      // Falta manejar el error, puede ser mostrar un pop-up por pantalla
+    }
     print(response);
     return response['id'];
   }
 
   // Unirse a sala
+  // repsonse: {message: "...", players: [p1 , p2, ...], status: [ok,error]}
   Future<void> joinRoom(int idRoom) async {
     final completer = Completer<Map<String, dynamic>>();
     late Map<String, dynamic> response; // guarda respuesta del servidor
@@ -90,10 +102,21 @@ class SocketSingleton {
     });
 
     response = await completer.future;
+    if(response['status'] == 'ok'){
+      // Ha ido bien
+      print("joinRoom correcto");
+      // Actualizar información sobre sala
+      User_instance.instance.idRoom = idRoom;
+      User_instance.instance.soyLider = false;
+    }else{
+      print("Error: ${response['message']}");
+      // Falta manejar el error, puede ser mostrar un pop-up por pantalla
+    }
     print(response);
   }
 
   // Salir de una sala
+  // {message: "..." players: [p1, ...], status: [ok|error]}
   Future<void> leaveRoom() async {
     final completer = Completer<Map<String, dynamic>>();
     late Map<String, dynamic> response; // guarda respuesta del servidor
@@ -104,6 +127,16 @@ class SocketSingleton {
     });
 
     response = await completer.future;
+    if(response['status'] == 'ok'){
+      // Ha ido bien
+      print("leaveRoom correcto");
+      // Actualizar información sobre sala
+      User_instance.instance.idRoom = -1;
+      User_instance.instance.soyLider = false;
+    }else{
+      print("Error: ${response['message']}");
+      // Falta manejar el error, puede ser mostrar un pop-up por pantalla
+    }
     print(response);
   }
 
@@ -113,12 +146,26 @@ class SocketSingleton {
     final completer = Completer<Map<String, dynamic>>();
     late Map<String, dynamic> response; // guarda respuesta del servidor
 
-    socket.emitWithAck('destroyRoom', [User_instance.instance.idRoom],
-        ack: (response) {
-      completer.complete(response);
-    });
+    if(User_instance.instance.soyLider) {
+      socket.emitWithAck('destroyRoom', [User_instance.instance.idRoom],
+          ack: (response) {
+            completer.complete(response);
+          });
+    }else{
+      // No es lider, notificar con un mensaje o algo
+    }
 
     response = await completer.future;
+    if(response['status'] == 'ok'){
+      // Ha ido bien
+      print("destroyRoom correcto");
+      // Actualizar información sobre sala
+      User_instance.instance.idRoom = -1;
+      User_instance.instance.soyLider = false;
+    }else{
+      print("Error: ${response['message']}");
+      // Falta manejar el error, puede ser mostrar un pop-up por pantalla
+    }
     print(response);
   }
 
@@ -134,6 +181,8 @@ class SocketSingleton {
 
     response = await completer.future;
     print(response);
+    
+    // Si ha ido bien, entonces
   }
 
   // -------- EVENTOS DE PARTIDA --------

@@ -1,19 +1,41 @@
+// ignore_for_file: must_be_immutable
+
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:oca_app/components/User_instance.dart';
+import 'package:oca_app/components/socket_class.dart';
 import 'package:oca_app/styles/buttons_styles.dart';
 
 class WaitingRoom extends StatefulWidget {
-  const WaitingRoom({Key? key}) : super(key: key);
+  WaitingRoom({Key? key}) : super(key: key);
 
   @override
   State<WaitingRoom> createState() => _WaitingRoomState();
 }
 
 class _WaitingRoomState extends State<WaitingRoom> {
-  int nPlayers = 1;
-  List<bool> playersPlaying = <bool>[true, false, false, false, false, false];
+  final List<String> _players = []; // lista de mensajes
+  final StreamController<String> _controller = StreamController<String>(); // controlador de eventos
+
+  @override
+  void dispose() {
+    _controller.close(); // cerrar el streamController cuando se destruye el widget
+    super.dispose();
+  }
+
+  void _handleEvent(String message) {
+    print("dentro de _handleEvent");
+    // función que maneja los eventos recibidos desde otra clase
+    setState(() {
+      _players.add(message); // agregamos el mensaje a la lista
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    SocketSingleton ss = SocketSingleton.instance;
+
     return Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: const Color.fromARGB(255, 28, 100, 116),
@@ -81,7 +103,7 @@ class _WaitingRoomState extends State<WaitingRoom> {
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: Text(
-                "Jugadores: $nPlayers",
+                "Jugadores: ${_players.length}",
                 style: const TextStyle(
                     color: Colors.white, fontSize: 24, fontFamily: 'Caudex'),
               ),
@@ -92,73 +114,56 @@ class _WaitingRoomState extends State<WaitingRoom> {
               child: SizedBox(
                 height: 300,
                 width: double.infinity,
-                child: Column(children: [
-                  Visibility(
-                      visible: playersPlaying[0],
-                      child: Container(
-                        height: 50,
-                        width: double.infinity,
-                        color: Colors.black,
-                      )),
-                  Visibility(
-                      visible: playersPlaying[1],
-                      child: Container(
-                        height: 50,
-                        width: double.infinity,
-                        color: Colors.green,
-                      )),
-                  Visibility(
-                      visible: playersPlaying[2],
-                      child: Container(
-                        height: 50,
-                        width: double.infinity,
-                        color: Colors.black,
-                      )),
-                  Visibility(
-                      visible: playersPlaying[3],
-                      child: Container(
-                        height: 50,
-                        width: double.infinity,
-                        color: Colors.purple,
-                      )),
-                  Visibility(
-                      visible: playersPlaying[4],
-                      child: Container(
-                        height: 50,
-                        width: double.infinity,
-                        color: Colors.black,
-                      )),
-                  Visibility(
-                      visible: playersPlaying[5],
-                      child: Container(
-                        height: 50,
-                        width: double.infinity,
-                        color: Colors.black,
-                      ))
-                ]),
-              ),
-            ),
+                child: StreamBuilder<String>(
+                  stream: _controller.stream, // escuchar eventos desde el controlador
+                  builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                    if (snapshot.hasData) {
+                      _handleEvent(snapshot.data!); // manejar evento si hay datos
+                    }
+                    return ListView.builder(
+                      itemCount: _players.length, // mostrar la cantidad de mensajes almacenados
+                      itemBuilder: (BuildContext context, int index) {
+                        return ListTile(
+                          title: Text(_players[index]), // mostrar el mensaje
+                        );
+                      },
+                    );
+                  },
+                ),),),
             // BOTÓN "EMPEZAR PARTIDA" *****************
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(20),
                 child: Align(
-                  alignment: Alignment.center,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      // HACER FUNCIONALIDAD DE EMPEZAR PARTIDA !!!!
-                    },
-                    style: GenericButton,
-                    child: const Text(
-                      "Empezar partida",
-                      style: TextStyle(fontSize: 25),
-                    ),
-                  ),
-                ),
+                  alignment: Alignment.bottomCenter,
+                  child: Column(children: [
+                        ElevatedButton(
+                          onPressed: () async {
+                            // el parámetro indica el timeout de cada turno
+                            await ss.empezarPartida(15);
+                            // HACER FUNCIONALIDAD DE EMPEZAR PARTIDA !!!!
+                          },
+                          style: GenericButton,
+                          child: const Text(
+                            "Empezar partida",
+                            style: TextStyle(fontSize: 25),
+                          ),
+                        ),
+                const SizedBox(height: 30,),
+                ElevatedButton(
+                  onPressed: () async {
+                    await ss.destroyRoom();
+              // HACER FUNCIONALIDAD DE EMPEZAR PARTIDA !!!!
+            },
+              style: GenericButton,
+              child: const Text(
+                "Eliminar sala",
+                style: TextStyle(fontSize: 25),
+              ),
+            ),],),
               ),
             )
-          ],
-        )));
+        ),],),),);
   }
 
   void _showIntrucciones(BuildContext context) {
