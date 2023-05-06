@@ -1,20 +1,24 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:oca_app/components/User_instance.dart';
+import 'package:oca_app/components/socket_class.dart';
+
+const baseUrl = 'http://192.168.1.51:3000';
 
 class LogIn {
-  late String email;
-  late String password;
+  late String _email;
+  late String _password;
 
   LogIn(String email, String password) {
-    this.email = email;
-    this.password = password;
+    _email = email;
+    _password = password;
   }
 
   Future<bool> enviar() async {
     print("Enviando datos");
-    const url = 'https://backendps.vercel.app/users/login';
-    final body = {"email": email, "password": password};
+
+    const url = '$baseUrl/users/login';
+    final body = {"email": _email, "password": _password};
 
     final response = await http.post(Uri.parse(url), headers: null, body: body);
 
@@ -22,11 +26,13 @@ class LogIn {
       print("Login exitoso");
 
       final jsonResponse = jsonDecode(response.body);
+      print(jsonResponse);
       final String token = jsonResponse['token'];
       print(token);
 
-      const storage = FlutterSecureStorage();
-      await storage.write(key: 'authToken', value: token);
+      User_instance.instance.token = token;
+
+      SocketSingleton(); // inicializar el socket al logearse
 
       return true;
     } else {

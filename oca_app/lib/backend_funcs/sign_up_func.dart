@@ -1,25 +1,43 @@
 import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+const baseUrl = 'http://192.168.1.51:3000';
 
 class Registro {
-  late String nickname;
-  late String email;
-  late String password;
+  late String _nickname;
+  late String _email;
+  late String _password;
 
   Registro(String nickname, String email, String password) {
-    this.nickname = nickname;
-    this.email = email;
-    this.password = password;
+    _nickname = nickname;
+    _email = email;
+    _password = password;
   }
 
   Future<bool> enviar() async {
     print("Enviando datos");
-    const url = 'https://backendps.vercel.app/users/register';
-    final body = {"nickname": nickname, "email": email, "password": password};
+
+    const url = '$baseUrl/users/register';
+    final body = {
+      "nickname": _nickname,
+      "email": _email,
+      "password": _password
+    };
 
     final response = await http.post(Uri.parse(url), headers: null, body: body);
 
     if (response.statusCode == 201) {
       print("Registro exitoso");
+
+      final jsonResponse = jsonDecode(response.body);
+      print(jsonResponse);
+      /*
+      final String token = jsonResponse['token'];
+      print(token);
+
+      User_instance user_instance = User_instance.instance;
+      user_instance.token = token;
+      */
       // Registro exitoso
       return true;
     } else {

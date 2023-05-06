@@ -22,6 +22,11 @@ username: userprueba
 e-mail: userprueba@gmail.com
 password: UserPrueba00
 
+Se ha definido otro uysuario estandar de prueba:
+username: userprueba2
+e-mail: userprueba2@gmail.com
+password: UserPrueba00
+
 ## Documentacion Back-end
 https://backendps.vercel.app/api-docs/
 Si al hacer build en el proyecto, se queja de que existe un build anterior no compatible con el dispositivo, ejecutar:

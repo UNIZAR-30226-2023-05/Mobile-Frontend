@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Statistics extends StatelessWidget {
-  Statistics({super.key});
+  const Statistics({super.key});
 
   void goToUserSettings() {}
 

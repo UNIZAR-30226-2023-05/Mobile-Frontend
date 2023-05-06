@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:oca_app/backend_funcs/peticiones_api.dart';
+import 'package:oca_app/components/User_instance.dart';
 import 'package:oca_app/components/forms.dart';
+import 'package:oca_app/pages/login_page.dart';
 import 'package:oca_app/styles/buttons_styles.dart';
 
-class UserSettings extends StatelessWidget {
-  UserSettings({super.key});
+class UserSettingsPage extends StatelessWidget {
+  UserSettingsPage({super.key});
 
   void saveSettings() {}
   void deleteAccount() {}
 
-  final usernameController = TextEditingController();
-  final passwordController = TextEditingController();
-  final repeatpasswordController = TextEditingController();
+  // Controladores de formularios
+  final nameCtrl = TextEditingController();
+  final passwdCtrl = TextEditingController();
+  final repeatpasswdCtrl = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: Color.fromARGB(255, 28, 100, 116),
+      backgroundColor: const Color.fromARGB(255, 28, 100, 116),
       body: SafeArea(
           child: Center(
         child: Column(children: [
@@ -44,15 +48,15 @@ class UserSettings extends StatelessWidget {
           //MyButton(onPressed: goToUserSettings, textoAMostrar: "Ajustes del perfil"),
           //MyButton(onPressed: goToUserSettings, textoAMostrar: "Estadisticas"),
           MyForm(
-              controller: usernameController,
+              controller: nameCtrl,
               hintText: "Nombre de usuario",
               obscureText: false),
           MyForm(
-              controller: passwordController,
+              controller: passwdCtrl,
               hintText: "Contraseña",
               obscureText: true),
           MyForm(
-              controller: repeatpasswordController,
+              controller: repeatpasswdCtrl,
               hintText: "Repetir contraseña",
               obscureText: true),
 
@@ -60,7 +64,16 @@ class UserSettings extends StatelessWidget {
           //MyButton(onPressed: saveSettings, textoAMostrar: "Confirmar"),
           ElevatedButton(
               style: GenericButton,
-              onPressed: () {},
+              onPressed: () async {
+                // Constraseñas iguales y Nombre de usuario distinto de vacío
+                if (_checkFormRestrictions(context)) {
+                  final responseMsg = await actualizarAtributosUsuario(
+                      nameCtrl.text, passwdCtrl.text);
+                  // Mostrar pop-up con mensaje que corresponda
+                  // ignore: use_build_context_synchronously
+                  _alertResponseMessage(context, responseMsg);
+                }
+              },
               child: const Text("Confirmar",
                   style: TextStyle(
                       color: Colors.white,
@@ -71,7 +84,39 @@ class UserSettings extends StatelessWidget {
               onPressed: deleteAccount, textoAMostrar: "Eliminar cuenta"),*/
           ElevatedButton(
               style: ErrorButton,
-              onPressed: () {},
+              onPressed: () {
+                User_instance ui = User_instance.instance;
+                // Petición al backend para que borre la cuenta
+                // Eliminar instancia de información de usuario y volver a Login
+                showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                          title: const Text("Eliminar cuenta"),
+                          // Muestra alerta non-null, pero siempre se inicializa
+                          content: const Text(
+                              "¿ Desea eliminar la cuenta con nombre X ?"),
+                          actions: [
+                            TextButton(
+                              child: const Text("Borrar"),
+                              onPressed: () {
+                                eliminarCuenta(ui.id); // conexión con BBDD
+                                ui.dispose(); // eliminar instancia del usuario
+                                Navigator.push // volver al pantalla incial
+                                    (
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => LoginPage()));
+                              },
+                            ),
+                            TextButton(
+                              child: const Text("Cancelar"),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                            )
+                          ],
+                        ));
+              },
               child: const Text("Eliminar cuenta",
                   style: TextStyle(
                       color: Colors.white,
@@ -80,5 +125,80 @@ class UserSettings extends StatelessWidget {
         ]),
       )),
     );
+  }
+
+  // En principio las constraseñas pueden ser cualesquiera menos vacías
+  bool _checkFormRestrictions(BuildContext context) {
+    String name = nameCtrl.text;
+    String passwd = passwdCtrl.text;
+    String repPasswd = repeatpasswdCtrl.text;
+
+    if (name == "" || passwd == "" || repeatpasswdCtrl == "") {
+      _alertEmptyFields(context);
+      return false;
+    } else if (passwd != repPasswd) {
+      _alertDifferentPasswd(context);
+      return false;
+    }
+
+    // Campos rellenos y contraseñas coinciden
+    return true;
+  }
+
+  // Muestra un pop-up indicando que los campos son vacíos
+  void _alertEmptyFields(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: const Text("Error"),
+              // Muestra alerta non-null, pero siempre se inicializa
+              content: const Text("Rellena todos los campos"),
+              actions: [
+                TextButton(
+                  child: const Text("OK"),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            ));
+  }
+
+  // Muestra un pop-up con un mensaje indicando que las contraseñas
+  // no coinciden
+  void _alertDifferentPasswd(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: const Text("Error"),
+              // Muestra alerta non-null, pero siempre se inicializa
+              content: const Text("Las contraseñas no coinciden"),
+              actions: [
+                TextButton(
+                  child: const Text("OK"),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            ));
+  }
+
+  // Muestra un pop-up con el mensaje que devuelve la respuesta http
+  void _alertResponseMessage(BuildContext context, String message) {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              // Muestra alerta non-null, pero siempre se inicializa
+              content: Text(message),
+              actions: [
+                TextButton(
+                  child: const Text("OK"),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            ));
   }
 }
