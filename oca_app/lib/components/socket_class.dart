@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:ffi';
+import 'dart:io';
 
 import 'package:flutter/widgets.dart';
 import 'package:oca_app/components/User_instance.dart';
@@ -10,7 +12,7 @@ const url = 'http://192.168.1.51:3000';
 class SocketSingleton {
   static SocketSingleton? _instance;
   static late IO.Socket socket;
-  final playersStream = StreamController<dynamic>();
+  final StreamController<dynamic> playersStream = StreamController<dynamic>();
 
   Stream<dynamic> get listStream => playersStream.stream;
 

@@ -174,12 +174,14 @@ class CreateRoomPage extends StatelessWidget {
                         ),
                         ElevatedButton(
                           style: CancelarButton,
-                          onPressed: () {
+                          onPressed: () async {
+                            await ss.destroyRoom();
                             // ignore: use_build_context_synchronously
+                            /*
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => Main_Menu_Page()));
+                                    builder: (context) => Main_Menu_Page()));*/
                           },
                           child: const Text("Cancelar",
                               style: TextStyle(

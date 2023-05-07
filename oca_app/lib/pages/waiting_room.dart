@@ -1,10 +1,14 @@
 // ignore_for_file: must_be_immutable
 
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:oca_app/components/socket_class.dart';
+import 'package:oca_app/pages/main_menu.dart';
 import 'package:oca_app/styles/buttons_styles.dart';
+
+import '../components/User_instance.dart';
 
 class WaitingRoom extends StatefulWidget {
   final String nameRoom; // nombre de la sala
@@ -16,26 +20,38 @@ class WaitingRoom extends StatefulWidget {
 
 class _WaitingRoomState extends State<WaitingRoom> {
   List<dynamic> players = [];
-  late StreamSubscription<dynamic> streamSubscription;
+  StreamSubscription<dynamic>? streamSubscription;
 
   @override
   void initState() {
     print("initState()");
-    super.initState();
-    streamSubscription = SocketSingleton.instance.listStream.listen((data) {
-      print("data = $data");
-      setState(() {
-        players = data;
+    if (streamSubscription == null) {
+      print("streamSuscription es null");
+      streamSubscription = SocketSingleton.instance.listStream.listen((data) {
+        print("data = $data");
+        setState(() {
+          players = data;
+        });
+        print("players = $players");
       });
-      print("players = $players");
-    });
+    } else {
+      print("streamSuscription no es nulo");
+    }
+
+    super.initState();
   }
 
   @override
-  void dispose() {
+  void dispose() async {
     print("dispose()");
+    /*
+    try {
+      await streamSubscription!.cancel();
+      print('La suscripción se ha cancelado correctamente.');
+    } catch (e) {
+      print('Error al cancelar la suscripción: $e');
+    }*/
     super.dispose();
-    streamSubscription.cancel();
   }
 
   @override
@@ -121,13 +137,13 @@ class _WaitingRoomState extends State<WaitingRoom> {
                 height: 300,
                 width: double.infinity,
                 child: StreamBuilder<dynamic>(
-                  stream: SocketSingleton.instance.listStream,
                   builder:
                       (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                    print(
+                        "${snapshot.hasData} and snapshot.data = ${snapshot.data}");
                     if (!snapshot.hasData) {
                       return const CircularProgressIndicator();
                     }
-                    print("snapshot.data = ${snapshot.data}");
                     return ListView.builder(
                       itemCount: snapshot.data
                           .length, // mostrar la cantidad de mensajes almacenados
@@ -165,14 +181,34 @@ class _WaitingRoomState extends State<WaitingRoom> {
                     ),
                     ElevatedButton(
                       onPressed: () async {
-                        await ss.destroyRoom();
-                        // HACER FUNCIONALIDAD DE EMPEZAR PARTIDA !!!!
+                        /*
+                        try {
+                          await streamSubscription!.cancel();
+                          print(
+                              'La suscripción se ha cancelado correctamente.');
+                        } catch (e) {
+                          print('Error al cancelar la suscripción: $e');
+                        }*/
+                        User_instance.instance.soyLider
+                            ? await ss.destroyRoom()
+                            : await ss.leaveRoom();
+                        // Volver a pantalla de inicio
+                        // ignore: use_build_context_synchronously
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Main_Menu_Page()));
                       },
                       style: GenericButton,
-                      child: const Text(
-                        "Eliminar sala",
-                        style: TextStyle(fontSize: 25),
-                      ),
+                      child: User_instance.instance.soyLider
+                          ? const Text(
+                              "Eliminar sala",
+                              style: TextStyle(fontSize: 25),
+                            )
+                          : const Text(
+                              "Abandonar sala",
+                              style: TextStyle(fontSize: 25),
+                            ),
                     ),
                   ],
                 ),
