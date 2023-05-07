@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:oca_app/components/forms.dart';
 import 'package:oca_app/components/socket_class.dart';
 import 'package:oca_app/pages/main_menu.dart';
+import 'package:oca_app/pages/waiting_room.dart';
 import 'package:oca_app/styles/buttons_styles.dart';
 
 class JoinRoomPage extends StatelessWidget {
@@ -80,7 +81,15 @@ class JoinRoomPage extends StatelessWidget {
                               _alertEmptyFields(context);
                             } else {
                               // Comprobar que sigue un formato
-                              await ss.joinRoom(int.parse(idRoomCtrl.text));
+                              final roomName =
+                                  await ss.joinRoom(int.parse(idRoomCtrl.text));
+                              // ignore: use_build_context_synchronously
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => WaitingRoom(
+                                            nameRoom: roomName,
+                                          )));
                             }
                           },
                           child: const Text("Unirse",
@@ -97,15 +106,12 @@ class JoinRoomPage extends StatelessWidget {
                         ElevatedButton(
                           // podría quitarse
                           style: CancelarButton,
-                          onPressed: () async {
-                            await ss.leaveRoom();
-                            //print(User_instance.instance.idRoom);
+                          onPressed: () {
                             // Vuelve a  menú principal
-                            /*
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => Main_Menu_Page()));*/
+                                    builder: (context) => Main_Menu_Page()));
                           },
                           child: const Text("Cancelar",
                               style: TextStyle(

@@ -87,7 +87,7 @@ class SocketSingleton {
 
   // Unirse a sala
   // repsonse: {message: "...", players: [p1 , p2, ...], status: [ok,error]}
-  Future<void> joinRoom(int idRoom) async {
+  Future<String> joinRoom(int idRoom) async {
     final completer = Completer<Map<String, dynamic>>();
     late Map<String, dynamic> response; // guarda respuesta del servidor
 
@@ -110,6 +110,8 @@ class SocketSingleton {
       // Falta manejar el error, puede ser mostrar un pop-up por pantalla
     }
     print(response);
+
+    return response['nameRoom'];
   }
 
   // Salir de una sala

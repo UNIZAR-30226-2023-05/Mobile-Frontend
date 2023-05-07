@@ -152,10 +152,13 @@ class CreateRoomPage extends StatelessWidget {
                               User_instance.instance.idRoom = newIdRoom;
 
                               // Redirección a la sala de juegos
+                              // ignore: use_build_context_synchronously
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => WaitingRoom()));
+                                      builder: (context) => WaitingRoom(
+                                            nameRoom: roomNameCtrl.text,
+                                          )));
                             }
                           },
                           child: const Text("Crear",
@@ -171,15 +174,12 @@ class CreateRoomPage extends StatelessWidget {
                         ),
                         ElevatedButton(
                           style: CancelarButton,
-                          onPressed: () async {
-                            //await ss.removePlayerFromRoom("JuanCarlos");
-                            await ss.destroyRoom();
-                            // Vuelve a  menú principal
-                            /*
+                          onPressed: () {
+                            // ignore: use_build_context_synchronously
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => Main_Menu_Page()));*/
+                                    builder: (context) => Main_Menu_Page()));
                           },
                           child: const Text("Cancelar",
                               style: TextStyle(

@@ -3,38 +3,39 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:oca_app/components/User_instance.dart';
 import 'package:oca_app/components/socket_class.dart';
 import 'package:oca_app/styles/buttons_styles.dart';
 
 class WaitingRoom extends StatefulWidget {
-  const WaitingRoom({Key? key}) : super(key: key);
+  final String nameRoom; // nombre de la sala
+  const WaitingRoom({Key? key, required this.nameRoom}) : super(key: key);
 
   @override
   State<WaitingRoom> createState() => _WaitingRoomState();
 }
 
 class _WaitingRoomState extends State<WaitingRoom> {
-  int _nPlayers = 0;
-  List<dynamic> _players = [];
+  List<dynamic> players = [];
+  late StreamSubscription<dynamic> streamSubscription;
 
   @override
   void initState() {
+    print("initState()");
     super.initState();
+    streamSubscription = SocketSingleton.instance.listStream.listen((data) {
+      print("data = $data");
+      setState(() {
+        players = data;
+      });
+      print("players = $players");
+    });
   }
 
   @override
   void dispose() {
+    print("dispose()");
     super.dispose();
-  }
-
-  void _handleEvent(List<dynamic> message) {
-    print("dentro de _handleEvent");
-    // función que maneja los eventos recibidos desde otra clase
-    setState(() {
-      _players.addAll(message); // agregamos el mensaje a la lista
-      _nPlayers = _players.length;
-    });
+    streamSubscription.cancel();
   }
 
   @override
@@ -82,12 +83,33 @@ class _WaitingRoomState extends State<WaitingRoom> {
               ),
             ),
             // NOMBRE DE SALA  **********************
-            const FormNombreSala(),
+            Container(
+              color: Colors.white,
+              height: 50,
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    left: 8.0, right: 8.0, top: 4.0, bottom: 4.0),
+                child: Container(
+                  color: const Color.fromARGB(255, 170, 250, 254),
+                  width: double.infinity,
+                  child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        widget.nameRoom,
+                        style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 30,
+                            fontFamily: 'Caudex'),
+                      )),
+                  //child: Text() PONER EL NOMBRE DE LA SALA
+                ),
+              ),
+            ),
             // PARTICIPANTES  **********************
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: Text(
-                "Jugadores: $_nPlayers",
+                "Jugadores: ${players.length}",
                 style: const TextStyle(
                     color: Colors.white, fontSize: 24, fontFamily: 'Caudex'),
               ),
@@ -130,9 +152,7 @@ class _WaitingRoomState extends State<WaitingRoom> {
                   children: [
                     ElevatedButton(
                       onPressed: () async {
-                        // el parámetro indica el timeout de cada turno
                         //await ss.empezarPartida(15);
-                        // HACER FUNCIONALIDAD DE EMPEZAR PARTIDA !!!!
                       },
                       style: GenericButton,
                       child: const Text(
@@ -180,35 +200,5 @@ class _WaitingRoomState extends State<WaitingRoom> {
                 )
               ],
             ));
-  }
-}
-
-class FormNombreSala extends StatelessWidget {
-  const FormNombreSala({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      height: 50,
-      child: Padding(
-        padding:
-            const EdgeInsets.only(left: 8.0, right: 8.0, top: 4.0, bottom: 4.0),
-        child: Container(
-          color: const Color.fromARGB(255, 170, 250, 254),
-          width: double.infinity,
-          child: const Align(
-              alignment: Alignment.center,
-              child: Text(
-                "Nombre de la sala",
-                style: TextStyle(
-                    color: Colors.black, fontSize: 30, fontFamily: 'Caudex'),
-              )),
-          //child: Text() PONER EL NOMBRE DE LA SALA
-        ),
-      ),
-    );
   }
 }
