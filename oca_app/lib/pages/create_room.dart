@@ -151,6 +151,8 @@ class CreateRoomPage extends StatelessWidget {
                               // Actualización de id de sala
                               User_instance.instance.idRoom = newIdRoom;
 
+                              print("ID de la sala creada: $newIdRoom");
+
                               // Redirección a la sala de juegos
                               // ignore: use_build_context_synchronously
                               Navigator.push(

@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:oca_app/components/User_instance.dart';
 
-const String baseUrl = 'http://192.168.1.51:3000';
+const String baseUrl = 'http://192.168.1.46:3000';
 
 class ApiService {
   //FUNCION GENERICA PARA USAR EL TOKEN, PUEDES AGREGAR MAS FUNCIONES

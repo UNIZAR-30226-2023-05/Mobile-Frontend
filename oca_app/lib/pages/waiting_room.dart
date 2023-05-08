@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:oca_app/components/socket_class.dart';
 import 'package:oca_app/pages/main_menu.dart';
 import 'package:oca_app/styles/buttons_styles.dart';
+import 'package:oca_app/components/global_stream_controller.dart';
 
 import '../components/User_instance.dart';
 
@@ -27,13 +28,6 @@ class _WaitingRoomState extends State<WaitingRoom> {
     print("initState()");
     if (streamSubscription == null) {
       print("streamSuscription es null");
-      streamSubscription = SocketSingleton.instance.listStream.listen((data) {
-        print("data = $data");
-        setState(() {
-          players = data;
-        });
-        print("players = $players");
-      });
     } else {
       print("streamSuscription no es nulo");
     }
@@ -124,40 +118,82 @@ class _WaitingRoomState extends State<WaitingRoom> {
             // PARTICIPANTES  **********************
             Padding(
               padding: const EdgeInsets.all(20.0),
-              child: Text(
-                "Jugadores: ${players.length}",
-                style: const TextStyle(
-                    color: Colors.white, fontSize: 24, fontFamily: 'Caudex'),
+              child: StreamBuilder<dynamic>(
+                stream: GlobalStreamController().playersStream,
+                builder:
+                    (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                  if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}',
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 24,
+                            fontFamily: 'Caudex'));
+                  }
+
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.waiting:
+                      return Text("Jugadores: -",
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 24,
+                              fontFamily: 'Caudex'));
+                    default:
+                      if (snapshot.hasData) {
+                        List<dynamic> players = snapshot.data;
+                        return Text("Jugadores: ${players.length}",
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 24,
+                                fontFamily: 'Caudex'));
+                      } else {
+                        return Text("Jugadores: 0",
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 24,
+                                fontFamily: 'Caudex'));
+                      }
+                  }
+                },
               ),
             ),
-            // COLUMNA DE SEIS ELEMENTOS **********************
+
             Padding(
               padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
               child: SizedBox(
                 height: 300,
                 width: double.infinity,
                 child: StreamBuilder<dynamic>(
+                  stream: GlobalStreamController().playersStream,
                   builder:
                       (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                    print(
-                        "${snapshot.hasData} and snapshot.data = ${snapshot.data}");
-                    if (!snapshot.hasData) {
-                      return const CircularProgressIndicator();
+                    if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
                     }
-                    return ListView.builder(
-                      itemCount: snapshot.data
-                          .length, // mostrar la cantidad de mensajes almacenados
-                      itemBuilder: (BuildContext context, int index) {
-                        return ListTile(
-                          title:
-                              Text(snapshot.data[index]), // mostrar el mensaje
-                        );
-                      },
-                    );
+
+                    switch (snapshot.connectionState) {
+                      case ConnectionState.waiting:
+                        return Center(child: CircularProgressIndicator());
+                      default:
+                        if (snapshot.hasData) {
+                          List<dynamic> players = snapshot.data;
+                          return ListView.builder(
+                            itemCount: players.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return ListTile(
+                                title: Text(players[index]['nickname']),
+                                // Puedes incluir más información del jugador si es necesario
+                              );
+                            },
+                          );
+                        } else {
+                          return Center(child: Text('No hay jugadores'));
+                        }
+                    }
                   },
                 ),
               ),
             ),
+
             // BOTÓN "EMPEZAR PARTIDA" *****************
             Expanded(
                 child: Padding(
@@ -168,7 +204,7 @@ class _WaitingRoomState extends State<WaitingRoom> {
                   children: [
                     ElevatedButton(
                       onPressed: () async {
-                        //await ss.empezarPartida(15);
+                        await ss.empezarPartida(15);
                       },
                       style: GenericButton,
                       child: const Text(

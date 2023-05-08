@@ -47,4 +47,8 @@ Pablo López
 2h 30m redefinicion de la conexion con backend 27/04/2023
 1h 30m websockets para el juego 06/04/2023
 
+5h     Ayuda en la creacion de salas y unirse a salas 07/04/2023
+1h     Intento de implementacion de websockets con el juego 07/04/2023
+2h 30m Implementacion de la lista de jugadores en la sala 08/04/2023
+
 TOTAL: 42h

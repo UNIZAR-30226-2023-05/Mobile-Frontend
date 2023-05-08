@@ -6,18 +6,22 @@ import 'package:flutter/widgets.dart';
 import 'package:oca_app/components/User_instance.dart';
 import 'package:oca_app/pages/waiting_room.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:oca_app/components/global_stream_controller.dart';
 
-const url = 'http://192.168.1.51:3000';
+const url = 'http://192.168.1.46:3000';
 
 class SocketSingleton {
   static SocketSingleton? _instance;
   static late IO.Socket socket;
-  final StreamController<dynamic> playersStream = StreamController<dynamic>();
-
-  Stream<dynamic> get listStream => playersStream.stream;
+  final GlobalStreamController globalStreamController =
+      GlobalStreamController();
 
   factory SocketSingleton() {
-    return instance.._initSocket();
+    final instance = SocketSingleton.instance
+      .._initSocket()
+      .._subscribeToEvents();
+
+    return instance;
   }
 
   SocketSingleton._internal();
@@ -38,6 +42,11 @@ class SocketSingleton {
       'auth': {'token': authToken}
     });
 
+    void _onPlayerListUpdated(List<dynamic> playerList) {
+      // Envía la lista de jugadores al StreamController
+      globalStreamController.addPlayersData(playerList);
+    }
+
     socket.connect();
     // Registro de eventos
 
@@ -50,7 +59,25 @@ class SocketSingleton {
     // Eventos relativos a partida
     socket.on('updatePlayers', (data) {
       print("updatePlayers: $data");
-      playersStream.sink.add(data);
+      globalStreamController.addPlayersData(data);
+    });
+    socket.on('estadoPartida', (data) => null);
+    socket.on('ordenTurnos', (data) => null);
+    socket.on('sigTurno', (data) => null);
+    socket.on('finPartida ', (data) => null);
+  }
+
+  void _subscribeToEvents() {
+    socket.on('updatePlayers', (data) {
+      print("updatePlayers: $data");
+      if (data is List<dynamic> && data.every((element) => element is String)) {
+        // Convierte la lista de Strings en una lista de mapas
+        List<Map<String, dynamic>> playerList =
+            data.map((playerName) => {'nickname': playerName}).toList();
+        globalStreamController.addPlayersData(playerList);
+      } else {
+        print("Error: el formato de la lista de jugadores es incorrecto");
+      }
     });
     socket.on('estadoPartida', (data) => null);
     socket.on('ordenTurnos', (data) => null);
@@ -113,7 +140,7 @@ class SocketSingleton {
     }
     print(response);
 
-    return response['nameRoom'];
+    return response['roomName'];
   }
 
   // Salir de una sala
@@ -173,7 +200,7 @@ class SocketSingleton {
   // Expulsar jugador de sala (disponible para lider)
   Future<void> removePlayerFromRoom(String playerNameToRemove) async {
     final completer = Completer<Map<String, dynamic>>();
-    late Map<String, dynamic> response; // guarda respuesta del servidor0
+    late Map<String, dynamic> response; // guarda respuesta del servidor
 
     socket.emitWithAck('removePlayerFromRoom',
         [User_instance.instance.idRoom, playerNameToRemove], ack: (response) {
@@ -189,9 +216,9 @@ class SocketSingleton {
   // -------- EVENTOS DE PARTIDA --------
 
   // Empezar partida
-  Future<void> empezarPartida(int turnTimeout) async {
+  Future<bool> empezarPartida(int turnTimeout) async {
     final completer = Completer<Map<String, dynamic>>();
-    late Map<String, dynamic> response; // guarda respuesta del servidor0
+    late Map<String, dynamic> response; // guarda respuesta del servidor
 
     socket
         .emitWithAck('startGame', [User_instance.instance.idRoom, turnTimeout],
@@ -200,7 +227,15 @@ class SocketSingleton {
     });
 
     response = await completer.future;
-    print(response);
+
+    if (response['status'] == 'ok') {
+      print("Partida iniciada: ${response['message']}");
+      return true;
+    } else {
+      print("Error al iniciar partida: ${response['message']}");
+      return false;
+      // Aquí puedes manejar el error, por ejemplo, mostrando un pop-up en la pantalla
+    }
   }
 
   // Jugar turno
