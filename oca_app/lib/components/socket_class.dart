@@ -62,9 +62,11 @@ class SocketSingleton {
       globalStreamController.addPlayersData(data);
     });
     socket.on('estadoPartida', (data) => null);
-    socket.on('ordenTurnos', (data) => null);
+    socket.on('ordenTurnos', (data) => print(data));
     socket.on('sigTurno', (data) => null);
     socket.on('finPartida ', (data) => null);
+    socket.on("serverRoomMessage",
+        (message) => (print("respuesta del server:" + message)));
   }
 
   void _subscribeToEvents() {
@@ -80,9 +82,13 @@ class SocketSingleton {
       }
     });
     socket.on('estadoPartida', (data) => null);
-    socket.on('ordenTurnos', (data) => null);
+    socket.on('ordenTurnos', (data) => print(data));
     socket.on('sigTurno', (data) => null);
     socket.on('finPartida ', (data) => null);
+    socket.on("serverRoomMessage",
+        (message) => (print("respuesta del server" + message)));
+    socket.on("destroyingRoom",
+        (message) => (print("respuesta del destroying $message")));
   }
 
   // -------- EVENTOS DE SALA --------
@@ -201,9 +207,11 @@ class SocketSingleton {
   Future<void> removePlayerFromRoom(String playerNameToRemove) async {
     final completer = Completer<Map<String, dynamic>>();
     late Map<String, dynamic> response; // guarda respuesta del servidor
+    Map<String, dynamic> miJson = {'nickname': playerNameToRemove};
 
-    socket.emitWithAck('removePlayerFromRoom',
-        [User_instance.instance.idRoom, playerNameToRemove], ack: (response) {
+    socket.emitWithAck(
+        'removePlayerFromRoom', [User_instance.instance.idRoom, miJson],
+        ack: (response) {
       completer.complete(response);
     });
 
@@ -220,9 +228,9 @@ class SocketSingleton {
     final completer = Completer<Map<String, dynamic>>();
     late Map<String, dynamic> response; // guarda respuesta del servidor
 
-    socket
-        .emitWithAck('startGame', [User_instance.instance.idRoom, turnTimeout],
-            ack: (response) {
+    socket.emitWithAck(
+        'startGame', [User_instance.instance.idRoom, turnTimeout.toString()],
+        ack: (response) {
       completer.complete(response);
     });
 

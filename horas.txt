@@ -50,5 +50,6 @@ Pablo López
 5h     Ayuda en la creacion de salas y unirse a salas 07/04/2023
 1h     Intento de implementacion de websockets con el juego 07/04/2023
 2h 30m Implementacion de la lista de jugadores en la sala 08/04/2023
+3h     Arreglo de salas 09/04/2023 
 
 TOTAL: 42h

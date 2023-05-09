@@ -26,11 +26,6 @@ class _WaitingRoomState extends State<WaitingRoom> {
   @override
   void initState() {
     print("initState()");
-    if (streamSubscription == null) {
-      print("streamSuscription es null");
-    } else {
-      print("streamSuscription no es nulo");
-    }
 
     super.initState();
   }
@@ -117,47 +112,6 @@ class _WaitingRoomState extends State<WaitingRoom> {
             ),
             // PARTICIPANTES  **********************
             Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: StreamBuilder<dynamic>(
-                stream: GlobalStreamController().playersStream,
-                builder:
-                    (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                  if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}',
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 24,
-                            fontFamily: 'Caudex'));
-                  }
-
-                  switch (snapshot.connectionState) {
-                    case ConnectionState.waiting:
-                      return Text("Jugadores: -",
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 24,
-                              fontFamily: 'Caudex'));
-                    default:
-                      if (snapshot.hasData) {
-                        List<dynamic> players = snapshot.data;
-                        return Text("Jugadores: ${players.length}",
-                            style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 24,
-                                fontFamily: 'Caudex'));
-                      } else {
-                        return Text("Jugadores: 0",
-                            style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 24,
-                                fontFamily: 'Caudex'));
-                      }
-                  }
-                },
-              ),
-            ),
-
-            Padding(
               padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
               child: SizedBox(
                 height: 300,
@@ -176,12 +130,36 @@ class _WaitingRoomState extends State<WaitingRoom> {
                       default:
                         if (snapshot.hasData) {
                           List<dynamic> players = snapshot.data;
+                          bool isLeader = User_instance.instance.soyLider;
                           return ListView.builder(
                             itemCount: players.length,
                             itemBuilder: (BuildContext context, int index) {
-                              return ListTile(
-                                title: Text(players[index]['nickname']),
-                                // Puedes incluir más información del jugador si es necesario
+                              return Container(
+                                height:
+                                    60, // Ajusta la altura según tus necesidades
+                                child: Card(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(players[index]['nickname']),
+                                        if (isLeader &&
+                                            players[index]['nickname'] !=
+                                                User_instance.instance.nickname)
+                                          TextButton(
+                                            onPressed: () {
+                                              print(players[index]['nickname']);
+                                              ss.removePlayerFromRoom(
+                                                  players[index]['nickname']);
+                                            },
+                                            child: Text("Expulsar"),
+                                          ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
                               );
                             },
                           );
