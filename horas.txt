@@ -23,33 +23,41 @@ Pablo López
 2h prototipos 27/02/2023
 1h prototipos 02/03/2023
 2h log-in 03/03/2023
+14
 
 2h menu de ajustes y ajustes
 1h Memoria intermedia organización
 2h Pantalla de Registro 15/03/2023
 2h Mapa de navegacion y diagrama de componentes 18/03/2023
+10
 
 1h añadir clase registro para mandar correctamente los json al servidor 26/03/2023
 2h Conexion con el servidor para registro y login 30/03/2023
 1h Enrutamiento de las pantallas, creacion pantalla principal y cambio de botones 30/03/2023
 2h 30m Pantalla de estadisticas y primera version de  tienda. 02/04/2023
 1h  Gestion segura del token y arregladas interacciones del log in y sign up 05/04/2023
+7.5
 
 1h 30m Video y memoria para la practica 4 11/04/2023
 30m Configuracion, Creacion y prueba del APK 12/04/2023
 1h 30m  Juego Parte 1 / 13/04/2023
 1h 30m  Fichas del juego / 13/04/2023
 3h      Grid del tablero 17/04/2023
+8
 
 1h 30m  Cambio del Widget para poder mover las fichas y movimiento completo de las fichas 17/04/2023
 2h apartado social 23/04/2023
 1h 30m apartado social, conexion backend 24/04/2023
 2h 30m redefinicion de la conexion con backend 27/04/2023
 1h 30m websockets para el juego 06/04/2023
+9
 
 5h     Ayuda en la creacion de salas y unirse a salas 07/04/2023
 1h     Intento de implementacion de websockets con el juego 07/04/2023
 2h 30m Implementacion de la lista de jugadores en la sala 08/04/2023
 3h     Arreglo de salas 09/04/2023 
+2h     Implementacion del navigator para el juego 09/04/2023
+3h     Implementacion del backend con el juego    10/04/2023
+16.5
 
-TOTAL: 42h
+TOTAL: 65h

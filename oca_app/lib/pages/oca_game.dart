@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:oca_app/styles/buttons_styles.dart';
 import 'package:oca_app/components/fichas.dart';
 import 'package:oca_app/components/oca_game_grid.dart';
+import 'package:oca_app/components/global_stream_controller.dart';
+import 'package:oca_app/components/socket_class.dart';
 
 class Oca_game extends StatefulWidget {
   Oca_game({Key? key}) : super(key: key);
@@ -12,6 +14,7 @@ class Oca_game extends StatefulWidget {
 
 class _Oca_gameState extends State<Oca_game> {
   final String nombreSala = 'Nombre de la sala';
+  late int njugadores;
 
   int posicionFicha1 = 0;
   double leftFicha1 = calcularCoordenadas(1, 0)[0].toDouble();
@@ -49,6 +52,22 @@ class _Oca_gameState extends State<Oca_game> {
 
       print(posicionFicha1);
     });
+
+    @override
+    void initState() {
+      super.initState();
+      inicializarJuego();
+    }
+  }
+
+  void inicializarJuego() {
+    SocketSingleton ss = SocketSingleton.instance;
+    var value = ss.turnController.playersStreamController.value;
+    if (value is List) {
+      njugadores = value.length;
+    } else {
+      // Handle error or set njugadores to a default value
+    }
   }
 
   @override

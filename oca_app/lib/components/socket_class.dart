@@ -2,8 +2,10 @@ import 'dart:async';
 import 'dart:ffi';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:oca_app/components/User_instance.dart';
+import 'package:oca_app/pages/oca_game.dart';
 import 'package:oca_app/pages/waiting_room.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:oca_app/components/global_stream_controller.dart';
@@ -15,6 +17,9 @@ class SocketSingleton {
   static late IO.Socket socket;
   final GlobalStreamController globalStreamController =
       GlobalStreamController();
+  final GlobalStreamController turnController = GlobalStreamController();
+  BuildContext? _context;
+  bool estaenPartida = false;
 
   factory SocketSingleton() {
     final instance = SocketSingleton.instance
@@ -22,6 +27,10 @@ class SocketSingleton {
       .._subscribeToEvents();
 
     return instance;
+  }
+
+  void setContext(BuildContext context) {
+    _context = context;
   }
 
   SocketSingleton._internal();
@@ -44,7 +53,7 @@ class SocketSingleton {
 
     void _onPlayerListUpdated(List<dynamic> playerList) {
       // Envía la lista de jugadores al StreamController
-      globalStreamController.addPlayersData(playerList);
+      globalStreamController.addData(playerList);
     }
 
     socket.connect();
@@ -59,10 +68,19 @@ class SocketSingleton {
     // Eventos relativos a partida
     socket.on('updatePlayers', (data) {
       print("updatePlayers: $data");
-      globalStreamController.addPlayersData(data);
+      globalStreamController.addData(data);
     });
     socket.on('estadoPartida', (data) => null);
-    socket.on('ordenTurnos', (data) => print(data));
+    socket.on('ordenTurnos', (data) {
+      print(data);
+      if (_context != null && !estaenPartida) {
+        estaenPartida = true;
+        Navigator.of(_context!)
+            .push(MaterialPageRoute(builder: (context) => Oca_game()));
+      } else {
+        //gestion de los turnos
+      }
+    });
     socket.on('sigTurno', (data) => null);
     socket.on('finPartida ', (data) => null);
     socket.on("serverRoomMessage",
@@ -76,13 +94,15 @@ class SocketSingleton {
         // Convierte la lista de Strings en una lista de mapas
         List<Map<String, dynamic>> playerList =
             data.map((playerName) => {'nickname': playerName}).toList();
-        globalStreamController.addPlayersData(playerList);
+        globalStreamController.addData(playerList);
       } else {
         print("Error: el formato de la lista de jugadores es incorrecto");
       }
     });
     socket.on('estadoPartida', (data) => null);
-    socket.on('ordenTurnos', (data) => print(data));
+    socket.on('ordenTurnos', (data) {
+      turnController.addData(data['ordenTurnos']);
+    });
     socket.on('sigTurno', (data) => null);
     socket.on('finPartida ', (data) => null);
     socket.on("serverRoomMessage",

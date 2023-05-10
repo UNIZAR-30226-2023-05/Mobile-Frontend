@@ -46,6 +46,7 @@ class _WaitingRoomState extends State<WaitingRoom> {
   @override
   Widget build(BuildContext context) {
     SocketSingleton ss = SocketSingleton.instance;
+    ss.setContext(context);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
