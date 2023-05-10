@@ -55,7 +55,7 @@ class JoinRoomPage extends StatelessWidget {
                   padding: const EdgeInsets.all(10),
                   child: MyForm(
                     controller: idRoomCtrl,
-                    hintText: "Introduzca nombre de la sala",
+                    hintText: "Introduzca código de la sala",
                     obscureText: false,
                   ),
                 ),
