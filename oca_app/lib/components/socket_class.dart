@@ -353,6 +353,13 @@ class SocketSingleton {
 
     response = await completer.future;
     print(response);
+
+    // Si el mensaje es "Estás penalizado" y el estado es "error", no hagas nada
+    if (response['message'] == 'Estás penalizado' &&
+        response['status'] == 'error') {
+      return {}; // Retorna un mapa vacío
+    }
+
     if (response['res']['rollAgain'] == true) {
       showDialog(
         context: context,

@@ -45,35 +45,11 @@ class _Oca_gameState extends State<Oca_game> {
 
   void actualizarJuego(Map<String, dynamic> res) {
     setState(() {
-      /*
       _diceNumber =
           res['dice']; // Actualiza _diceNumber con el valor de 'dice' en 'res'
       actualizarPosicionFicha1(res['afterDice']);
       print("actualizarjuego: ");
       print(res);
-      if (res['rollAgain'] == true) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text('Te toca volver a tocar'),
-              content: Text(
-                  'Enhorabuena, te mueves a la casilla ${res['finalCell']} y vuelves a tirar'),
-              actions: <Widget>[
-                TextButton(
-                  child: Text('Cerrar'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    actualizarPosicionFicha1(
-                        res['finalCell']); // Cierra el Popup
-                  },
-                ),
-              ],
-            );
-          },
-        );
-      }
-    */
     });
     // Aquí, puedes agregar el código para actualizar la posición basándote en _diceNumber
   }
@@ -235,7 +211,7 @@ class _Oca_gameState extends State<Oca_game> {
               Stack(
                 children: [
                   Image.asset(
-                    'lib/images/oca_tablero.PNG',
+                    'lib/images/oca_tablero_final.png',
                     width: 400,
                     height: 400,
                   ),
