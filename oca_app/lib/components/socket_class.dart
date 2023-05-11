@@ -367,7 +367,7 @@ class SocketSingleton {
           return AlertDialog(
             title: Text('Te toca volver a tirar'),
             content: Text(
-                'Enhorabuena, te mueves a la casilla ${response['res']['finalCell']} y vuelves a tirar'),
+                'Enhorabuena, has caido en la casilla ${response['res']['afterDice']}, asi que te mueves a la casilla ${response['res']['finalCell']} y vuelves a tirar'),
             actions: <Widget>[
               TextButton(
                 child: Text('Cerrar'),

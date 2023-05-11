@@ -47,7 +47,7 @@ class _Oca_gameState extends State<Oca_game> {
     setState(() {
       _diceNumber =
           res['dice']; // Actualiza _diceNumber con el valor de 'dice' en 'res'
-      actualizarPosicionFicha1(res['afterDice']);
+      //actualizarPosicionFicha1(res['afterDice']);
       print("actualizarjuego: ");
       print(res);
     });
