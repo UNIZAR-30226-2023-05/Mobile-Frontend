@@ -45,6 +45,7 @@ class _Oca_gameState extends State<Oca_game> {
 
   void actualizarJuego(Map<String, dynamic> res) {
     setState(() {
+      /*
       _diceNumber =
           res['dice']; // Actualiza _diceNumber con el valor de 'dice' en 'res'
       actualizarPosicionFicha1(res['afterDice']);
@@ -72,6 +73,7 @@ class _Oca_gameState extends State<Oca_game> {
           },
         );
       }
+    */
     });
     // Aquí, puedes agregar el código para actualizar la posición basándote en _diceNumber
   }
@@ -82,37 +84,37 @@ class _Oca_gameState extends State<Oca_game> {
       leftFicha1 = calcularCoordenadas(1, posicionFicha1)[0].toDouble();
       topFicha1 = calcularCoordenadas(1, posicionFicha1)[1].toDouble();
 
-      print(posicionFicha1);
+      print("posicion ficha 1: " + posicionFicha1.toString());
     });
   }
 
   void actualizarPosicionFicha2(int afterDice) {
     setState(() {
       posicionFicha2 = afterDice;
-      leftFicha2 = calcularCoordenadas(2, posicionFicha1)[0].toDouble();
-      topFicha2 = calcularCoordenadas(2, posicionFicha1)[1].toDouble();
+      leftFicha2 = calcularCoordenadas(2, posicionFicha2)[0].toDouble();
+      topFicha2 = calcularCoordenadas(2, posicionFicha2)[1].toDouble();
 
-      print(posicionFicha1);
+      print(posicionFicha2);
     });
   }
 
   void actualizarPosicionFicha3(int afterDice) {
     setState(() {
       posicionFicha3 = afterDice;
-      leftFicha3 = calcularCoordenadas(3, posicionFicha1)[0].toDouble();
-      topFicha3 = calcularCoordenadas(3, posicionFicha1)[1].toDouble();
+      leftFicha3 = calcularCoordenadas(3, posicionFicha3)[0].toDouble();
+      topFicha3 = calcularCoordenadas(3, posicionFicha3)[1].toDouble();
 
-      print(posicionFicha1);
+      print(posicionFicha3);
     });
   }
 
   void actualizarPosicionFicha4(int afterDice) {
     setState(() {
       posicionFicha4 = afterDice;
-      leftFicha4 = calcularCoordenadas(4, posicionFicha1)[0].toDouble();
-      topFicha4 = calcularCoordenadas(4, posicionFicha1)[1].toDouble();
+      leftFicha4 = calcularCoordenadas(4, posicionFicha4)[0].toDouble();
+      topFicha4 = calcularCoordenadas(4, posicionFicha4)[1].toDouble();
 
-      print(posicionFicha1);
+      print(posicionFicha4);
     });
   }
 
@@ -161,7 +163,7 @@ class _Oca_gameState extends State<Oca_game> {
         ? FichaWidget(
             visible: (2 <= njugadores),
             nombre: nombresJugadores[1],
-            posicion: posicionFicha1,
+            posicion: posicionFicha2,
             imagen: Image.asset('lib/images/Skin_rosa.png',
                 width: 15, height: 15, fit: BoxFit.contain))
         : null;
@@ -170,7 +172,7 @@ class _Oca_gameState extends State<Oca_game> {
         ? FichaWidget(
             visible: (3 <= njugadores),
             nombre: nombresJugadores[2],
-            posicion: posicionFicha1,
+            posicion: posicionFicha3,
             imagen: Image.asset('lib/images/Skin_dorada.png',
                 width: 15, height: 15, fit: BoxFit.contain))
         : null;
@@ -179,7 +181,7 @@ class _Oca_gameState extends State<Oca_game> {
         ? FichaWidget(
             visible: (4 <= njugadores),
             nombre: nombresJugadores[3],
-            posicion: posicionFicha1,
+            posicion: posicionFicha4,
             imagen: Image.asset('lib/images/Skin_rosa.png',
                 width: 15, height: 15, fit: BoxFit.contain))
         : null;
@@ -238,17 +240,13 @@ class _Oca_gameState extends State<Oca_game> {
                     height: 400,
                   ),
                   if (ficha1 != null)
-                    Positioned(
-                        child: ficha1!, left: leftFicha3, top: topFicha3),
+                    Positioned(child: ficha1, left: leftFicha1, top: topFicha1),
                   if (ficha2 != null)
-                    Positioned(
-                        child: ficha2!, left: leftFicha4, top: topFicha4),
+                    Positioned(child: ficha2, left: leftFicha2, top: topFicha2),
                   if (ficha3 != null)
-                    Positioned(
-                        child: ficha3!, left: leftFicha3, top: topFicha3),
+                    Positioned(child: ficha3, left: leftFicha3, top: topFicha3),
                   if (ficha4 != null)
-                    Positioned(
-                        child: ficha4!, left: leftFicha4, top: topFicha4),
+                    Positioned(child: ficha4, left: leftFicha4, top: topFicha4),
                 ],
               ),
               if (userInstance.isMyTurn)
@@ -258,7 +256,7 @@ class _Oca_gameState extends State<Oca_game> {
                     InkWell(
                       onTap: () async {
                         SocketSingleton.instance
-                            .jugarTurno()
+                            .jugarTurno(context)
                             .then((res) => actualizarJuego(res));
                       },
                       child: SizedBox(

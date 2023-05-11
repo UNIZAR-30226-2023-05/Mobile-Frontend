@@ -189,7 +189,7 @@ class _WaitingRoomState extends State<WaitingRoom> {
                   children: [
                     ElevatedButton(
                       onPressed: () async {
-                        await ss.empezarPartida(30);
+                        await ss.empezarPartida(3000);
                       },
                       style: GenericButton,
                       child: const Text(

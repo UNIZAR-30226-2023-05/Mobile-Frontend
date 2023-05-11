@@ -78,12 +78,13 @@ class SocketSingleton {
     socket.onDisconnect((data) => {});
 
     // Eventos relativos a partida
+    /*
     socket.on('estadoPartida', (data) => null);
 
     socket.on('sigTurno', (data) => null);
     socket.on('finPartida ', (data) => null);
-    socket.on("serverRoomMessage",
-        (message) => (print("respuesta del server:" + message)));
+    socket.on("serverRoomMessage", (message) => (print(message)));
+    */
   }
 
   void _subscribeToEvents() {
@@ -110,6 +111,7 @@ class SocketSingleton {
       }
     });
     socket.on('estadoPartida', (data) {
+      print("Estado partida");
       print(data);
       List posiciones = data['posiciones'];
 
@@ -119,7 +121,7 @@ class SocketSingleton {
 
         int index = nombresJugadores.indexOf(
             nickname); // Encuentra la posición del nickname en la lista de nombres de jugadores
-
+        print('Index: $index');
         // Llama a la función de actualización correspondiente
         switch (index) {
           case 0:
@@ -179,8 +181,7 @@ class SocketSingleton {
     });
 
     socket.on('finPartida ', (data) => null);
-    socket.on("serverRoomMessage",
-        (message) => (print("respuesta del server" + message)));
+    socket.on("serverRoomMessage", (message) => (message));
     socket.on("destroyingRoom",
         (message) => (print("respuesta del destroying $message")));
   }
@@ -341,7 +342,7 @@ class SocketSingleton {
   }
 
   // Jugar turno
-  Future<Map<String, dynamic>> jugarTurno() async {
+  Future<Map<String, dynamic>> jugarTurno(context) async {
     final completer = Completer<Map<String, dynamic>>();
     late Map<String, dynamic> response;
 
@@ -352,6 +353,27 @@ class SocketSingleton {
 
     response = await completer.future;
     print(response);
+    if (response['res']['rollAgain'] == true) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Te toca volver a tirar'),
+            content: Text(
+                'Enhorabuena, te mueves a la casilla ${response['res']['finalCell']} y vuelves a tirar'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Cerrar'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  // Cierra el Popup
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
 
     // Devuelve el campo 'res'
     return response['res'];

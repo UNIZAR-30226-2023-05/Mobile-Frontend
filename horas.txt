@@ -49,17 +49,18 @@ Pablo López
 2h apartado social 23/04/2023
 1h 30m apartado social, conexion backend 24/04/2023
 2h 30m redefinicion de la conexion con backend 27/04/2023
-1h 30m websockets para el juego 06/04/2023
+1h 30m websockets para el juego 06/05/2023
 9
 
-5h     Ayuda en la creacion de salas y unirse a salas 07/04/2023
-1h     Intento de implementacion de websockets con el juego 07/04/2023
-2h 30m Implementacion de la lista de jugadores en la sala 08/04/2023
+5h     Ayuda en la creacion de salas y unirse a salas 07/05/2023
+1h     Intento de implementacion de websockets con el juego 07/05/2023
+2h 30m Implementacion de la lista de jugadores en la sala 08/05/2023
 3h     Arreglo de salas 09/04/2023 
-2h     Implementacion del navigator para el juego 09/04/2023
-3h     Implementacion del backend con el juego    10/04/2023
+2h     Implementacion del navigator para el juego 09/05/2023
+3h     Implementacion del backend con el juego    10/05/2023
 16.5
 
-3h    comunicacion juego y backend parte 1 11/04/2023
+3h    comunicacion juego y backend parte 1 11/05/2023
+3h    Comunicacion juego y backend parte 2 y 3, ya funciona el juego 11/05/2023
 
 TOTAL: 65h
