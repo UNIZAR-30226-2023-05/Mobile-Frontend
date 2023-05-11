@@ -13,6 +13,10 @@ import 'package:oca_app/components/global_stream_controller.dart';
 const url = 'http://192.168.1.46:3000';
 
 typedef ActualizarEstadoCallback = Function();
+typedef ActualizarFicha1 = Function(int);
+typedef ActualizarFicha2 = Function(int);
+typedef ActualizarFicha3 = Function(int);
+typedef ActualizarFicha4 = Function(int);
 
 class SocketSingleton {
   static SocketSingleton? _instance;
@@ -22,6 +26,12 @@ class SocketSingleton {
   final GlobalStreamController turnController = GlobalStreamController();
   BuildContext? _context;
   ActualizarEstadoCallback? onActualizarEstado;
+  ActualizarFicha1? actualizarPosicionFicha1;
+  ActualizarFicha2? actualizarPosicionFicha2;
+  ActualizarFicha3? actualizarPosicionFicha3;
+  ActualizarFicha4? actualizarPosicionFicha4;
+
+  late List<String> nombresJugadores;
 
   factory SocketSingleton() {
     final instance = SocketSingleton.instance
@@ -88,8 +98,46 @@ class SocketSingleton {
       } else {
         print("Error: el formato de la lista de jugadores es incorrecto");
       }
+
+      var value = turnController.playersStreamController.value;
+      if (value is List<Map<String, dynamic>>) {
+        nombresJugadores =
+            value.map((map) => map['nickname'] as String).toList();
+        print('Nombres de los jugadores: $nombresJugadores');
+      } else {
+        print('Error al obtener el número de jugadores');
+        // Handle error or set njugadores to a default value
+      }
     });
-    socket.on('estadoPartida', (data) => (print(data)));
+    socket.on('estadoPartida', (data) {
+      print(data);
+      List posiciones = data['posiciones'];
+
+      posiciones.forEach((posicion) {
+        String nickname = posicion['nickname'];
+        int celda = posicion['celda'];
+
+        int index = nombresJugadores.indexOf(
+            nickname); // Encuentra la posición del nickname en la lista de nombres de jugadores
+
+        // Llama a la función de actualización correspondiente
+        switch (index) {
+          case 0:
+            actualizarPosicionFicha1!(celda);
+            break;
+          case 1:
+            actualizarPosicionFicha2!(celda);
+            break;
+          case 2:
+            actualizarPosicionFicha3!(celda);
+            break;
+          case 3:
+            actualizarPosicionFicha4!(celda);
+            break;
+        }
+      });
+    });
+
     socket.on('ordenTurnos', (data) {
       print(data);
       if (_context != null && userInstance.estaEnPartida == false) {
