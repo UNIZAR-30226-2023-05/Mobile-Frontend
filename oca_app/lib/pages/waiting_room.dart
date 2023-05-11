@@ -46,6 +46,7 @@ class _WaitingRoomState extends State<WaitingRoom> {
   @override
   Widget build(BuildContext context) {
     SocketSingleton ss = SocketSingleton.instance;
+    ss.setContext(context);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -134,33 +135,39 @@ class _WaitingRoomState extends State<WaitingRoom> {
                           return ListView.builder(
                             itemCount: players.length,
                             itemBuilder: (BuildContext context, int index) {
-                              return Container(
-                                height:
-                                    60, // Ajusta la altura según tus necesidades
-                                child: Card(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(players[index]['nickname']),
-                                        if (isLeader &&
-                                            players[index]['nickname'] !=
-                                                User_instance.instance.nickname)
-                                          TextButton(
-                                            onPressed: () {
-                                              print(players[index]['nickname']);
-                                              ss.removePlayerFromRoom(
-                                                  players[index]['nickname']);
-                                            },
-                                            child: Text("Expulsar"),
-                                          ),
-                                      ],
+                              if (players[index] is Map<String, dynamic>) {
+                                return Container(
+                                  height:
+                                      60, // Adjust the height as per your needs
+                                  child: Card(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(players[index]['nickname']),
+                                          if (isLeader &&
+                                              players[index]['nickname'] !=
+                                                  User_instance
+                                                      .instance.nickname)
+                                            TextButton(
+                                              onPressed: () {
+                                                print(
+                                                    players[index]['nickname']);
+                                                ss.removePlayerFromRoom(
+                                                    players[index]['nickname']);
+                                              },
+                                              child: Text("Expulsar"),
+                                            ),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              );
+                                );
+                              } else {
+                                return Container(); // Return an empty container when the data format is not as expected
+                              }
                             },
                           );
                         } else {
@@ -182,7 +189,7 @@ class _WaitingRoomState extends State<WaitingRoom> {
                   children: [
                     ElevatedButton(
                       onPressed: () async {
-                        await ss.empezarPartida(15);
+                        await ss.empezarPartida(3000);
                       },
                       style: GenericButton,
                       child: const Text(
