@@ -181,7 +181,10 @@ class CreateRoomPage extends StatelessWidget {
         barrierColor: Colors.black45,
         context: context,
         builder: (context) => AlertDialog(
-              title: const Text("Error"),
+              title: const Text(
+                "Error",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
               content:
                   const Text("La sala creada debe tener un nombre no vacío."),
               actions: [
@@ -218,7 +221,10 @@ class CreateRoomPage extends StatelessWidget {
             barrierDismissible: false,
             context: context,
             builder: (context) => AlertDialog(
-                  title: const Text("Error"),
+                  title: const Text(
+                    "Error",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                   content: const Text(
                       "Ha habido un error al crear la sala. \n Inténtelo de nuevo más tarde"),
                   actions: [

@@ -98,33 +98,11 @@ class JoinRoomPage extends StatelessWidget {
                           // podría quitarse
                           style: CancelarButton,
                           onPressed: () {
-                            showDialog(
-                                barrierColor: Colors.black45,
-                                barrierDismissible: false,
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                      title: const Text("Error"),
-                                      content: const Text(
-                                          "Ha habido un error al unirse a la sala. \n Inténtelo de nuevo más tarde"),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        Main_Menu_Page()));
-                                          },
-                                          child: const Text("Atrás"),
-                                        )
-                                      ],
-                                    ));
                             // Vuelve a  menú principal
-                            // Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //         builder: (context) => Main_Menu_Page()));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Main_Menu_Page()));
                           },
                           child: const Text("Cancelar",
                               style: TextStyle(
@@ -151,7 +129,10 @@ class JoinRoomPage extends StatelessWidget {
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
-              title: const Text("Error"),
+              title: const Text(
+                "Error",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
               // Muestra alerta non-null, pero siempre se inicializa
               content: const Text("Rellena todos los campos"),
               actions: [
@@ -187,7 +168,10 @@ class JoinRoomPage extends StatelessWidget {
             barrierDismissible: false,
             context: context,
             builder: (context) => AlertDialog(
-                  title: const Text("Error"),
+                  title: const Text(
+                    "Error",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                   content: const Text(
                       "Ha habido un error al unirse a la sala. \n Inténtelo de nuevo más tarde"),
                   actions: [
