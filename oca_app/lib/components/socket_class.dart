@@ -1,14 +1,9 @@
 import 'dart:async';
-import 'dart:ffi';
-import 'dart:io';
-
-import 'package:flutter/widgets.dart';
 import 'package:oca_app/components/User_instance.dart';
-import 'package:oca_app/pages/waiting_room.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:oca_app/components/global_stream_controller.dart';
 
-const url = 'http://192.168.1.46:3000';
+const url = 'http://192.168.1.51:3000';
 
 class SocketSingleton {
   static SocketSingleton? _instance;
@@ -95,9 +90,10 @@ class SocketSingleton {
 
   // Creación de sala
   // response: {id: int, message: "...", status: [ok,error]}
-  Future<int> createRoom(String roomName, int nPlayers) async {
+  Future<Map<String, dynamic>> createRoom(String roomName, int nPlayers) async {
     final completer = Completer<Map<String, dynamic>>();
     late Map<String, dynamic> response; // guarda respuesta del servidor
+    late Map<String, dynamic> returnVal;
 
     Map<String, dynamic> miJson = {'nickname': User_instance.instance.nickname};
 
@@ -106,25 +102,37 @@ class SocketSingleton {
       completer.complete(response);
     });
 
+    // Espera hasta que llega respuesta...
     response = await completer.future;
+
     if (response['status'] == 'ok') {
-      print("createRoom correcto");
-      // Actualizar información sobre sala
+      // Actualización de datos de sala
       User_instance.instance.idRoom = response['id'];
       User_instance.instance.soyLider = true;
+
+      // Valor de retorno
+      returnVal = {
+        'status': true,
+        'id': response['id'],
+      };
     } else {
-      print("Error: ${response['message']}");
-      // Falta manejar el error, puede ser mostrar un pop-up por pantalla
+      // Valor de retorno con mensaje de error genérico
+      returnVal = {
+        'status': false,
+        'id': response['id'],
+        'msgError': "Error al crear la sala. \n Inténtelo más tarde."
+      };
     }
-    print(response);
-    return response['id'];
+
+    return returnVal;
   }
 
   // Unirse a sala
   // repsonse: {message: "...", players: [p1 , p2, ...], status: [ok,error]}
-  Future<String> joinRoom(int idRoom) async {
+  Future<Map<String, dynamic>> joinRoom(int idRoom) async {
     final completer = Completer<Map<String, dynamic>>();
     late Map<String, dynamic> response; // guarda respuesta del servidor
+    late Map<String, dynamic> returnVal;
 
     Map<String, dynamic> miJson = {'nickname': User_instance.instance.nickname};
     // Map<String, dynamic> miJson = {'nickname': 'c'};
@@ -135,18 +143,22 @@ class SocketSingleton {
 
     response = await completer.future;
     if (response['status'] == 'ok') {
-      // Ha ido bien
-      print("joinRoom correcto");
       // Actualizar información sobre sala
       User_instance.instance.idRoom = idRoom;
       User_instance.instance.soyLider = false;
+      returnVal = {
+        'status': true,
+        'id': response['id'],
+      };
     } else {
-      print("Error: ${response['message']}");
-      // Falta manejar el error, puede ser mostrar un pop-up por pantalla
+      returnVal = {
+        'status': true,
+        'id': response['id'],
+        'msgError': "Error al unirse a la sala.\n Inténtelo de nuevo más tarde."
+      };
     }
-    print(response);
 
-    return response['roomName'];
+    return returnVal;
   }
 
   // Salir de una sala

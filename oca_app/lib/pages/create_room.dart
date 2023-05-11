@@ -130,37 +130,9 @@ class CreateRoomPage extends StatelessWidget {
                           style: CrearButton,
                           onPressed: () async {
                             if (roomNameCtrl.text == "") {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                        title: const Text("Error"),
-                                        content: const Text(
-                                            "La sala creada debe tener un nombre no vacío."),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: const Text("OK"),
-                                          )
-                                        ],
-                                      ));
+                              _showAlertDialogEmptyFields(context);
                             } else {
-                              int newIdRoom = await ss.createRoom(
-                                  roomNameCtrl.text, nPlayers);
-                              // Actualización de id de sala
-                              User_instance.instance.idRoom = newIdRoom;
-
-                              print("ID de la sala creada: $newIdRoom");
-
-                              // Redirección a la sala de juegos
-                              // ignore: use_build_context_synchronously
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => WaitingRoom(
-                                            nameRoom: roomNameCtrl.text,
-                                          )));
+                              _createRoom(context, nPlayers);
                             }
                           },
                           child: const Text("Crear",
@@ -203,5 +175,64 @@ class CreateRoomPage extends StatelessWidget {
         ]),
       )),
     );
+  }
+
+  void _showAlertDialogEmptyFields(BuildContext context) {
+    showDialog(
+        barrierColor: Colors.black45,
+        context: context,
+        builder: (context) => AlertDialog(
+              title: const Text("Error"),
+              content:
+                  const Text("La sala creada debe tener un nombre no vacío."),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("OK"),
+                )
+              ],
+            ));
+  }
+
+  void _createRoom(BuildContext context, int nPlayers) async {
+    final response =
+        await SocketSingleton.instance.createRoom(roomNameCtrl.text, nPlayers);
+
+    switch (response['status']) {
+      case true: /* ok */
+        // ignore: use_build_context_synchronously
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => WaitingRoom(
+                      nameRoom: roomNameCtrl.text,
+                    )));
+        break;
+      default: /* error */
+        // ignore: use_build_context_synchronously
+        showDialog(
+            barrierColor: Colors.black45,
+            barrierDismissible: false,
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: const Text("Error"),
+                  content: const Text(
+                      "La sala creada debe tener un nombre no vacío."),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Main_Menu_Page()));
+                      },
+                      child: const Text("Atrás"),
+                    )
+                  ],
+                ));
+    }
   }
 }
