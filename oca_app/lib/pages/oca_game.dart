@@ -1,9 +1,12 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:oca_app/styles/buttons_styles.dart';
 import 'package:oca_app/components/fichas.dart';
 import 'package:oca_app/components/oca_game_grid.dart';
 import 'package:oca_app/components/global_stream_controller.dart';
 import 'package:oca_app/components/socket_class.dart';
+import 'package:oca_app/components/User_instance.dart';
 
 class Oca_game extends StatefulWidget {
   Oca_game({Key? key}) : super(key: key);
@@ -15,6 +18,8 @@ class Oca_game extends StatefulWidget {
 class _Oca_gameState extends State<Oca_game> {
   final String nombreSala = 'Nombre de la sala';
   late int njugadores;
+  User_instance userInstance = User_instance.instance;
+  int _diceNumber = 1;
 
   int posicionFicha1 = 0;
   double leftFicha1 = calcularCoordenadas(1, 0)[0].toDouble();
@@ -32,7 +37,23 @@ class _Oca_gameState extends State<Oca_game> {
   double leftFicha4 = calcularCoordenadas(4, 0)[0].toDouble();
   double topFicha4 = calcularCoordenadas(4, 0)[1].toDouble();
 
-  void actualizarPosicion() {
+  void actualizarEstado() {
+    setState(() {});
+    // Aquí, puedes agregar el código para actualizar la posición basándote en _diceNumber
+  }
+
+  void actualizarJuego(Map<String, dynamic> res) {
+    setState(() {
+      _diceNumber =
+          res['dice']; // Actualiza _diceNumber con el valor de 'dice' en 'res'
+      actualizarPosicion(res['afterDice']);
+      print("actualizarjuego: ");
+      print(res);
+    });
+    // Aquí, puedes agregar el código para actualizar la posición basándote en _diceNumber
+  }
+
+  void actualizarPosicion(int casillas) {
     setState(() {
       posicionFicha1++;
       leftFicha1 = calcularCoordenadas(1, posicionFicha1)[0].toDouble();
@@ -52,12 +73,13 @@ class _Oca_gameState extends State<Oca_game> {
 
       print(posicionFicha1);
     });
+  }
 
-    @override
-    void initState() {
-      super.initState();
-      inicializarJuego();
-    }
+  @override
+  void initState() {
+    super.initState();
+    SocketSingleton.instance.onActualizarEstado = actualizarEstado;
+    inicializarJuego();
   }
 
   void inicializarJuego() {
@@ -65,7 +87,9 @@ class _Oca_gameState extends State<Oca_game> {
     var value = ss.turnController.playersStreamController.value;
     if (value is List) {
       njugadores = value.length;
+      print('Número de jugadores: $njugadores');
     } else {
+      print('Error al obtener el número de jugadores');
       // Handle error or set njugadores to a default value
     }
   }
@@ -73,25 +97,29 @@ class _Oca_gameState extends State<Oca_game> {
   @override
   Widget build(BuildContext context) {
     FichaWidget ficha1 = FichaWidget(
+        visible: (1 <= njugadores),
         nombre: 'Ficha 1',
         posicion: posicionFicha1,
         imagen: Image.asset('lib/images/Skin_dorada.png',
             width: 15, height: 15, fit: BoxFit.contain));
 
     FichaWidget ficha2 = FichaWidget(
-        nombre: 'Ficha 1',
+        visible: (2 <= njugadores),
+        nombre: 'Ficha 2',
         posicion: posicionFicha1,
         imagen: Image.asset('lib/images/Skin_rosa.png',
             width: 15, height: 15, fit: BoxFit.contain));
 
     FichaWidget ficha3 = FichaWidget(
-        nombre: 'Ficha 1',
+        visible: (3 <= njugadores),
+        nombre: 'Ficha 3',
         posicion: posicionFicha1,
         imagen: Image.asset('lib/images/Skin_dorada.png',
             width: 15, height: 15, fit: BoxFit.contain));
 
     FichaWidget ficha4 = FichaWidget(
-        nombre: 'Ficha 1',
+        visible: (4 <= njugadores),
+        nombre: 'Ficha 4',
         posicion: posicionFicha1,
         imagen: Image.asset('lib/images/Skin_rosa.png',
             width: 15, height: 15, fit: BoxFit.contain));
@@ -155,11 +183,27 @@ class _Oca_gameState extends State<Oca_game> {
                   Positioned(child: ficha4, left: leftFicha4, top: topFicha4),
                 ],
               ),
-              ElevatedButton(
-                  onPressed: () {
-                    actualizarPosicion();
-                  },
-                  child: const Text('Tirar dados')),
+              if (userInstance.isMyTurn)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    InkWell(
+                      onTap: () async {
+                        SocketSingleton.instance
+                            .jugarTurno()
+                            .then((res) => actualizarJuego(res));
+                      },
+                      child: SizedBox(
+                        height: 50.0, // Ajusta el tamaño como necesites
+                        width: 50.0, // Ajusta el tamaño como necesites
+                        child: Image.asset(
+                            'lib/images/dado_cara_$_diceNumber.png'),
+                      ),
+                    ),
+                    SizedBox(width: 10), // Espaciado entre la imagen y el texto
+                    Text('Tirar dados'),
+                  ],
+                )
             ],
           ),
         ));

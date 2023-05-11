@@ -12,6 +12,8 @@ import 'package:oca_app/components/global_stream_controller.dart';
 
 const url = 'http://192.168.1.46:3000';
 
+typedef ActualizarEstadoCallback = Function();
+
 class SocketSingleton {
   static SocketSingleton? _instance;
   static late IO.Socket socket;
@@ -19,7 +21,7 @@ class SocketSingleton {
       GlobalStreamController();
   final GlobalStreamController turnController = GlobalStreamController();
   BuildContext? _context;
-  bool estaenPartida = false;
+  ActualizarEstadoCallback? onActualizarEstado;
 
   factory SocketSingleton() {
     final instance = SocketSingleton.instance
@@ -66,21 +68,8 @@ class SocketSingleton {
     socket.onDisconnect((data) => {});
 
     // Eventos relativos a partida
-    socket.on('updatePlayers', (data) {
-      print("updatePlayers: $data");
-      globalStreamController.addData(data);
-    });
     socket.on('estadoPartida', (data) => null);
-    socket.on('ordenTurnos', (data) {
-      print(data);
-      if (_context != null && !estaenPartida) {
-        estaenPartida = true;
-        Navigator.of(_context!)
-            .push(MaterialPageRoute(builder: (context) => Oca_game()));
-      } else {
-        //gestion de los turnos
-      }
-    });
+
     socket.on('sigTurno', (data) => null);
     socket.on('finPartida ', (data) => null);
     socket.on("serverRoomMessage",
@@ -88,6 +77,7 @@ class SocketSingleton {
   }
 
   void _subscribeToEvents() {
+    User_instance userInstance = User_instance.instance;
     socket.on('updatePlayers', (data) {
       print("updatePlayers: $data");
       if (data is List<dynamic> && data.every((element) => element is String)) {
@@ -99,11 +89,47 @@ class SocketSingleton {
         print("Error: el formato de la lista de jugadores es incorrecto");
       }
     });
-    socket.on('estadoPartida', (data) => null);
+    socket.on('estadoPartida', (data) => (print(data)));
     socket.on('ordenTurnos', (data) {
-      turnController.addData(data['ordenTurnos']);
+      print(data);
+      if (_context != null && userInstance.estaEnPartida == false) {
+        userInstance.estaEnPartida = true;
+        if (data != null &&
+            data['ordenTurnos'] != null &&
+            data['ordenTurnos'].length > 0) {
+          if (data['ordenTurnos'][0] == userInstance.nickname) {
+            userInstance.isMyTurn = true;
+          } else {
+            userInstance.isMyTurn = false;
+          }
+        }
+        Navigator.of(_context!)
+            .push(MaterialPageRoute(builder: (context) => Oca_game()));
+      } else {
+        //gestion de los turnos
+        if (data != null &&
+            data['ordenTurnos'] != null &&
+            data['ordenTurnos'].length > 0) {
+          if (data['ordenTurnos'][0] == userInstance.nickname) {
+            userInstance.isMyTurn = true;
+          } else {
+            userInstance.isMyTurn = false;
+          }
+        }
+      }
     });
-    socket.on('sigTurno', (data) => null);
+    socket.on('sigTurno', (data) {
+      print(data);
+      if (data['turno'] == User_instance.instance.nickname) {
+        User_instance.instance.isMyTurn = true;
+      } else {
+        User_instance.instance.isMyTurn = false;
+      }
+
+      // Llama a la función actualizarEstado de Oca_game
+      onActualizarEstado?.call();
+    });
+
     socket.on('finPartida ', (data) => null);
     socket.on("serverRoomMessage",
         (message) => (print("respuesta del server" + message)));
@@ -267,9 +293,9 @@ class SocketSingleton {
   }
 
   // Jugar turno
-  Future<void> jugarTurno() async {
+  Future<Map<String, dynamic>> jugarTurno() async {
     final completer = Completer<Map<String, dynamic>>();
-    late Map<String, dynamic> response; // guarda respuesta del servidor0
+    late Map<String, dynamic> response;
 
     socket.emitWithAck('turn', [User_instance.instance.idRoom],
         ack: (response) {
@@ -278,5 +304,8 @@ class SocketSingleton {
 
     response = await completer.future;
     print(response);
+
+    // Devuelve el campo 'res'
+    return response['res'];
   }
 }
