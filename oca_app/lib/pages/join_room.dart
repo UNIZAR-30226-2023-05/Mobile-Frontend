@@ -32,8 +32,8 @@ class JoinRoomPage extends StatelessWidget {
             width: double.infinity,
           ),
           Container(
-            width: 390, //390,
-            height: 700, // 700,
+            width: 390,
+            height: 700,
             color: Colors.white,
             child: Container(
               color: const Color.fromARGB(255, 170, 250, 254),
@@ -80,16 +80,7 @@ class JoinRoomPage extends StatelessWidget {
                             if (idRoomCtrl.text == "") {
                               _alertEmptyFields(context);
                             } else {
-                              // Comprobar que sigue un formato
-                              final roomName =
-                                  await ss.joinRoom(int.parse(idRoomCtrl.text));
-                              // ignore: use_build_context_synchronously
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => WaitingRoom(
-                                            nameRoom: roomName,
-                                          )));
+                              _joinRoom(context, int.parse(idRoomCtrl.text));
                             }
                           },
                           child: const Text("Unirse",
@@ -107,11 +98,33 @@ class JoinRoomPage extends StatelessWidget {
                           // podría quitarse
                           style: CancelarButton,
                           onPressed: () {
+                            showDialog(
+                                barrierColor: Colors.black45,
+                                barrierDismissible: false,
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                      title: const Text("Error"),
+                                      content: const Text(
+                                          "Ha habido un error al unirse a la sala. \n Inténtelo de nuevo más tarde"),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        Main_Menu_Page()));
+                                          },
+                                          child: const Text("Atrás"),
+                                        )
+                                      ],
+                                    ));
                             // Vuelve a  menú principal
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Main_Menu_Page()));
+                            // Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //         builder: (context) => Main_Menu_Page()));
                           },
                           child: const Text("Cancelar",
                               style: TextStyle(
@@ -150,5 +163,46 @@ class JoinRoomPage extends StatelessWidget {
                 ),
               ],
             ));
+  }
+
+  void _joinRoom(BuildContext context, int id) async {
+    // Comprobar que sigue un formato
+    final response =
+        await SocketSingleton.instance.joinRoom(int.parse(idRoomCtrl.text));
+
+    switch (response['status']) {
+      case true: /* ok */
+        // ignore: use_build_context_synchronously
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => WaitingRoom(
+                      roomName: response['roomName'],
+                    )));
+      default: /* error */
+        // Redirección a menú principal
+        // ignore: use_build_context_synchronously
+        showDialog(
+            barrierColor: Colors.black45,
+            barrierDismissible: false,
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: const Text("Error"),
+                  content: const Text(
+                      "Ha habido un error al unirse a la sala. \n Inténtelo de nuevo más tarde"),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Main_Menu_Page()));
+                      },
+                      child: const Text("Atrás"),
+                    )
+                  ],
+                ));
+    }
   }
 }

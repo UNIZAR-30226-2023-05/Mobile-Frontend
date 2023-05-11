@@ -6,7 +6,6 @@
 // -------------------------------------------------------------------
 
 import 'package:flutter/material.dart';
-import 'package:oca_app/components/User_instance.dart';
 import 'package:oca_app/components/forms.dart';
 import 'package:oca_app/components/socket_class.dart';
 import 'package:oca_app/pages/main_menu.dart';
@@ -150,12 +149,12 @@ class CreateRoomPage extends StatelessWidget {
                           style: CancelarButton,
                           onPressed: () async {
                             await ss.destroyRoom();
+
                             // ignore: use_build_context_synchronously
-                            /*
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => Main_Menu_Page()));*/
+                                    builder: (context) => Main_Menu_Page()));
                           },
                           child: const Text("Cancelar",
                               style: TextStyle(
@@ -202,15 +201,17 @@ class CreateRoomPage extends StatelessWidget {
 
     switch (response['status']) {
       case true: /* ok */
+        // Redirección a sala de juegos
         // ignore: use_build_context_synchronously
         Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => WaitingRoom(
-                      nameRoom: roomNameCtrl.text,
+                      roomName: roomNameCtrl.text,
                     )));
         break;
       default: /* error */
+        // Redirección a menú principal
         // ignore: use_build_context_synchronously
         showDialog(
             barrierColor: Colors.black45,
@@ -219,7 +220,7 @@ class CreateRoomPage extends StatelessWidget {
             builder: (context) => AlertDialog(
                   title: const Text("Error"),
                   content: const Text(
-                      "La sala creada debe tener un nombre no vacío."),
+                      "Ha habido un error al crear la sala. \n Inténtelo de nuevo más tarde"),
                   actions: [
                     TextButton(
                       onPressed: () {

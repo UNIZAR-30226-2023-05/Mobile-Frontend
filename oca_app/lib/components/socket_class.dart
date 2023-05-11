@@ -60,8 +60,8 @@ class SocketSingleton {
     socket.on('ordenTurnos', (data) => print(data));
     socket.on('sigTurno', (data) => null);
     socket.on('finPartida ', (data) => null);
-    socket.on("serverRoomMessage",
-        (message) => (print("respuesta del server:" + message)));
+    // socket.on("serverRoomMessage",
+    //     (message) => (print("respuesta del server:" + message)));
   }
 
   void _subscribeToEvents() {
@@ -80,8 +80,8 @@ class SocketSingleton {
     socket.on('ordenTurnos', (data) => print(data));
     socket.on('sigTurno', (data) => null);
     socket.on('finPartida ', (data) => null);
-    socket.on("serverRoomMessage",
-        (message) => (print("respuesta del server" + message)));
+    // socket.on("serverRoomMessage",
+    //     (message) => (print("respuesta del server" + message)));
     socket.on("destroyingRoom",
         (message) => (print("respuesta del destroying $message")));
   }
@@ -102,21 +102,15 @@ class SocketSingleton {
       completer.complete(response);
     });
 
-    // Espera hasta que llega respuesta...
     response = await completer.future;
-
     if (response['status'] == 'ok') {
-      // Actualización de datos de sala
       User_instance.instance.idRoom = response['id'];
       User_instance.instance.soyLider = true;
-
-      // Valor de retorno
       returnVal = {
         'status': true,
         'id': response['id'],
       };
     } else {
-      // Valor de retorno con mensaje de error genérico
       returnVal = {
         'status': false,
         'id': response['id'],
@@ -124,6 +118,7 @@ class SocketSingleton {
       };
     }
 
+    print(response);
     return returnVal;
   }
 
@@ -146,10 +141,7 @@ class SocketSingleton {
       // Actualizar información sobre sala
       User_instance.instance.idRoom = idRoom;
       User_instance.instance.soyLider = false;
-      returnVal = {
-        'status': true,
-        'id': response['id'],
-      };
+      returnVal = {'status': true, 'roomName': response['roomName']};
     } else {
       returnVal = {
         'status': true,
@@ -158,6 +150,7 @@ class SocketSingleton {
       };
     }
 
+    print(response);
     return returnVal;
   }
 
