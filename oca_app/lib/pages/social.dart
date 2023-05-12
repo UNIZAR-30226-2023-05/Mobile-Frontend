@@ -12,7 +12,6 @@ class Social extends StatefulWidget {
 
 class _SocialState extends State<Social> {
   var solicitudController = TextEditingController();
-  User_instance user_instance = User_instance.instance;
   final solicitudesController =
       StreamController<List<Map<String, dynamic>>>.broadcast();
 
@@ -20,16 +19,16 @@ class _SocialState extends State<Social> {
   @override
   void initState() {
     super.initState();
-    solicitudesPendientes(user_instance.id).then((solicitudes) {
-      listaAmigos(user_instance.id).then((amigos) {
+    solicitudesPendientes(User_instance.instance.id).then((solicitudes) {
+      listaAmigos(User_instance.instance.id).then((amigos) {
         solicitudesController.add([...solicitudes, ...amigos]);
       });
     });
   }
 
   Future<void> fetchData() async {
-    final solicitudes = await solicitudesPendientes(user_instance.id);
-    final amigos = await listaAmigos(user_instance.id);
+    final solicitudes = await solicitudesPendientes(User_instance.instance.id);
+    final amigos = await listaAmigos(User_instance.instance.id);
     solicitudesController.add([...solicitudes, ...amigos]);
   }
 
@@ -97,7 +96,7 @@ class _SocialState extends State<Social> {
             ElevatedButton(
               onPressed: () async {
                 if (await enviarSolicitudAmistad(
-                    await getUserIDemail(user_instance.email),
+                    await getUserIDemail(User_instance.instance.email),
                     await getUserIDemail(solicitudController.text))) {
                   Navigator.pop(context);
                   // ignore: use_build_context_synchronously
@@ -311,7 +310,8 @@ class _SocialState extends State<Social> {
                                               onPressed: () async {
                                                 if (await rechazarSolcitudAmistad(
                                                     await getUserIDemail(
-                                                        user_instance.email),
+                                                        User_instance
+                                                            .instance.email),
                                                     await getUserIDnickname(
                                                         "${element['nickname']}"))) {
                                                   // ignore: use_build_context_synchronously
@@ -434,7 +434,8 @@ class _SocialState extends State<Social> {
                                               onPressed: () async {
                                                 if (await enviarSolicitudAmistad(
                                                     await getUserIDemail(
-                                                        user_instance.email),
+                                                        User_instance
+                                                            .instance.email),
                                                     await getUserIDnickname(
                                                         "${element['nickname']}"))) {
                                                   // ignore: use_build_context_synchronously

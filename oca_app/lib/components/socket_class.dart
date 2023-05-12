@@ -17,6 +17,8 @@ typedef ActualizarFicha1 = Function(int);
 typedef ActualizarFicha2 = Function(int);
 typedef ActualizarFicha3 = Function(int);
 typedef ActualizarFicha4 = Function(int);
+typedef ActualizarFicha5 = Function(int);
+typedef ActualizarFicha6 = Function(int);
 
 class SocketSingleton {
   static SocketSingleton? _instance;
@@ -30,6 +32,8 @@ class SocketSingleton {
   ActualizarFicha2? actualizarPosicionFicha2;
   ActualizarFicha3? actualizarPosicionFicha3;
   ActualizarFicha4? actualizarPosicionFicha4;
+  ActualizarFicha3? actualizarPosicionFicha5;
+  ActualizarFicha4? actualizarPosicionFicha6;
 
   late List<String> nombresJugadores;
 
@@ -136,6 +140,12 @@ class SocketSingleton {
           case 3:
             actualizarPosicionFicha4!(celda);
             break;
+          case 4:
+            actualizarPosicionFicha5!(celda);
+            break;
+          case 5:
+            actualizarPosicionFicha6!(celda);
+            break;
         }
       });
     });
@@ -180,8 +190,9 @@ class SocketSingleton {
       onActualizarEstado?.call();
     });
 
-    socket.on('finPartida ', (data) => null);
-    socket.on("serverRoomMessage", (message) => (message));
+    socket.on('finPartida ', (data) => ("finPartida: $data"));
+    socket.on(
+        "serverRoomMessage", (message) => ("ServerRoomMessage: $message"));
     socket.on("destroyingRoom",
         (message) => (print("respuesta del destroying $message")));
   }
@@ -357,6 +368,25 @@ class SocketSingleton {
     // Si el mensaje es "Estás penalizado" y el estado es "error", no hagas nada
     if (response['message'] == 'Estás penalizado' &&
         response['status'] == 'error') {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Estas penalizado'),
+            content: Text(
+                'Has caido en una casilla de penalizacion, asi que no puedes jugar este turno'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Cerrar'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  // Cierra el Popup
+                },
+              ),
+            ],
+          );
+        },
+      );
       return {}; // Retorna un mapa vacío
     }
 

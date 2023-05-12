@@ -67,7 +67,26 @@ List<List<int>> matrizCoordenadas = [
 ];
 
 // Jajajaj lo siento por esto intentare reducirla
-List<int> calcularCoordenadas(int jugador, int posicion) {
+List<int> calcularCoordenadas(int jugador, int posicion, int njugadores) {
+  int offset = 0;
+  switch (njugadores) {
+    case 2:
+      offset = 5;
+      break;
+    case 3:
+      offset = 3;
+      break;
+    case 4:
+      offset = 2;
+      break;
+    case 5:
+      offset = 1;
+      break;
+    case 6:
+      offset = 1;
+      break;
+  }
+
   if (posicion > 62) {
     posicion = 62;
   }
@@ -75,170 +94,282 @@ List<int> calcularCoordenadas(int jugador, int posicion) {
     case 1:
       return matrizCoordenadas[posicion];
     case 2:
-      if (posicion <= 7) {
+      if (posicion <= 8) {
         return [
           matrizCoordenadas[posicion][0],
-          matrizCoordenadas[posicion][1] + 10
+          matrizCoordenadas[posicion][1] + 5 * offset
         ];
       }
-      if (posicion > 7 && posicion <= 17) {
+      if (posicion > 8 && posicion <= 18) {
         return [
-          matrizCoordenadas[posicion][0] + 10,
+          matrizCoordenadas[posicion][0] + 5 * offset,
           matrizCoordenadas[posicion][1]
         ];
       }
-      if (posicion > 17 && posicion <= 27) {
+      if (posicion > 18 && posicion <= 28) {
         return [
           matrizCoordenadas[posicion][0],
-          matrizCoordenadas[posicion][1] - 10
+          matrizCoordenadas[posicion][1] - 5 * offset
         ];
       }
-      if (posicion > 27 && posicion <= 35) {
+      if (posicion > 28 && posicion <= 36) {
         return [
-          matrizCoordenadas[posicion][0] - 10,
+          matrizCoordenadas[posicion][0] - 5 * offset,
           matrizCoordenadas[posicion][1]
         ];
       }
-      if (posicion > 35 && posicion <= 43) {
+      if (posicion > 36 && posicion <= 44) {
         return [
           matrizCoordenadas[posicion][0],
-          matrizCoordenadas[posicion][1] + 10
+          matrizCoordenadas[posicion][1] + 5 * offset
         ];
       }
-      if (posicion > 43 && posicion <= 49) {
+      if (posicion > 44 && posicion <= 50) {
         return [
-          matrizCoordenadas[posicion][0] + 10,
+          matrizCoordenadas[posicion][0] + 5 * offset,
           matrizCoordenadas[posicion][1]
         ];
       }
-      if (posicion > 49 && posicion <= 55) {
+      if (posicion > 50 && posicion <= 56) {
         return [
           matrizCoordenadas[posicion][0],
-          matrizCoordenadas[posicion][1] - 10
+          matrizCoordenadas[posicion][1] - 5 * offset
         ];
       }
-      if (posicion > 55 && posicion <= 59) {
+      if (posicion > 56 && posicion <= 60) {
         return [
-          matrizCoordenadas[posicion][0] - 10,
+          matrizCoordenadas[posicion][0] - 5 * offset,
           matrizCoordenadas[posicion][1]
         ];
       }
-      if (posicion > 59 && posicion <= 62) {
+      if (posicion > 60 && posicion <= 63) {
         return [
           matrizCoordenadas[posicion][0],
-          matrizCoordenadas[posicion][1] + 10
+          matrizCoordenadas[posicion][1] + 5 * offset
         ];
       }
       return [0, 0];
     case 3:
-      if (posicion <= 7) {
+      if (posicion <= 8) {
         return [
           matrizCoordenadas[posicion][0],
-          matrizCoordenadas[posicion][1] + 20
+          matrizCoordenadas[posicion][1] + 10 * offset
         ];
       }
-      if (posicion > 7 && posicion <= 17) {
+      if (posicion > 8 && posicion <= 18) {
         return [
-          matrizCoordenadas[posicion][0] + 20,
+          matrizCoordenadas[posicion][0] + 10 * offset,
           matrizCoordenadas[posicion][1]
         ];
       }
-      if (posicion > 17 && posicion <= 27) {
+      if (posicion > 18 && posicion <= 28) {
         return [
           matrizCoordenadas[posicion][0],
-          matrizCoordenadas[posicion][1] - 20
+          matrizCoordenadas[posicion][1] - 10 * offset
         ];
       }
-      if (posicion > 27 && posicion <= 35) {
+      if (posicion > 28 && posicion <= 36) {
         return [
-          matrizCoordenadas[posicion][0] - 20,
+          matrizCoordenadas[posicion][0] - 10 * offset,
           matrizCoordenadas[posicion][1]
         ];
       }
-      if (posicion > 35 && posicion <= 43) {
+      if (posicion > 36 && posicion <= 44) {
         return [
           matrizCoordenadas[posicion][0],
-          matrizCoordenadas[posicion][1] + 20
+          matrizCoordenadas[posicion][1] + 10 * offset
         ];
       }
-      if (posicion > 43 && posicion <= 49) {
+      if (posicion > 44 && posicion <= 50) {
         return [
-          matrizCoordenadas[posicion][0] + 20,
+          matrizCoordenadas[posicion][0] + 10 * offset,
           matrizCoordenadas[posicion][1]
         ];
       }
-      if (posicion > 49 && posicion <= 55) {
+      if (posicion > 50 && posicion <= 56) {
         return [
           matrizCoordenadas[posicion][0],
-          matrizCoordenadas[posicion][1] - 20
+          matrizCoordenadas[posicion][1] - 10 * offset
         ];
       }
-      if (posicion > 55 && posicion <= 59) {
+      if (posicion > 56 && posicion <= 60) {
         return [
-          matrizCoordenadas[posicion][0] - 20,
+          matrizCoordenadas[posicion][0] - 10 * offset,
           matrizCoordenadas[posicion][1]
         ];
       }
-      if (posicion > 59 && posicion <= 62) {
+      if (posicion > 60 && posicion <= 63) {
         return [
           matrizCoordenadas[posicion][0],
-          matrizCoordenadas[posicion][1] + 20
+          matrizCoordenadas[posicion][1] + 10 * offset
         ];
       }
       return [0, 0];
     case 4:
-      if (posicion <= 7) {
+      if (posicion <= 8) {
         return [
           matrizCoordenadas[posicion][0],
-          matrizCoordenadas[posicion][1] + 30
+          matrizCoordenadas[posicion][1] + 15 * offset
         ];
       }
-      if (posicion > 7 && posicion <= 17) {
+      if (posicion > 8 && posicion <= 18) {
         return [
-          matrizCoordenadas[posicion][0] + 30,
+          matrizCoordenadas[posicion][0] + 15 * offset,
           matrizCoordenadas[posicion][1]
         ];
       }
-      if (posicion > 17 && posicion <= 27) {
+      if (posicion > 18 && posicion <= 28) {
         return [
           matrizCoordenadas[posicion][0],
-          matrizCoordenadas[posicion][1] - 30
+          matrizCoordenadas[posicion][1] - 15 * offset
         ];
       }
-      if (posicion > 27 && posicion <= 35) {
+      if (posicion > 28 && posicion <= 36) {
         return [
-          matrizCoordenadas[posicion][0] - 30,
+          matrizCoordenadas[posicion][0] - 15 * offset,
           matrizCoordenadas[posicion][1]
         ];
       }
-      if (posicion > 35 && posicion <= 43) {
+      if (posicion > 36 && posicion <= 44) {
         return [
           matrizCoordenadas[posicion][0],
-          matrizCoordenadas[posicion][1] + 30
+          matrizCoordenadas[posicion][1] + 15 * offset
         ];
       }
-      if (posicion > 43 && posicion <= 49) {
+      if (posicion > 44 && posicion <= 50) {
         return [
-          matrizCoordenadas[posicion][0] + 30,
+          matrizCoordenadas[posicion][0] + 15 * offset,
           matrizCoordenadas[posicion][1]
         ];
       }
-      if (posicion > 49 && posicion <= 55) {
+      if (posicion > 50 && posicion <= 56) {
         return [
           matrizCoordenadas[posicion][0],
-          matrizCoordenadas[posicion][1] - 30
+          matrizCoordenadas[posicion][1] - 15 * offset
         ];
       }
-      if (posicion > 55 && posicion <= 59) {
+      if (posicion > 56 && posicion <= 60) {
         return [
-          matrizCoordenadas[posicion][0] - 30,
+          matrizCoordenadas[posicion][0] - 15 * offset,
           matrizCoordenadas[posicion][1]
         ];
       }
-      if (posicion > 59 && posicion <= 62) {
+      if (posicion > 60 && posicion <= 63) {
         return [
           matrizCoordenadas[posicion][0],
-          matrizCoordenadas[posicion][1] + 30
+          matrizCoordenadas[posicion][1] + 15 * offset
+        ];
+      }
+      return [0, 0];
+    case 5:
+      if (posicion <= 8) {
+        return [
+          matrizCoordenadas[posicion][0],
+          matrizCoordenadas[posicion][1] + 20 * offset
+        ];
+      }
+      if (posicion > 8 && posicion <= 18) {
+        return [
+          matrizCoordenadas[posicion][0] + 20 * offset,
+          matrizCoordenadas[posicion][1]
+        ];
+      }
+      if (posicion > 18 && posicion <= 28) {
+        return [
+          matrizCoordenadas[posicion][0],
+          matrizCoordenadas[posicion][1] - 20 * offset
+        ];
+      }
+      if (posicion > 28 && posicion <= 36) {
+        return [
+          matrizCoordenadas[posicion][0] - 20 * offset,
+          matrizCoordenadas[posicion][1]
+        ];
+      }
+      if (posicion > 36 && posicion <= 44) {
+        return [
+          matrizCoordenadas[posicion][0],
+          matrizCoordenadas[posicion][1] + 20 * offset
+        ];
+      }
+      if (posicion > 44 && posicion <= 50) {
+        return [
+          matrizCoordenadas[posicion][0] + 20 * offset,
+          matrizCoordenadas[posicion][1]
+        ];
+      }
+      if (posicion > 50 && posicion <= 56) {
+        return [
+          matrizCoordenadas[posicion][0],
+          matrizCoordenadas[posicion][1] - 20 * offset
+        ];
+      }
+      if (posicion > 56 && posicion <= 60) {
+        return [
+          matrizCoordenadas[posicion][0] - 20 * offset,
+          matrizCoordenadas[posicion][1]
+        ];
+      }
+      if (posicion > 60 && posicion <= 63) {
+        return [
+          matrizCoordenadas[posicion][0],
+          matrizCoordenadas[posicion][1] + 20 * offset
+        ];
+      }
+      return [0, 0];
+    case 6:
+      if (posicion <= 8) {
+        return [
+          matrizCoordenadas[posicion][0],
+          matrizCoordenadas[posicion][1] + 25 * offset
+        ];
+      }
+      if (posicion > 8 && posicion <= 18) {
+        return [
+          matrizCoordenadas[posicion][0] + 25 * offset,
+          matrizCoordenadas[posicion][1]
+        ];
+      }
+      if (posicion > 18 && posicion <= 28) {
+        return [
+          matrizCoordenadas[posicion][0],
+          matrizCoordenadas[posicion][1] - 25 * offset
+        ];
+      }
+      if (posicion > 28 && posicion <= 36) {
+        return [
+          matrizCoordenadas[posicion][0] - 25 * offset,
+          matrizCoordenadas[posicion][1]
+        ];
+      }
+      if (posicion > 36 && posicion <= 44) {
+        return [
+          matrizCoordenadas[posicion][0],
+          matrizCoordenadas[posicion][1] + 25 * offset
+        ];
+      }
+      if (posicion > 44 && posicion <= 50) {
+        return [
+          matrizCoordenadas[posicion][0] + 25 * offset,
+          matrizCoordenadas[posicion][1]
+        ];
+      }
+      if (posicion > 50 && posicion <= 56) {
+        return [
+          matrizCoordenadas[posicion][0],
+          matrizCoordenadas[posicion][1] - 25 * offset
+        ];
+      }
+      if (posicion > 56 && posicion <= 60) {
+        return [
+          matrizCoordenadas[posicion][0] - 25 * offset,
+          matrizCoordenadas[posicion][1]
+        ];
+      }
+      if (posicion > 60 && posicion <= 63) {
+        return [
+          matrizCoordenadas[posicion][0],
+          matrizCoordenadas[posicion][1] + 25 * offset
         ];
       }
       return [0, 0];

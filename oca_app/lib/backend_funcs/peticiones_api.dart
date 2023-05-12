@@ -39,7 +39,7 @@ Future<int> getUserIDemail(String email) async {
     return respJson['id_usuario']; //jsonDecode(response.body)['id'];
   } else {
     // ignore: avoid_print, prefer_interpolation_to_compose_strings
-    print("Error en getuserid " +
+    print("Error en getuseridemail " +
         response.statusCode.toString() +
         "\n" +
         "\n" +
@@ -50,8 +50,7 @@ Future<int> getUserIDemail(String email) async {
 
 Future<int> getUserIDnickname(String nickname) async {
   var headers = {'Content-Type': 'application/json'};
-  var request = http.Request(
-      'GET', Uri.parse('https://backendps.vercel.app/users/register'));
+  var request = http.Request('GET', Uri.parse('$baseUrl/users/register'));
   request.body = json.encode({"nickname": nickname});
   request.headers.addAll(headers);
 
@@ -66,7 +65,7 @@ Future<int> getUserIDnickname(String nickname) async {
     return respJson['id_usuario']; //jsonDecode(response.body)['id'];
   } else {
     // ignore: avoid_print, prefer_interpolation_to_compose_strings
-    print("Error en getuserid " +
+    print("Error en getuseridnickname " +
         response.statusCode.toString() +
         "\n" +
         "\n" +
