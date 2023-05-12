@@ -19,8 +19,6 @@ class JoinRoomPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SocketSingleton ss = SocketSingleton.instance;
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xFF1C6474),

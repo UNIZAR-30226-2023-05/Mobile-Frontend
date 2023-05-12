@@ -3,14 +3,12 @@ import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:oca_app/components/User_instance.dart';
 import 'package:oca_app/pages/oca_game.dart';
-import 'package:oca_app/pages/waiting_room.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:oca_app/components/global_stream_controller.dart';
 
-const url = 'http://192.168.1.46:3000';
+const url = 'http://192.168.1.51:3000';
 
 typedef ActualizarEstadoCallback = Function();
 typedef ActualizarFicha1 = Function(int);
@@ -19,20 +17,26 @@ typedef ActualizarFicha3 = Function(int);
 typedef ActualizarFicha4 = Function(int);
 
 class SocketSingleton {
+  // Atributos
   static SocketSingleton? _instance;
   static late IO.Socket socket;
+  // Stream de salas
   final GlobalStreamController globalStreamController =
       GlobalStreamController();
+  // Stream de partidas
   final GlobalStreamController turnController = GlobalStreamController();
+  // Contexto
   BuildContext? _context;
+  // Control de estado de posiciones de fichas
   ActualizarEstadoCallback? onActualizarEstado;
   ActualizarFicha1? actualizarPosicionFicha1;
   ActualizarFicha2? actualizarPosicionFicha2;
   ActualizarFicha3? actualizarPosicionFicha3;
   ActualizarFicha4? actualizarPosicionFicha4;
-
+  // Listado de jugadores
   late List<String> nombresJugadores;
 
+  // Constructor especial de retorno de instancias
   factory SocketSingleton() {
     final instance = SocketSingleton.instance
       .._initSocket()
@@ -45,54 +49,52 @@ class SocketSingleton {
     _context = context;
   }
 
+  // Constructor privado
   SocketSingleton._internal();
 
-  void dispose() {}
-
+  // Getter instancia de clase
   static SocketSingleton get instance {
     _instance ??= SocketSingleton._internal();
     return _instance!;
   }
 
+  // Inicialización de socket
   void _initSocket() {
-    User_instance userInstance = User_instance.instance;
-    String authToken = userInstance.token;
     socket = IO.io(url, <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': false,
-      'auth': {'token': authToken}
+      'auth': {'token': User_instance.instance.token}
     });
 
-    void _onPlayerListUpdated(List<dynamic> playerList) {
-      // Envía la lista de jugadores al StreamController
-      globalStreamController.addData(playerList);
-    }
+    // void _onPlayerListUpdated(List<dynamic> playerList) {
+    //   // Envía la lista de jugadores al StreamController
+    //   globalStreamController.addData(playerList);
+    // }
 
+    // Conexión manual
     socket.connect();
-    // Registro de eventos
-
-    // Eventos relativos a conexión
-    socket.onConnect((data) => {});
-    socket.onConnectTimeout((data) => {});
-    socket.onConnectError((data) => {});
-    socket.onDisconnect((data) => {});
-
-    // Eventos relativos a partida
-    /*
-    socket.on('estadoPartida', (data) => null);
-
-    socket.on('sigTurno', (data) => null);
-    socket.on('finPartida ', (data) => null);
-    socket.on("serverRoomMessage", (message) => (print(message)));
-    */
+    // Suscripción a eventos
+    _subscribeToEvents();
   }
 
   void _subscribeToEvents() {
-    User_instance userInstance = User_instance.instance;
+    final ui = User_instance.instance; // Simplificación para referencias
+    // ---- Eventos de conexión ----
+
+    socket.onConnect((data) => {print("onConnect: $data")});
+    socket.onConnectTimeout((data) => {print("onConnectTimeout: $data")});
+    socket.onConnectError((data) => {print("onConnectError: $data")});
+    socket.onDisconnect((data) => {print("onDisconnect: $data")});
+
+    // ---- Eventos de sala ----
+
+    // Update players: usado para controlar jugadores en la sala de espera
     socket.on('updatePlayers', (data) {
       print("updatePlayers: $data");
-      if (data is List<dynamic> && data.every((element) => element is String)) {
-        // Convierte la lista de Strings en una lista de mapas
+
+      // Check tipo recibido correcto y envío JSON de
+      // jugadores por stream de partida
+      if (data is List<String>) {
         List<Map<String, dynamic>> playerList =
             data.map((playerName) => {'nickname': playerName}).toList();
         globalStreamController.addData(playerList);
@@ -100,16 +102,26 @@ class SocketSingleton {
         print("Error: el formato de la lista de jugadores es incorrecto");
       }
 
-      var value = turnController.playersStreamController.value;
-      if (value is List<Map<String, dynamic>>) {
-        nombresJugadores =
-            value.map((map) => map['nickname'] as String).toList();
-        print('Nombres de los jugadores: $nombresJugadores');
-      } else {
-        print('Error al obtener el número de jugadores');
-        // Handle error or set njugadores to a default value
+      // Exception si value aún no se ha enviado un dato por Stream turnController
+      try {
+        // Lee el último dato emitido
+        var value = turnController.playersStreamController.value;
+
+        // Check tipo correcto y conversión a JSON para usar fácilmente
+        if (value is List<Map<String, dynamic>>) {
+          nombresJugadores =
+              value.map((map) => map['nickname'] as String).toList();
+          print('Nombres de los jugadores: $nombresJugadores');
+        } else {
+          print('Error al obtener el número de jugadores');
+          // Handle error or set njugadores to a default value
+        }
+      } catch (e) {
+        print(e);
       }
     });
+
+    // ---- Eventos de partida ----
     socket.on('estadoPartida', (data) {
       print("Estado partida");
       print(data);
@@ -142,15 +154,15 @@ class SocketSingleton {
 
     socket.on('ordenTurnos', (data) {
       print(data);
-      if (_context != null && userInstance.estaEnPartida == false) {
-        userInstance.estaEnPartida = true;
+      if (_context != null && ui.estaEnPartida == false) {
+        ui.estaEnPartida = true;
         if (data != null &&
             data['ordenTurnos'] != null &&
             data['ordenTurnos'].length > 0) {
-          if (data['ordenTurnos'][0] == userInstance.nickname) {
-            userInstance.isMyTurn = true;
+          if (data['ordenTurnos'][0] == ui.nickname) {
+            ui.isMyTurn = true;
           } else {
-            userInstance.isMyTurn = false;
+            ui.isMyTurn = false;
           }
         }
         Navigator.of(_context!)
@@ -160,10 +172,10 @@ class SocketSingleton {
         if (data != null &&
             data['ordenTurnos'] != null &&
             data['ordenTurnos'].length > 0) {
-          if (data['ordenTurnos'][0] == userInstance.nickname) {
-            userInstance.isMyTurn = true;
+          if (data['ordenTurnos'][0] == ui.nickname) {
+            ui.isMyTurn = true;
           } else {
-            userInstance.isMyTurn = false;
+            ui.isMyTurn = false;
           }
         }
       }
@@ -190,9 +202,10 @@ class SocketSingleton {
 
   // Creación de sala
   // response: {id: int, message: "...", status: [ok,error]}
-  Future<int> createRoom(String roomName, int nPlayers) async {
+  Future<Map<String, dynamic>> createRoom(String roomName, int nPlayers) async {
     final completer = Completer<Map<String, dynamic>>();
     late Map<String, dynamic> response; // guarda respuesta del servidor
+    late Map<String, dynamic> retVal;
 
     Map<String, dynamic> miJson = {'nickname': User_instance.instance.nickname};
 
@@ -207,22 +220,27 @@ class SocketSingleton {
       // Actualizar información sobre sala
       User_instance.instance.idRoom = response['id'];
       User_instance.instance.soyLider = true;
+      retVal = {'status': true, 'idRoom': response['id']};
     } else {
-      print("Error: ${response['message']}");
-      // Falta manejar el error, puede ser mostrar un pop-up por pantalla
+      retVal = {
+        'status': false,
+        'errorMsg':
+            "Ha habido un error al crear la sala. \n Inténtelo de nuevo más tarde"
+      };
     }
     print(response);
-    return response['id'];
+
+    return retVal;
   }
 
   // Unirse a sala
   // repsonse: {message: "...", players: [p1 , p2, ...], status: [ok,error]}
-  Future<String> joinRoom(int idRoom) async {
+  Future<Map<String, dynamic>> joinRoom(int idRoom) async {
     final completer = Completer<Map<String, dynamic>>();
     late Map<String, dynamic> response; // guarda respuesta del servidor
+    late Map<String, dynamic> retVal;
 
     Map<String, dynamic> miJson = {'nickname': User_instance.instance.nickname};
-    // Map<String, dynamic> miJson = {'nickname': 'c'};
 
     socket.emitWithAck('joinRoom', [idRoom, miJson], ack: (response) {
       completer.complete(response);
@@ -230,18 +248,20 @@ class SocketSingleton {
 
     response = await completer.future;
     if (response['status'] == 'ok') {
-      // Ha ido bien
-      print("joinRoom correcto");
       // Actualizar información sobre sala
       User_instance.instance.idRoom = idRoom;
       User_instance.instance.soyLider = false;
+      retVal = {'status': true, 'roomName': response['roomName']};
     } else {
-      print("Error: ${response['message']}");
-      // Falta manejar el error, puede ser mostrar un pop-up por pantalla
+      retVal = {
+        'status': false,
+        'errorMsg':
+            "Ha habido un error al unirse a la sala. \n Inténtelo de nuevo más tarde"
+      };
     }
     print(response);
 
-    return response['roomName'];
+    return retVal;
   }
 
   // Salir de una sala

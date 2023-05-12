@@ -148,8 +148,6 @@ class CreateRoomPage extends StatelessWidget {
                         ElevatedButton(
                           style: CancelarButton,
                           onPressed: () async {
-                            await ss.destroyRoom();
-
                             // ignore: use_build_context_synchronously
                             Navigator.push(
                                 context,
@@ -225,8 +223,7 @@ class CreateRoomPage extends StatelessWidget {
                     "Error",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  content: const Text(
-                      "Ha habido un error al crear la sala. \n Inténtelo de nuevo más tarde"),
+                  content: Text(response['errorMsg']),
                   actions: [
                     TextButton(
                       onPressed: () {

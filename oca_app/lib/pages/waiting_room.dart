@@ -127,11 +127,12 @@ class _WaitingRoomState extends State<WaitingRoom> {
 
                     switch (snapshot.connectionState) {
                       case ConnectionState.waiting:
-                        return Center(child: CircularProgressIndicator());
+                        return const Center(child: CircularProgressIndicator());
                       default:
                         if (snapshot.hasData) {
                           List<dynamic> players = snapshot.data;
                           bool isLeader = User_instance.instance.soyLider;
+
                           return ListView.builder(
                             itemCount: players.length,
                             itemBuilder: (BuildContext context, int index) {
@@ -171,7 +172,7 @@ class _WaitingRoomState extends State<WaitingRoom> {
                             },
                           );
                         } else {
-                          return Center(child: Text('No hay jugadores'));
+                          return const Center(child: Text('No hay jugadores'));
                         }
                     }
                   },
