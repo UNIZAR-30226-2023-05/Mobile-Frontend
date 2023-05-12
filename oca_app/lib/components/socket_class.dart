@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:oca_app/components/User_instance.dart';
+import 'package:oca_app/pages/main_menu.dart';
 import 'package:oca_app/pages/oca_game.dart';
 import 'package:oca_app/pages/waiting_room.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -125,7 +126,6 @@ class SocketSingleton {
 
         int index = nombresJugadores.indexOf(
             nickname); // Encuentra la posición del nickname en la lista de nombres de jugadores
-        print('Index: $index');
         // Llama a la función de actualización correspondiente
         switch (index) {
           case 0:
@@ -190,7 +190,7 @@ class SocketSingleton {
       onActualizarEstado?.call();
     });
 
-    socket.on('finPartida ', (data) => ("finPartida: $data"));
+    socket.on('finPartida', (data) => ("finPartida: $data"));
     socket.on(
         "serverRoomMessage", (message) => ("ServerRoomMessage: $message"));
     socket.on("destroyingRoom",
@@ -380,6 +380,29 @@ class SocketSingleton {
                 child: Text('Cerrar'),
                 onPressed: () {
                   Navigator.of(context).pop();
+                  // Cierra el Popup
+                },
+              ),
+            ],
+          );
+        },
+      );
+      return {}; // Retorna un mapa vacío
+    }
+
+    if (response['message'] == 'Has ganado' && response['status'] == 'ok') {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Enhorabuena, has ganado la partida!'),
+            content: Text('Has ganado, ahora volveras al menú principal'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Cerrar'),
+                onPressed: () {
+                  Navigator.of(_context!).push(MaterialPageRoute(
+                      builder: (context) => Main_Menu_Page()));
                   // Cierra el Popup
                 },
               ),
