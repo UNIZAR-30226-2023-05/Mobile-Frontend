@@ -1,11 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:oca_app/backend_funcs/social_func.dart';
+import 'package:oca_app/components/User_instance.dart';
+import 'package:oca_app/backend_funcs/peticiones_api.dart';
+import 'dart:async';
 
-class Social extends StatelessWidget {
-  Social({super.key});
+class Social extends StatefulWidget {
+  @override
+  State<Social> createState() => _SocialState();
+}
 
+class _SocialState extends State<Social> {
   var solicitudController = TextEditingController();
+  User_instance user_instance = User_instance.instance;
+  final solicitudesController =
+      StreamController<List<Map<String, dynamic>>>.broadcast();
+
+  //Esto es una funcion que se ejecuta siempre que se inicia la pantalla social
+  @override
+  void initState() {
+    super.initState();
+    solicitudesPendientes(user_instance.id).then((solicitudes) {
+      listaAmigos(user_instance.id).then((amigos) {
+        solicitudesController.add([...solicitudes, ...amigos]);
+      });
+    });
+  }
+
+  Future<void> fetchData() async {
+    final solicitudes = await solicitudesPendientes(user_instance.id);
+    final amigos = await listaAmigos(user_instance.id);
+    solicitudesController.add([...solicitudes, ...amigos]);
+  }
 
   void gotoAddFriend(BuildContext context) {
     showPlatformDialog(
@@ -69,18 +95,18 @@ class Social extends StatelessWidget {
           ),
           actions: [
             ElevatedButton(
-              onPressed: () {
-                SolicitudAmistad solicitud = SolicitudAmistad(
-                  "String",
-                  solicitudController.text,
-                );
-
-                if (solicitud.enviar() == true) {
+              onPressed: () async {
+                if (await enviarSolicitudAmistad(
+                    await getUserIDemail(user_instance.email),
+                    await getUserIDemail(solicitudController.text))) {
+                  Navigator.pop(context);
+                  // ignore: use_build_context_synchronously
                   showPlatformDialog(
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        backgroundColor: Color.fromARGB(255, 190, 250, 254),
+                        backgroundColor:
+                            const Color.fromARGB(255, 190, 250, 254),
                         title: const Center(
                           child: Column(
                             children: [
@@ -88,7 +114,7 @@ class Social extends StatelessWidget {
                                 children: [
                                   Text("Solicitud enviada",
                                       style: TextStyle(
-                                          fontSize: 30,
+                                          fontSize: 28,
                                           color:
                                               Color.fromARGB(255, 28, 100, 115),
                                           fontFamily: 'Trocchi')),
@@ -108,17 +134,62 @@ class Social extends StatelessWidget {
                         actions: [
                           ElevatedButton(
                             onPressed: () {
+                              fetchData();
                               // Lógica para aceptar la acción
                               Navigator.pop(context);
                             },
-                            child: Text('Aceptar'),
+                            child: const Text('Aceptar'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                } else {
+                  Navigator.pop(context);
+                  // ignore: use_build_context_synchronously
+                  showPlatformDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        backgroundColor:
+                            const Color.fromARGB(255, 190, 250, 254),
+                        title: const Center(
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Text("Error en la solicitud",
+                                      style: TextStyle(
+                                          fontSize: 28,
+                                          color:
+                                              Color.fromARGB(255, 28, 100, 115),
+                                          fontFamily: 'Trocchi')),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 30,
+                              ),
+                              Text("La solicitud no se ha enviado",
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.black,
+                                  )),
+                            ],
+                          ),
+                        ),
+                        actions: [
+                          ElevatedButton(
+                            onPressed: () {
+                              // Lógica para aceptar la acción
+                              Navigator.pop(context);
+                            },
+                            child: const Text('Aceptar'),
                           ),
                         ],
                       );
                     },
                   );
                 }
-                Navigator.pop(context);
               },
               child: Text('Agregar'),
             ),
@@ -143,14 +214,14 @@ class Social extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
             Row(
               children: [
                 Container(
                   margin: EdgeInsets.only(left: 16, top: 10),
-                  child: Text(
+                  child: const Text(
                     "AMIGOS",
                     style: TextStyle(
                       color: Colors.white,
@@ -160,10 +231,12 @@ class Social extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.only(left: 220, top: 10),
+                  margin: EdgeInsets.only(left: 200, top: 10),
                   child: IconButton(
-                    onPressed: () {},
-                    icon: Icon(
+                    onPressed: () {
+                      fetchData();
+                    },
+                    icon: const Icon(
                       Icons.search,
                       color: Colors.white,
                       size: 45,
@@ -172,27 +245,350 @@ class Social extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(
-              height: 30,
+            const SizedBox(
+              height: 10,
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(18.0),
               child: Stack(
                 children: [
                   SizedBox(
-                    height: 650.0, // establece la altura del Sized Box
+                    height: 650.0,
                     child: Container(
-                      color: Colors.white,
-                      child: ListView.builder(
-                        itemCount:
-                            20, // establece la cantidad de elementos en la lista
-                        itemBuilder: (BuildContext context, int index) {
-                          return ListTile(
-                            title: Text('Elemento $index'),
-                          );
-                        },
-                      ),
-                    ),
+                        color: Colors.white,
+                        child: StreamBuilder<List<Map<String, dynamic>>>(
+                          stream: solicitudesController.stream,
+                          initialData: [],
+                          builder: (BuildContext context,
+                              AsyncSnapshot<List<Map<String, dynamic>>>
+                                  snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Center(child: CircularProgressIndicator());
+                            } else {
+                              if (snapshot.hasError) {
+                                return Center(
+                                    child: Text(
+                                        'Error al cargar las solicitudes'));
+                              } else {
+                                List<Map<String, dynamic>>? data =
+                                    snapshot.data;
+                                if (data != null && data.isNotEmpty) {
+                                  List<Widget> solicitudesAmistad = data
+                                      .where((element) =>
+                                          element['tipo'] == 'solicitud')
+                                      .map<Widget>((element) {
+                                    return Container(
+                                      decoration: BoxDecoration(
+                                        border: Border(bottom: BorderSide()),
+                                      ),
+                                      child: ListTile(
+                                        leading: Icon(Icons.person),
+                                        title: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'Solicitud entrante:',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.green,
+                                              ),
+                                            ),
+                                            Text(
+                                              element['nickname'],
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.normal,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        trailing: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            IconButton(
+                                              icon: Icon(Icons.clear),
+                                              onPressed: () async {
+                                                if (await rechazarSolcitudAmistad(
+                                                    await getUserIDemail(
+                                                        user_instance.email),
+                                                    await getUserIDnickname(
+                                                        "${element['nickname']}"))) {
+                                                  // ignore: use_build_context_synchronously
+                                                  showPlatformDialog(
+                                                    context: context,
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      return AlertDialog(
+                                                        backgroundColor:
+                                                            const Color
+                                                                    .fromARGB(
+                                                                255,
+                                                                190,
+                                                                250,
+                                                                254),
+                                                        title: const Center(
+                                                          child: Column(
+                                                            children: [
+                                                              Row(
+                                                                children: [
+                                                                  Text(
+                                                                      "Solicitud rechazada",
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              28,
+                                                                          color: Color.fromARGB(
+                                                                              255,
+                                                                              28,
+                                                                              100,
+                                                                              115),
+                                                                          fontFamily:
+                                                                              'Trocchi')),
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        actions: [
+                                                          ElevatedButton(
+                                                            onPressed: () {
+                                                              fetchData();
+                                                              // Lógica para aceptar la acción
+                                                              Navigator.pop(
+                                                                  context);
+                                                            },
+                                                            child: const Text(
+                                                                'Aceptar'),
+                                                          ),
+                                                        ],
+                                                      );
+                                                    },
+                                                  );
+                                                } else {
+                                                  // ignore: use_build_context_synchronously
+                                                  showPlatformDialog(
+                                                    context: context,
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      return AlertDialog(
+                                                        backgroundColor:
+                                                            const Color
+                                                                    .fromARGB(
+                                                                255,
+                                                                190,
+                                                                250,
+                                                                254),
+                                                        title: const Center(
+                                                          child: Column(
+                                                            children: [
+                                                              Row(
+                                                                children: [
+                                                                  Text(
+                                                                      "Error en la solicitud",
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              28,
+                                                                          color: Color.fromARGB(
+                                                                              255,
+                                                                              28,
+                                                                              100,
+                                                                              115),
+                                                                          fontFamily:
+                                                                              'Trocchi')),
+                                                                ],
+                                                              ),
+                                                              SizedBox(
+                                                                height: 30,
+                                                              ),
+                                                              Text(
+                                                                  "Vuelve a intentarlo",
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontSize:
+                                                                        15,
+                                                                    color: Colors
+                                                                        .black,
+                                                                  )),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        actions: [
+                                                          ElevatedButton(
+                                                            onPressed: () {
+                                                              fetchData();
+                                                              Navigator.pop(
+                                                                  context);
+                                                            },
+                                                            child: const Text(
+                                                                'Aceptar'),
+                                                          ),
+                                                        ],
+                                                      );
+                                                    },
+                                                  );
+                                                }
+                                              },
+                                            ),
+                                            IconButton(
+                                              icon: Icon(Icons.check),
+                                              onPressed: () async {
+                                                if (await enviarSolicitudAmistad(
+                                                    await getUserIDemail(
+                                                        user_instance.email),
+                                                    await getUserIDnickname(
+                                                        "${element['nickname']}"))) {
+                                                  // ignore: use_build_context_synchronously
+                                                  showPlatformDialog(
+                                                    context: context,
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      return AlertDialog(
+                                                        backgroundColor:
+                                                            const Color
+                                                                    .fromARGB(
+                                                                255,
+                                                                190,
+                                                                250,
+                                                                254),
+                                                        title: const Center(
+                                                          child: Column(
+                                                            children: [
+                                                              Row(
+                                                                children: [
+                                                                  Text(
+                                                                      "Solicitud aceptada",
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              28,
+                                                                          color: Color.fromARGB(
+                                                                              255,
+                                                                              28,
+                                                                              100,
+                                                                              115),
+                                                                          fontFamily:
+                                                                              'Trocchi')),
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        actions: [
+                                                          ElevatedButton(
+                                                            onPressed: () {
+                                                              fetchData();
+                                                              // Lógica para aceptar la acción
+                                                              Navigator.pop(
+                                                                  context);
+                                                            },
+                                                            child: const Text(
+                                                                'Aceptar'),
+                                                          ),
+                                                        ],
+                                                      );
+                                                    },
+                                                  );
+                                                } else {
+                                                  Navigator.pop(context);
+                                                  // ignore: use_build_context_synchronously
+                                                  showPlatformDialog(
+                                                    context: context,
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      return AlertDialog(
+                                                        backgroundColor:
+                                                            const Color
+                                                                    .fromARGB(
+                                                                255,
+                                                                190,
+                                                                250,
+                                                                254),
+                                                        title: const Center(
+                                                          child: Column(
+                                                            children: [
+                                                              Row(
+                                                                children: [
+                                                                  Text(
+                                                                      "Error en la solicitud",
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              28,
+                                                                          color: Color.fromARGB(
+                                                                              255,
+                                                                              28,
+                                                                              100,
+                                                                              115),
+                                                                          fontFamily:
+                                                                              'Trocchi')),
+                                                                ],
+                                                              ),
+                                                              SizedBox(
+                                                                height: 30,
+                                                              ),
+                                                              Text(
+                                                                  "vuelve a intentarlo",
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontSize:
+                                                                        15,
+                                                                    color: Colors
+                                                                        .black,
+                                                                  )),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        actions: [
+                                                          ElevatedButton(
+                                                            onPressed: () {
+                                                              fetchData();
+                                                              // Lógica para aceptar la acción
+                                                              Navigator.pop(
+                                                                  context);
+                                                            },
+                                                            child: const Text(
+                                                                'Aceptar'),
+                                                          ),
+                                                        ],
+                                                      );
+                                                    },
+                                                  );
+                                                }
+
+                                                // Aquí, coloca la lógica para aceptar la solicitud de amistad
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  }).toList();
+
+                                  List<Widget> amigos = data
+                                      .where((element) =>
+                                          element['tipo'] == 'amigo')
+                                      .map<Widget>((element) {
+                                    return Container(
+                                      decoration: BoxDecoration(
+                                        border: Border(bottom: BorderSide()),
+                                      ),
+                                      child: ListTile(
+                                        leading: Icon(Icons.person),
+                                        title: Text("${element['nickname']}"),
+                                      ),
+                                    );
+                                  }).toList();
+
+                                  return ListView(
+                                    children: solicitudesAmistad + amigos,
+                                  );
+                                } else {
+                                  return Center(
+                                      child: Text(
+                                          'No tienes amigos, agrega uno dandole a la lupa'));
+                                }
+                              }
+                            }
+                          },
+                        )),
                   ),
                   Positioned(
                     bottom: 0,

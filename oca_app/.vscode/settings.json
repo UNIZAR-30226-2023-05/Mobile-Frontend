@@ -1,3 +1,4 @@
 {
-    "cmake.configureOnOpen": false
+    "cmake.configureOnOpen": false,
+    "cmake.sourceDirectory": "C:/Users/pablo/OneDrive - unizar.es/Ingenieria informatica/3o 2o semestre/PS/Mobile-Frontend/oca_app/linux"
 }
