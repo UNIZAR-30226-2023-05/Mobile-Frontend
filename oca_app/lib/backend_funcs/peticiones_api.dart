@@ -92,9 +92,11 @@ Future<void> eliminarCuenta(int idUsuario) async {
   }
 }
 
-Future<String> actualizarAtributosUsuario(String name, String passwd) async {
+Future<Map<String, dynamic>> actualizarAtributosUsuario(
+    Map<String, dynamic> updatedAtributes) async {
   final url = Uri.parse('$baseUrl/users/register');
   late String body;
+  Map<String, dynamic> retVal = {};
 
   final headers = {
     'Content-Type': 'application/json',
@@ -103,26 +105,29 @@ Future<String> actualizarAtributosUsuario(String name, String passwd) async {
   };
 
   // Evitar enviar información redundante
-  if (User_instance.instance.nickname == name) {
-    body = jsonEncode(
-        {'id_usuario': User_instance.instance.id, 'password': passwd});
-  } else {
-    body = jsonEncode({
-      'id_usuario': User_instance.instance.id,
-      'nickname': name,
-      'password': passwd
-    });
-  }
+  // if (User_instance.instance.nickname == name) {
+  //   body = jsonEncode(
+  //       {'id_usuario': User_instance.instance.id, 'password': passwd});
+  // } else {
+  //   body = jsonEncode({
+  //     'id_usuario': User_instance.instance.id,
+  //     'nickname': name,
+  //     'password': passwd
+  //   });
+  // }
 
-  final response = await http.put(url, headers: headers, body: body);
+  final response =
+      await http.put(url, headers: headers, body: jsonEncode(updatedAtributes));
 
   final responseJson = jsonDecode(response.body);
 
   // Handle response
   switch (response.statusCode) {
     case 200: // Ok
-      return responseJson['message'];
+      retVal = {'status': true, 'msg': responseJson['message']};
     default: // Error
-      return responseJson['msg'];
+      retVal = {'status': false, 'msg': responseJson['msg']};
   }
+
+  return retVal;
 }

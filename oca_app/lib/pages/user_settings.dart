@@ -5,6 +5,7 @@ import 'package:oca_app/backend_funcs/peticiones_api.dart';
 import 'package:oca_app/components/User_instance.dart';
 import 'package:oca_app/components/forms.dart';
 import 'package:oca_app/pages/login_page.dart';
+import 'package:oca_app/pages/main_menu.dart';
 import 'package:oca_app/styles/buttons_styles.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -29,6 +30,8 @@ class UserSettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool changedPhoto = false;
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: const Color.fromARGB(255, 28, 100, 116),
@@ -79,10 +82,14 @@ class UserSettingsPage extends StatelessWidget {
                                       // Construye cada elemento del grid
                                       return InkWell(
                                         onTap: () {
-                                          // Acción que se ejecutará cuando se toque la imagen
+                                          // indica cambio de foto
+                                          changedPhoto = true;
+                                          // actualizar info usuario
                                           User_instance.instance.profile_pic =
                                               imagePaths[index];
+                                          // actualización visual
                                           imgCtrl.sink.add(imagePaths[index]);
+                                          // cerrar pop-up
                                           Navigator.pop(context);
                                         },
                                         child: Container(
@@ -205,13 +212,29 @@ class UserSettingsPage extends StatelessWidget {
                                 style: GenericButton,
                                 onPressed: () async {
                                   // Constraseñas iguales y Nombre de usuario distinto de vacío
-                                  _checkChanges(context);
-                                  if (_checkFormRestrictions(context)) {
-                                    final responseMsg =
+                                  final changes =
+                                      _checkChanges(context, changedPhoto);
+                                  if (changes != null) {
+                                    final response =
                                         await actualizarAtributosUsuario(
-                                            nameCtrl.text, passwdCtrl.text);
+                                            changes);
                                     // ignore: use_build_context_synchronously
-                                    _alertResponseMessage(context, responseMsg);
+                                    _alertResponseMessage(
+                                            context, response['msg'])
+                                        .then((_) {
+                                      // Future.delayed(
+                                      //     const Duration(seconds: 2));
+                                      // if (response['status']) {
+                                      //   // ignore: use_build_context_synchronously
+                                      //   Navigator
+                                      //       .push // volver al pantalla incial
+                                      //       (
+                                      //           context,
+                                      //           MaterialPageRoute(
+                                      //               builder: (context) =>
+                                      //                   Main_Menu_Page()));
+                                      // }
+                                    });
                                   }
                                 },
                                 child: const Text("Confirmar",
@@ -294,9 +317,12 @@ class UserSettingsPage extends StatelessWidget {
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
-              title: const Text("Error"),
+              title: const Text(
+                "Error",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
               // Muestra alerta non-null, pero siempre se inicializa
-              content: const Text("Rellena todos los campos"),
+              content: const Text("Rellena los campos que deseas modificar"),
               actions: [
                 TextButton(
                   child: const Text("OK"),
@@ -314,7 +340,8 @@ class UserSettingsPage extends StatelessWidget {
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
-              title: const Text("Error"),
+              title: const Text("Error",
+                  style: TextStyle(fontWeight: FontWeight.bold)),
               // Muestra alerta non-null, pero siempre se inicializa
               content: const Text("Las contraseñas no coinciden"),
               actions: [
@@ -329,7 +356,8 @@ class UserSettingsPage extends StatelessWidget {
   }
 
   // Muestra un pop-up con el mensaje que devuelve la respuesta http
-  void _alertResponseMessage(BuildContext context, String message) {
+  Future<void> _alertResponseMessage(
+      BuildContext context, String message) async {
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -346,9 +374,47 @@ class UserSettingsPage extends StatelessWidget {
             ));
   }
 
-  void _checkChanges(BuildContext context, bool changePhoto) {
-    if (changePhoto) {
+  Map<String, dynamic>? _checkChanges(BuildContext context, bool changedPhoto) {
+    late Map<String, dynamic> changes = {
+      'id_usuario': User_instance.instance.id
+    };
+
+    bool nameChanged = (nameCtrl.text != "");
+    bool passwdChanged = (passwdCtrl.text != "");
+    bool repPasswdChanged = (repeatpasswdCtrl.text != "");
+
+    // Check cambio de contraseña
+    if (passwdChanged) {
+      // Cambiada RepPasswd
+      if (repPasswdChanged) {
+        // Check match
+        if ((passwdCtrl.text == repeatpasswdCtrl.text)) {
+          // Ambos escritos y son iguales, hacer cambios
+          changes['password'] = passwdCtrl.text;
+        } else {
+          _alertDifferentPasswd(context); // mensaje coincidir contraseñas
+          return null;
+        }
+      } else {
+        _alertEmptyFields(context);
+        return null;
+      }
+    } else if (repPasswdChanged) {
+      /* Passwd vacía y RepPasswd escrito */
+      _alertEmptyFields(context);
+      return null;
     }
-    // mirar si ha cambiado algo, y si lo ha cambiado que esté todo correcto
+
+    // Check cambio de foto de perfil
+    if (changedPhoto) {
+      changes['prophilephoto'] = User_instance.instance.profile_pic;
+    }
+
+    // Check cambio de nombre
+    if (nameChanged) {
+      changes['nickname'] = nameCtrl.text;
+    }
+
+    return changes;
   }
 }
