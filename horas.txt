@@ -23,6 +23,8 @@ Pablo López
 2h prototipos 27/02/2023
 1h prototipos 02/03/2023
 2h log-in 03/03/2023
+14
+
 2h menu de ajustes y ajustes
 1h Memoria intermedia organización
 2h Pantalla de Registro 15/03/2023

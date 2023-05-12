@@ -16,7 +16,7 @@ class GlobalStreamController {
 
   Stream<dynamic> get playersStream => playersStreamController.stream;
 
-  void addPlayersData(dynamic data) {
+  void addData(dynamic data) {
     playersStreamController.sink.add(data);
   }
 

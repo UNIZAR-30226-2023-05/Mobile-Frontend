@@ -23,6 +23,10 @@ class User_instance {
   late int _idRoom;
   late bool _soyLider;
 
+  //informacion de partida
+  bool _estaEnPartida = false;
+  bool _isMyTurn = false;
+
   User_instance._(); // Constructor privado
 
   // Destructor de la clase  (utilizado al eliminar la instancia)
@@ -66,4 +70,10 @@ class User_instance {
 
   bool get soyLider => _soyLider;
   set soyLider(bool value) => _soyLider = value;
+
+  bool get estaEnPartida => _estaEnPartida;
+  set estaEnPartida(bool value) => _estaEnPartida = value;
+
+  bool get isMyTurn => _isMyTurn;
+  set isMyTurn(bool value) => _isMyTurn = value;
 }

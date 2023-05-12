@@ -2,19 +2,36 @@ import 'dart:async';
 import 'dart:ffi';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:oca_app/components/User_instance.dart';
+import 'package:oca_app/pages/oca_game.dart';
 import 'package:oca_app/pages/waiting_room.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:oca_app/components/global_stream_controller.dart';
 
 const url = 'http://192.168.1.46:3000';
 
+typedef ActualizarEstadoCallback = Function();
+typedef ActualizarFicha1 = Function(int);
+typedef ActualizarFicha2 = Function(int);
+typedef ActualizarFicha3 = Function(int);
+typedef ActualizarFicha4 = Function(int);
+
 class SocketSingleton {
   static SocketSingleton? _instance;
   static late IO.Socket socket;
   final GlobalStreamController globalStreamController =
       GlobalStreamController();
+  final GlobalStreamController turnController = GlobalStreamController();
+  BuildContext? _context;
+  ActualizarEstadoCallback? onActualizarEstado;
+  ActualizarFicha1? actualizarPosicionFicha1;
+  ActualizarFicha2? actualizarPosicionFicha2;
+  ActualizarFicha3? actualizarPosicionFicha3;
+  ActualizarFicha4? actualizarPosicionFicha4;
+
+  late List<String> nombresJugadores;
 
   factory SocketSingleton() {
     final instance = SocketSingleton.instance
@@ -22,6 +39,10 @@ class SocketSingleton {
       .._subscribeToEvents();
 
     return instance;
+  }
+
+  void setContext(BuildContext context) {
+    _context = context;
   }
 
   SocketSingleton._internal();
@@ -44,7 +65,7 @@ class SocketSingleton {
 
     void _onPlayerListUpdated(List<dynamic> playerList) {
       // Envía la lista de jugadores al StreamController
-      globalStreamController.addPlayersData(playerList);
+      globalStreamController.addData(playerList);
     }
 
     socket.connect();
@@ -57,36 +78,110 @@ class SocketSingleton {
     socket.onDisconnect((data) => {});
 
     // Eventos relativos a partida
-    socket.on('updatePlayers', (data) {
-      print("updatePlayers: $data");
-      globalStreamController.addPlayersData(data);
-    });
+    /*
     socket.on('estadoPartida', (data) => null);
-    socket.on('ordenTurnos', (data) => print(data));
+
     socket.on('sigTurno', (data) => null);
     socket.on('finPartida ', (data) => null);
-    socket.on("serverRoomMessage",
-        (message) => (print("respuesta del server:" + message)));
+    socket.on("serverRoomMessage", (message) => (print(message)));
+    */
   }
 
   void _subscribeToEvents() {
+    User_instance userInstance = User_instance.instance;
     socket.on('updatePlayers', (data) {
       print("updatePlayers: $data");
       if (data is List<dynamic> && data.every((element) => element is String)) {
         // Convierte la lista de Strings en una lista de mapas
         List<Map<String, dynamic>> playerList =
             data.map((playerName) => {'nickname': playerName}).toList();
-        globalStreamController.addPlayersData(playerList);
+        globalStreamController.addData(playerList);
       } else {
         print("Error: el formato de la lista de jugadores es incorrecto");
       }
+
+      var value = turnController.playersStreamController.value;
+      if (value is List<Map<String, dynamic>>) {
+        nombresJugadores =
+            value.map((map) => map['nickname'] as String).toList();
+        print('Nombres de los jugadores: $nombresJugadores');
+      } else {
+        print('Error al obtener el número de jugadores');
+        // Handle error or set njugadores to a default value
+      }
     });
-    socket.on('estadoPartida', (data) => null);
-    socket.on('ordenTurnos', (data) => print(data));
-    socket.on('sigTurno', (data) => null);
+    socket.on('estadoPartida', (data) {
+      print("Estado partida");
+      print(data);
+      List posiciones = data['posiciones'];
+
+      posiciones.forEach((posicion) {
+        String nickname = posicion['nickname'];
+        int celda = posicion['celda'];
+
+        int index = nombresJugadores.indexOf(
+            nickname); // Encuentra la posición del nickname en la lista de nombres de jugadores
+        print('Index: $index');
+        // Llama a la función de actualización correspondiente
+        switch (index) {
+          case 0:
+            actualizarPosicionFicha1!(celda);
+            break;
+          case 1:
+            actualizarPosicionFicha2!(celda);
+            break;
+          case 2:
+            actualizarPosicionFicha3!(celda);
+            break;
+          case 3:
+            actualizarPosicionFicha4!(celda);
+            break;
+        }
+      });
+    });
+
+    socket.on('ordenTurnos', (data) {
+      print(data);
+      if (_context != null && userInstance.estaEnPartida == false) {
+        userInstance.estaEnPartida = true;
+        if (data != null &&
+            data['ordenTurnos'] != null &&
+            data['ordenTurnos'].length > 0) {
+          if (data['ordenTurnos'][0] == userInstance.nickname) {
+            userInstance.isMyTurn = true;
+          } else {
+            userInstance.isMyTurn = false;
+          }
+        }
+        Navigator.of(_context!)
+            .push(MaterialPageRoute(builder: (context) => Oca_game()));
+      } else {
+        //gestion de los turnos
+        if (data != null &&
+            data['ordenTurnos'] != null &&
+            data['ordenTurnos'].length > 0) {
+          if (data['ordenTurnos'][0] == userInstance.nickname) {
+            userInstance.isMyTurn = true;
+          } else {
+            userInstance.isMyTurn = false;
+          }
+        }
+      }
+    });
+    socket.on('sigTurno', (data) {
+      print(data);
+      if (data['turno'] == User_instance.instance.nickname) {
+        User_instance.instance.isMyTurn = true;
+      } else {
+        User_instance.instance.isMyTurn = false;
+      }
+
+      // Llama a la función actualizarEstado de Oca_game
+      onActualizarEstado?.call();
+    });
+
     socket.on('finPartida ', (data) => null);
-    socket.on("serverRoomMessage",
-        (message) => (print("respuesta del server" + message)));
+    socket.on("serverRoomMessage", (message) => (message));
     socket.on("destroyingRoom",
         (message) => (print("respuesta del destroying $message")));
   }
@@ -247,9 +342,9 @@ class SocketSingleton {
   }
 
   // Jugar turno
-  Future<void> jugarTurno() async {
+  Future<Map<String, dynamic>> jugarTurno(context) async {
     final completer = Completer<Map<String, dynamic>>();
-    late Map<String, dynamic> response; // guarda respuesta del servidor0
+    late Map<String, dynamic> response;
 
     socket.emitWithAck('turn', [User_instance.instance.idRoom],
         ack: (response) {
@@ -258,5 +353,36 @@ class SocketSingleton {
 
     response = await completer.future;
     print(response);
+
+    // Si el mensaje es "Estás penalizado" y el estado es "error", no hagas nada
+    if (response['message'] == 'Estás penalizado' &&
+        response['status'] == 'error') {
+      return {}; // Retorna un mapa vacío
+    }
+
+    if (response['res']['rollAgain'] == true) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Te toca volver a tirar'),
+            content: Text(
+                'Enhorabuena, has caido en la casilla ${response['res']['afterDice']}, asi que te mueves a la casilla ${response['res']['finalCell']} y vuelves a tirar'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Cerrar'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  // Cierra el Popup
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+
+    // Devuelve el campo 'res'
+    return response['res'];
   }
 }
