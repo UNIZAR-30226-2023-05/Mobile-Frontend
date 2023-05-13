@@ -8,6 +8,7 @@ import 'package:oca_app/pages/main_menu.dart';
 import 'package:oca_app/pages/oca_game.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:oca_app/components/global_stream_controller.dart';
+import 'package:oca_app/components/popups_partida.dart';
 
 const url = 'http://192.168.1.51:3000';
 
@@ -202,9 +203,14 @@ class SocketSingleton {
       onActualizarEstado?.call();
     });
 
-    socket.on('finPartida', (data) => ("finPartida: $data"));
+    socket.on('finPartida', (data) {
+      print("Fin partida: $data");
+      String ganador = data['ganador'];
+      popUpOtroGanador(_context, ganador);
+    });
     socket.on(
         "serverRoomMessage", (message) => ("ServerRoomMessage: $message"));
+
     socket.on("destroyingRoom",
         (message) => (print("respuesta del destroying $message")));
   }
@@ -383,76 +389,23 @@ class SocketSingleton {
     });
 
     response = await completer.future;
-    print(response);
+    print("jugarturno: $response");
 
     // Si el mensaje es "Estás penalizado" y el estado es "error", no hagas nada
     if (response['message'] == 'Estás penalizado' &&
         response['status'] == 'error') {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Estas penalizado'),
-            content: Text(
-                'Has caido en una casilla de penalizacion, asi que no puedes jugar este turno'),
-            actions: <Widget>[
-              TextButton(
-                child: Text('Cerrar'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  // Cierra el Popup
-                },
-              ),
-            ],
-          );
-        },
-      );
+      popUpPenalizacion(context);
       return {}; // Retorna un mapa vacío
     }
 
     if (response['message'] == 'Has ganado' && response['status'] == 'ok') {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Enhorabuena, has ganado la partida!'),
-            content: Text('Has ganado, ahora volveras al menú principal'),
-            actions: <Widget>[
-              TextButton(
-                child: Text('Cerrar'),
-                onPressed: () {
-                  Navigator.of(_context!).push(MaterialPageRoute(
-                      builder: (context) => Main_Menu_Page()));
-                  // Cierra el Popup
-                },
-              ),
-            ],
-          );
-        },
-      );
+      popUpVictoria(context);
       return {}; // Retorna un mapa vacío
     }
 
     if (response['res']['rollAgain'] == true) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Te toca volver a tirar'),
-            content: Text(
-                'Enhorabuena, has caido en la casilla ${response['res']['afterDice']}, asi que te mueves a la casilla ${response['res']['finalCell']} y vuelves a tirar'),
-            actions: <Widget>[
-              TextButton(
-                child: Text('Cerrar'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  // Cierra el Popup
-                },
-              ),
-            ],
-          );
-        },
-      );
+      popUpVolverATirar(
+          context, response['res']['afterDice'], response['res']['finalCell']);
     }
 
     // Devuelve el campo 'res'
