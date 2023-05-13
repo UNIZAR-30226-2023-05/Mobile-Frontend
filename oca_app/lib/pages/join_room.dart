@@ -19,8 +19,6 @@ class JoinRoomPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SocketSingleton ss = SocketSingleton.instance;
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xFF1C6474),
@@ -32,8 +30,8 @@ class JoinRoomPage extends StatelessWidget {
             width: double.infinity,
           ),
           Container(
-            width: 390, //390,
-            height: 700, // 700,
+            width: 390,
+            height: 700,
             color: Colors.white,
             child: Container(
               color: const Color.fromARGB(255, 170, 250, 254),
@@ -55,7 +53,7 @@ class JoinRoomPage extends StatelessWidget {
                   padding: const EdgeInsets.all(10),
                   child: MyForm(
                     controller: idRoomCtrl,
-                    hintText: "Introduzca nombre de la sala",
+                    hintText: "Introduzca código de la sala",
                     obscureText: false,
                   ),
                 ),
@@ -80,16 +78,7 @@ class JoinRoomPage extends StatelessWidget {
                             if (idRoomCtrl.text == "") {
                               _alertEmptyFields(context);
                             } else {
-                              // Comprobar que sigue un formato
-                              final roomName =
-                                  await ss.joinRoom(int.parse(idRoomCtrl.text));
-                              // ignore: use_build_context_synchronously
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => WaitingRoom(
-                                            nameRoom: roomName,
-                                          )));
+                              _joinRoom(context, int.parse(idRoomCtrl.text));
                             }
                           },
                           child: const Text("Unirse",
@@ -138,7 +127,10 @@ class JoinRoomPage extends StatelessWidget {
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
-              title: const Text("Error"),
+              title: const Text(
+                "Error",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
               // Muestra alerta non-null, pero siempre se inicializa
               content: const Text("Rellena todos los campos"),
               actions: [
@@ -150,5 +142,49 @@ class JoinRoomPage extends StatelessWidget {
                 ),
               ],
             ));
+  }
+
+  void _joinRoom(BuildContext context, int id) async {
+    // Comprobar que sigue un formato
+    final response =
+        await SocketSingleton.instance.joinRoom(int.parse(idRoomCtrl.text));
+
+    switch (response['status']) {
+      case true: /* ok */
+        // ignore: use_build_context_synchronously
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => WaitingRoom(
+                      roomName: response['roomName'],
+                    )));
+      default: /* error */
+        // Redirección a menú principal
+        // ignore: use_build_context_synchronously
+        showDialog(
+            barrierColor: Colors.black45,
+            barrierDismissible: false,
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: const Text(
+                    "Error",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  content: const Text(
+                      "Ha habido un error al unirse a la sala. \n Inténtelo de nuevo más tarde"),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Main_Menu_Page()));
+                      },
+                      child: const Text("Atrás"),
+                    )
+                  ],
+                ));
+    }
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:oca_app/pages/login_page.dart';
 import 'package:oca_app/pages/oca_game.dart';
+import 'package:oca_app/pages/user_settings.dart';
 import 'package:oca_app/pages/waiting_room.dart';
 import 'package:oca_app/pages/settings_menu.dart';
 import 'package:oca_app/pages/sign_up.dart';

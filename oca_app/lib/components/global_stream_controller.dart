@@ -14,8 +14,10 @@ class GlobalStreamController {
   final BehaviorSubject<dynamic> playersStreamController =
       BehaviorSubject<dynamic>.seeded([]);
 
+  // Getter Stream
   Stream<dynamic> get playersStream => playersStreamController.stream;
 
+  // Añadir dato a Stream
   void addData(dynamic data) {
     playersStreamController.sink.add(data);
   }

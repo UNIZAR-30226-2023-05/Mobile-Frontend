@@ -17,7 +17,7 @@ class User_instance {
 
   // Información adicional de usuario
   late int _monedas;
-  late String _profile_pic;
+  late String _profile_pic = "";
 
   // Información de control de salas
   late int _idRoom;

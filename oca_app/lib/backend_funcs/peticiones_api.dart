@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:oca_app/components/User_instance.dart';
 
-const String baseUrl = 'http://192.168.1.46:3000';
+const String baseUrl = 'http://192.168.1.51:3000';
 
 class ApiService {
   //FUNCION GENERICA PARA USAR EL TOKEN, PUEDES AGREGAR MAS FUNCIONES
@@ -118,9 +118,11 @@ Future<void> eliminarCuenta(int idUsuario) async {
   }
 }
 
-Future<String> actualizarAtributosUsuario(String name, String passwd) async {
+Future<Map<String, dynamic>> actualizarAtributosUsuario(
+    Map<String, dynamic> updatedAtributes) async {
   final url = Uri.parse('$baseUrl/users/register');
   late String body;
+  Map<String, dynamic> retVal = {};
 
   final headers = {
     'Content-Type': 'application/json',
@@ -129,26 +131,29 @@ Future<String> actualizarAtributosUsuario(String name, String passwd) async {
   };
 
   // Evitar enviar información redundante
-  if (User_instance.instance.nickname == name) {
-    body = jsonEncode(
-        {'id_usuario': User_instance.instance.id, 'password': passwd});
-  } else {
-    body = jsonEncode({
-      'id_usuario': User_instance.instance.id,
-      'nickname': name,
-      'password': passwd
-    });
-  }
+  // if (User_instance.instance.nickname == name) {
+  //   body = jsonEncode(
+  //       {'id_usuario': User_instance.instance.id, 'password': passwd});
+  // } else {
+  //   body = jsonEncode({
+  //     'id_usuario': User_instance.instance.id,
+  //     'nickname': name,
+  //     'password': passwd
+  //   });
+  // }
 
-  final response = await http.put(url, headers: headers, body: body);
+  final response =
+      await http.put(url, headers: headers, body: jsonEncode(updatedAtributes));
 
   final responseJson = jsonDecode(response.body);
 
   // Handle response
   switch (response.statusCode) {
     case 200: // Ok
-      return responseJson['message'];
+      retVal = {'status': true, 'msg': responseJson['message']};
     default: // Error
-      return responseJson['msg'];
+      retVal = {'status': false, 'msg': responseJson['msg']};
   }
+
+  return retVal;
 }

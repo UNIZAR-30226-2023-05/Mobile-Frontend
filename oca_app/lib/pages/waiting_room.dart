@@ -12,8 +12,8 @@ import 'package:oca_app/components/global_stream_controller.dart';
 import '../components/User_instance.dart';
 
 class WaitingRoom extends StatefulWidget {
-  final String nameRoom; // nombre de la sala
-  const WaitingRoom({Key? key, required this.nameRoom}) : super(key: key);
+  final String roomName; // nombre de la sala
+  const WaitingRoom({Key? key, required this.roomName}) : super(key: key);
 
   @override
   State<WaitingRoom> createState() => _WaitingRoomState();
@@ -101,7 +101,7 @@ class _WaitingRoomState extends State<WaitingRoom> {
                   child: Align(
                       alignment: Alignment.center,
                       child: Text(
-                        widget.nameRoom,
+                        widget.roomName,
                         style: const TextStyle(
                             color: Colors.black,
                             fontSize: 30,
@@ -127,11 +127,12 @@ class _WaitingRoomState extends State<WaitingRoom> {
 
                     switch (snapshot.connectionState) {
                       case ConnectionState.waiting:
-                        return Center(child: CircularProgressIndicator());
+                        return const Center(child: CircularProgressIndicator());
                       default:
                         if (snapshot.hasData) {
                           List<dynamic> players = snapshot.data;
                           bool isLeader = User_instance.instance.soyLider;
+
                           return ListView.builder(
                             itemCount: players.length,
                             itemBuilder: (BuildContext context, int index) {
@@ -171,7 +172,7 @@ class _WaitingRoomState extends State<WaitingRoom> {
                             },
                           );
                         } else {
-                          return Center(child: Text('No hay jugadores'));
+                          return const Center(child: Text('No hay jugadores'));
                         }
                     }
                   },

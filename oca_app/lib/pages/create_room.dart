@@ -6,7 +6,6 @@
 // -------------------------------------------------------------------
 
 import 'package:flutter/material.dart';
-import 'package:oca_app/components/User_instance.dart';
 import 'package:oca_app/components/forms.dart';
 import 'package:oca_app/components/socket_class.dart';
 import 'package:oca_app/pages/main_menu.dart';
@@ -130,37 +129,9 @@ class CreateRoomPage extends StatelessWidget {
                           style: CrearButton,
                           onPressed: () async {
                             if (roomNameCtrl.text == "") {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                        title: const Text("Error"),
-                                        content: const Text(
-                                            "La sala creada debe tener un nombre no vacío."),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: const Text("OK"),
-                                          )
-                                        ],
-                                      ));
+                              _showAlertDialogEmptyFields(context);
                             } else {
-                              int newIdRoom = await ss.createRoom(
-                                  roomNameCtrl.text, nPlayers);
-                              // Actualización de id de sala
-                              User_instance.instance.idRoom = newIdRoom;
-
-                              print("ID de la sala creada: $newIdRoom");
-
-                              // Redirección a la sala de juegos
-                              // ignore: use_build_context_synchronously
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => WaitingRoom(
-                                            nameRoom: roomNameCtrl.text,
-                                          )));
+                              _createRoom(context, nPlayers);
                             }
                           },
                           child: const Text("Crear",
@@ -177,13 +148,11 @@ class CreateRoomPage extends StatelessWidget {
                         ElevatedButton(
                           style: CancelarButton,
                           onPressed: () async {
-                            await ss.destroyRoom();
                             // ignore: use_build_context_synchronously
-                            /*
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => Main_Menu_Page()));*/
+                                    builder: (context) => Main_Menu_Page()));
                           },
                           child: const Text("Cancelar",
                               style: TextStyle(
@@ -203,5 +172,71 @@ class CreateRoomPage extends StatelessWidget {
         ]),
       )),
     );
+  }
+
+  void _showAlertDialogEmptyFields(BuildContext context) {
+    showDialog(
+        barrierColor: Colors.black45,
+        context: context,
+        builder: (context) => AlertDialog(
+              title: const Text(
+                "Error",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              content:
+                  const Text("La sala creada debe tener un nombre no vacío."),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("OK"),
+                )
+              ],
+            ));
+  }
+
+  void _createRoom(BuildContext context, int nPlayers) async {
+    final response =
+        await SocketSingleton.instance.createRoom(roomNameCtrl.text, nPlayers);
+
+    switch (response['status']) {
+      case true: /* ok */
+        // Redirección a sala de juegos
+        // ignore: use_build_context_synchronously
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => WaitingRoom(
+                      roomName: roomNameCtrl.text,
+                    )));
+        break;
+      default: /* error */
+        // Redirección a menú principal
+        // ignore: use_build_context_synchronously
+        showDialog(
+            barrierColor: Colors.black45,
+            barrierDismissible: false,
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: const Text(
+                    "Error",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  content: Text(response['errorMsg']),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Main_Menu_Page()));
+                      },
+                      child: const Text("Atrás"),
+                    )
+                  ],
+                ));
+    }
   }
 }
