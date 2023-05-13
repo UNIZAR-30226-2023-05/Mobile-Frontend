@@ -428,33 +428,42 @@ class _Oca_gameState extends State<Oca_game> {
                                                                           .topLeft
                                                                       : Alignment
                                                                           .topRight),
-                                                                  child:
-                                                                      Container(
-                                                                    decoration:
-                                                                        BoxDecoration(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              20),
-                                                                      color: (messages[index].messageType ==
-                                                                              "receiver"
-                                                                          ? Colors
-                                                                              .grey
-                                                                              .shade200
-                                                                          : Colors
-                                                                              .blue[200]),
-                                                                    ),
-                                                                    padding:
-                                                                        const EdgeInsets.all(
-                                                                            16),
-                                                                    child: Text(
+                                                                  child: Container(
+                                                                      decoration: BoxDecoration(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(20),
+                                                                        color: (messages[index].messageType ==
+                                                                                "receiver"
+                                                                            ? Colors.grey.shade200
+                                                                            : Colors.blue[200]),
+                                                                      ),
+                                                                      padding: const EdgeInsets.all(16),
+                                                                      child: /*Text(
                                                                       messages[
                                                                               index]
                                                                           .messageContent,
                                                                       style: const TextStyle(
                                                                           fontSize:
                                                                               15),
-                                                                    ),
-                                                                  ),
+                                                                    ),*/
+                                                                          Container(
+                                                                        margin: const EdgeInsets.symmetric(
+                                                                            vertical:
+                                                                                8.0),
+                                                                        child:
+                                                                            Column(
+                                                                          crossAxisAlignment:
+                                                                              CrossAxisAlignment.start,
+                                                                          children: [
+                                                                            Text(
+                                                                              messages[index].username,
+                                                                              style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.bold),
+                                                                            ),
+                                                                            SizedBox(height: 4.0),
+                                                                            Text(messages[index].messageContent),
+                                                                          ],
+                                                                        ),
+                                                                      )),
                                                                 ),
                                                               );
                                                             },
@@ -475,7 +484,9 @@ class _Oca_gameState extends State<Oca_game> {
                                                     child: Row(
                                                       children: <Widget>[
                                                         GestureDetector(
-                                                          onTap: () {},
+                                                          onTap: () {
+                                                            //
+                                                          },
                                                           child: Container(
                                                             height: 30,
                                                             width: 30,
@@ -529,6 +540,7 @@ class _Oca_gameState extends State<Oca_game> {
                                                                         .text,
                                                                 messageType:
                                                                     "receiver"));
+                                                            // Enviar mensaje a sala
                                                             SocketSingleton
                                                                 .instance
                                                                 .enviarMsgChatPartida(
