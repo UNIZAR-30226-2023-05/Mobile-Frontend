@@ -46,6 +46,7 @@ Pablo López
 8
 
 1h 30m  Cambio del Widget para poder mover las fichas y movimiento completo de las fichas 17/04/2023
+
 2h apartado social 23/04/2023
 1h 30m apartado social, conexion backend 24/04/2023
 2h 30m redefinicion de la conexion con backend 27/04/2023
@@ -57,11 +58,13 @@ Pablo López
 2h 30m Implementacion de la lista de jugadores en la sala 08/05/2023
 3h     Arreglo de salas 09/04/2023 
 2h     Implementacion del navigator para el juego 09/05/2023
-3h     Implementacion del backend con el juego    10/05/2023
-16.5
+13.5h
 
+3h     Implementacion del backend con el juego    10/05/2023
 3h    comunicacion juego y backend parte 1 11/05/2023
 3h    Comunicacion juego y backend parte 2 y 3, ya funciona el juego 11/05/2023
 1h    Pruebas y dibujo del tablero 11/05/2023
+2h 30m    Fichas dinamicas + pruebas + mensajes on game  12/05/2023
+10h
 
-TOTAL: 65h
+TOTAL: 72h

@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:oca_app/components/User_instance.dart';
+import 'package:oca_app/pages/main_menu.dart';
 import 'package:oca_app/pages/oca_game.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:oca_app/components/global_stream_controller.dart';
@@ -15,6 +16,8 @@ typedef ActualizarFicha1 = Function(int);
 typedef ActualizarFicha2 = Function(int);
 typedef ActualizarFicha3 = Function(int);
 typedef ActualizarFicha4 = Function(int);
+typedef ActualizarFicha5 = Function(int);
+typedef ActualizarFicha6 = Function(int);
 
 class SocketSingleton {
   // Atributos
@@ -33,7 +36,9 @@ class SocketSingleton {
   ActualizarFicha2? actualizarPosicionFicha2;
   ActualizarFicha3? actualizarPosicionFicha3;
   ActualizarFicha4? actualizarPosicionFicha4;
-  // Listado de jugadores
+  ActualizarFicha3? actualizarPosicionFicha5;
+  ActualizarFicha4? actualizarPosicionFicha6;
+
   late List<String> nombresJugadores;
 
   // Constructor especial de retorno de instancias
@@ -133,7 +138,6 @@ class SocketSingleton {
 
         int index = nombresJugadores.indexOf(
             nickname); // Encuentra la posición del nickname en la lista de nombres de jugadores
-        print('Index: $index');
         // Llama a la función de actualización correspondiente
         switch (index) {
           case 0:
@@ -147,6 +151,12 @@ class SocketSingleton {
             break;
           case 3:
             actualizarPosicionFicha4!(celda);
+            break;
+          case 4:
+            actualizarPosicionFicha5!(celda);
+            break;
+          case 5:
+            actualizarPosicionFicha6!(celda);
             break;
         }
       });
@@ -192,8 +202,9 @@ class SocketSingleton {
       onActualizarEstado?.call();
     });
 
-    socket.on('finPartida ', (data) => null);
-    socket.on("serverRoomMessage", (message) => (message));
+    socket.on('finPartida', (data) => ("finPartida: $data"));
+    socket.on(
+        "serverRoomMessage", (message) => ("ServerRoomMessage: $message"));
     socket.on("destroyingRoom",
         (message) => (print("respuesta del destroying $message")));
   }
@@ -377,6 +388,48 @@ class SocketSingleton {
     // Si el mensaje es "Estás penalizado" y el estado es "error", no hagas nada
     if (response['message'] == 'Estás penalizado' &&
         response['status'] == 'error') {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Estas penalizado'),
+            content: Text(
+                'Has caido en una casilla de penalizacion, asi que no puedes jugar este turno'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Cerrar'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  // Cierra el Popup
+                },
+              ),
+            ],
+          );
+        },
+      );
+      return {}; // Retorna un mapa vacío
+    }
+
+    if (response['message'] == 'Has ganado' && response['status'] == 'ok') {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Enhorabuena, has ganado la partida!'),
+            content: Text('Has ganado, ahora volveras al menú principal'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Cerrar'),
+                onPressed: () {
+                  Navigator.of(_context!).push(MaterialPageRoute(
+                      builder: (context) => Main_Menu_Page()));
+                  // Cierra el Popup
+                },
+              ),
+            ],
+          );
+        },
+      );
       return {}; // Retorna un mapa vacío
     }
 
@@ -387,7 +440,7 @@ class SocketSingleton {
           return AlertDialog(
             title: Text('Te toca volver a tirar'),
             content: Text(
-                'Enhorabuena, te mueves a la casilla ${response['res']['finalCell']} y vuelves a tirar'),
+                'Enhorabuena, has caido en la casilla ${response['res']['afterDice']}, asi que te mueves a la casilla ${response['res']['finalCell']} y vuelves a tirar'),
             actions: <Widget>[
               TextButton(
                 child: Text('Cerrar'),
