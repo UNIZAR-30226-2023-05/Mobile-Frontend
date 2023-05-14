@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:oca_app/components/ChatMessages.dart';
 import 'package:oca_app/components/User_instance.dart';
 import 'package:oca_app/pages/oca_game.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -496,6 +497,27 @@ class SocketSingleton {
 
     response = await completer.future;
     print("enviarMsgChatPriv --> $response");
+
+    if (response['status'] == 'ok') {
+      // print("Partida iniciada: ${response['message']}");
+    } else {
+      // print("Error al iniciar partida: ${response['message']}");
+      // Aquí puedes manejar el error, por ejemplo, mostrando un pop-up en la pantalla
+    }
+  }
+
+  Future<void> getMessagesHistory(String friendName) async {
+    final completer = Completer<Map<String, dynamic>>();
+    late Map<String, dynamic> response; // guarda respuesta del servidor
+
+    socket.emitWithAck(
+        'getPrivMessage', [User_instance.instance.nickname, friendName],
+        ack: (response) {
+      completer.complete(response);
+    });
+
+    response = await completer.future;
+    print("getMessagesHistory --> $response");
 
     if (response['status'] == 'ok') {
       // print("Partida iniciada: ${response['message']}");

@@ -15,7 +15,7 @@ class ChatPriv extends StatelessWidget {
   ChatPriv({super.key, required this.friendNickname});
 
   // Atributos para controlar el chat privado
-  List<ChatMessage> messages = []; //getMessagesHistory();
+  List<ChatMessage> messages = [];
   /*static*/ final BehaviorSubject<ChatMessage> chatController =
       BehaviorSubject<ChatMessage>();
   final TextEditingController msgCtrl = TextEditingController();
@@ -23,6 +23,7 @@ class ChatPriv extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //SocketSingleton.instance.getMessagesHistory(friendNickname);   falla
     return Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: const Color.fromARGB(255, 28, 100, 116),
