@@ -34,6 +34,7 @@ class _Oca_gameState extends State<Oca_game> {
       BehaviorSubject<ChatMessage>();
   final TextEditingController msgCtrl = TextEditingController();
   List<ChatMessage> messages = [];
+  final ScrollController _scrollController = ScrollController();
 
   int posicionFicha1 = 0;
   double leftFicha1 = calcularCoordenadas(1, 9, 2)[0].toDouble();
@@ -394,8 +395,28 @@ class _Oca_gameState extends State<Oca_game> {
                                                                       .data!);
                                                             }
                                                           }
+                                                          WidgetsBinding
+                                                              .instance
+                                                              .addPostFrameCallback(
+                                                                  (_) {
+                                                            // Ajusta el scroll a la posición más reciente
+                                                            _scrollController
+                                                                .animateTo(
+                                                              _scrollController
+                                                                  .position
+                                                                  .maxScrollExtent,
+                                                              duration:
+                                                                  const Duration(
+                                                                      milliseconds:
+                                                                          300),
+                                                              curve: Curves
+                                                                  .easeOut,
+                                                            );
+                                                          });
                                                           return ListView
                                                               .builder(
+                                                            controller:
+                                                                _scrollController,
                                                             itemCount:
                                                                 messages.length,
                                                             shrinkWrap: true,
@@ -457,9 +478,9 @@ class _Oca_gameState extends State<Oca_game> {
                                                                           children: [
                                                                             Text(
                                                                               messages[index].username,
-                                                                              style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.bold),
+                                                                              style: const TextStyle(fontSize: 12.0, fontWeight: FontWeight.bold),
                                                                             ),
-                                                                            SizedBox(height: 4.0),
+                                                                            const SizedBox(height: 4.0),
                                                                             Text(messages[index].messageContent),
                                                                           ],
                                                                         ),
