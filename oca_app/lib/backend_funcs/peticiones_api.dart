@@ -121,7 +121,7 @@ Future<void> eliminarCuenta(int idUsuario) async {
 Future<Map<String, dynamic>> actualizarAtributosUsuario(
     Map<String, dynamic> updatedAtributes) async {
   final url = Uri.parse('$baseUrl/users/register');
-  late String body;
+
   Map<String, dynamic> retVal = {};
 
   final headers = {
@@ -129,18 +129,6 @@ Future<Map<String, dynamic>> actualizarAtributosUsuario(
     'Accept': 'application/json',
     'Authorization': 'Bearer ${User_instance.instance.token}',
   };
-
-  // Evitar enviar información redundante
-  // if (User_instance.instance.nickname == name) {
-  //   body = jsonEncode(
-  //       {'id_usuario': User_instance.instance.id, 'password': passwd});
-  // } else {
-  //   body = jsonEncode({
-  //     'id_usuario': User_instance.instance.id,
-  //     'nickname': name,
-  //     'password': passwd
-  //   });
-  // }
 
   final response =
       await http.put(url, headers: headers, body: jsonEncode(updatedAtributes));
