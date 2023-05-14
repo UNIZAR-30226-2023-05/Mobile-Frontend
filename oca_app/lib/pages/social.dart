@@ -3,7 +3,10 @@ import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:oca_app/backend_funcs/social_func.dart';
 import 'package:oca_app/components/User_instance.dart';
 import 'package:oca_app/backend_funcs/peticiones_api.dart';
+import 'package:oca_app/components/socket_class.dart';
 import 'dart:async';
+
+import 'package:oca_app/pages/chatPriv.dart';
 
 class Social extends StatefulWidget {
   @override
@@ -567,13 +570,29 @@ class _SocialState extends State<Social> {
                                       .where((element) =>
                                           element['tipo'] == 'amigo')
                                       .map<Widget>((element) {
-                                    return Container(
-                                      decoration: BoxDecoration(
-                                        border: Border(bottom: BorderSide()),
-                                      ),
-                                      child: ListTile(
-                                        leading: Icon(Icons.person),
-                                        title: Text("${element['nickname']}"),
+                                    return GestureDetector(
+                                      onTap: () {
+                                        // Abrir sesión de chat
+                                        SocketSingleton.instance
+                                            .abrirSesionChat();
+
+                                        // Acceder al chat
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => ChatPriv(
+                                                      friendNickname:
+                                                          element['nickname'],
+                                                    )));
+                                      },
+                                      child: Container(
+                                        decoration: const BoxDecoration(
+                                          border: Border(bottom: BorderSide()),
+                                        ),
+                                        child: ListTile(
+                                          leading: Icon(Icons.person),
+                                          title: Text("${element['nickname']}"),
+                                        ),
                                       ),
                                     );
                                   }).toList();
@@ -584,7 +603,7 @@ class _SocialState extends State<Social> {
                                 } else {
                                   return Center(
                                       child: Text(
-                                          'No tienes amigos, agrega uno dandole a la lupa'));
+                                          'No tienes amigos, agrega amigos presionando \n el botón situado en la parte inferior derecha'));
                                 }
                               }
                             }

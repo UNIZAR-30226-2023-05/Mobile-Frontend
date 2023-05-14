@@ -1,10 +1,7 @@
 import 'dart:async';
-import 'dart:ffi';
-import 'dart:io';
-
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:oca_app/components/User_instance.dart';
-import 'package:oca_app/pages/main_menu.dart';
 import 'package:oca_app/pages/oca_game.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:oca_app/components/global_stream_controller.dart';
@@ -71,11 +68,6 @@ class SocketSingleton {
       'autoConnect': false,
       'auth': {'token': User_instance.instance.token}
     });
-
-    // void _onPlayerListUpdated(List<dynamic> playerList) {
-    //   // Envía la lista de jugadores al StreamController
-    //   globalStreamController.addData(playerList);
-    // }
 
     // Conexión manual
     socket.connect();
@@ -216,6 +208,13 @@ class SocketSingleton {
 
     // ---- Eventos de chat ---
     socket.on('roomMessage', (response) {
+      print("roomMessage  = $response");
+      if (response['message'] != "") {
+        Oca_game.chatMsgRecevied(response['user'], response['message']);
+      }
+    });
+
+    socket.on('privMessage', (response) {
       print("roomMessage  = $response");
       if (response['message'] != "") {
         Oca_game.chatMsgRecevied(response['user'], response['message']);
@@ -420,7 +419,7 @@ class SocketSingleton {
     return response['res'];
   }
 
-  // --------  FUNCIONES DE SALA ----------
+  // --------  FUNCIONES DE PARTIDA ----------
   Future<void> enviarMsgChatPartida(String msg) async {
     final completer = Completer<Map<String, dynamic>>();
     late Map<String, dynamic> response; // guarda respuesta del servidor
@@ -432,6 +431,71 @@ class SocketSingleton {
 
     response = await completer.future;
     print("enviarMsgChatPartida --> $response");
+
+    if (response['status'] == 'ok') {
+      // print("Partida iniciada: ${response['message']}");
+    } else {
+      // print("Error al iniciar partida: ${response['message']}");
+      // Aquí puedes manejar el error, por ejemplo, mostrando un pop-up en la pantalla
+    }
+  }
+
+  // ---- FUNCIONES DE CHAT PRIVADO ----
+
+  Future<void> abrirSesionChat() async {
+    final completer = Completer<Map<String, dynamic>>();
+    late Map<String, dynamic> response; // guarda respuesta del servidor
+
+    socket.emitWithAck(
+        'openSession', {'nickname': User_instance.instance.nickname},
+        ack: (response) {
+      completer.complete(response);
+    });
+
+    response = await completer.future;
+    print("abrirSesionChat --> $response");
+
+    if (response['status'] == 'ok') {
+      // print("Partida iniciada: ${response['message']}");
+    } else {
+      // print("Error al iniciar partida: ${response['message']}");
+      // Aquí puedes manejar el error, por ejemplo, mostrando un pop-up en la pantalla
+    }
+  }
+
+  Future<void> cerrarSesionChat() async {
+    final completer = Completer<Map<String, dynamic>>();
+    late Map<String, dynamic> response; // guarda respuesta del servidor
+
+    socket.emitWithAck(
+        'closeSession', {'nickname': User_instance.instance.nickname},
+        ack: (response) {
+      completer.complete(response);
+    });
+
+    response = await completer.future;
+    print("cerrarSesionChat --> $response");
+
+    if (response['status'] == 'ok') {
+      // print("Partida iniciada: ${response['message']}");
+    } else {
+      // print("Error al iniciar partida: ${response['message']}");
+      // Aquí puedes manejar el error, por ejemplo, mostrando un pop-up en la pantalla
+    }
+  }
+
+  Future<void> enviarMsgChatPriv(String friendName, String msg) async {
+    final completer = Completer<Map<String, dynamic>>();
+    late Map<String, dynamic> response; // guarda respuesta del servidor
+
+    socket.emitWithAck(
+        'sendPrivMessage', [User_instance.instance.nickname, friendName, msg],
+        ack: (response) {
+      completer.complete(response);
+    });
+
+    response = await completer.future;
+    print("enviarMsgChatPriv --> $response");
 
     if (response['status'] == 'ok') {
       // print("Partida iniciada: ${response['message']}");

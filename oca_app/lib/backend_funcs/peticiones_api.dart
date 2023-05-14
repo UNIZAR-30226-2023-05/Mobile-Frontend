@@ -5,21 +5,30 @@ import 'package:oca_app/components/User_instance.dart';
 
 const String baseUrl = 'http://192.168.1.51:3000';
 
-class ApiService {
-  //FUNCION GENERICA PARA USAR EL TOKEN, PUEDES AGREGAR MAS FUNCIONES
-  Future<http.Response> getData(String token) async {
-    final headers = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $token',
-    };
+//FUNCION GENERICA PARA USAR EL TOKEN, PUEDES AGREGAR MAS FUNCIONES
+Future<http.Response> getData(String token) async {
+  final headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'Authorization': 'Bearer $token',
+  };
 
-    final response = await http.get('$baseUrl/data' as Uri, headers: headers);
+  final response = await http.get('$baseUrl/data' as Uri, headers: headers);
 
-    return response;
-  }
+  return response;
+}
 
-  // Aquí puedes agregar otras funciones que requieran el token
+Future<Map<String, dynamic>> getDataFriend(int idFriend, String token) async {
+  final headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'Authorization': 'Bearer $token',
+  };
+
+  final response =
+      await http.get('$baseUrl/usuarios/$idFriend' as Uri, headers: headers);
+
+  return jsonDecode(response.body);
 }
 
 Future<int> getUserIDemail(String email) async {
