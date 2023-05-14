@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:oca_app/components/User_instance.dart';
 import 'package:oca_app/pages/statistics.dart';
 import 'package:oca_app/styles/buttons_styles.dart';
 import 'package:oca_app/pages/user_settings.dart';
 import 'package:oca_app/pages/Logros.dart';
+import 'package:oca_app/backend_funcs/peticiones_api.dart';
 
 class SettingsMenu extends StatelessWidget {
   const SettingsMenu({super.key});
@@ -41,11 +43,29 @@ class SettingsMenu extends StatelessWidget {
           const SizedBox(height: 60),
           ElevatedButton(
               style: GenericButton,
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Statistics()));
+              onPressed: () async {
+                if (await getEstadisticas(
+                    await getUserIDemail(User_instance.instance.email))) {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Statistics()));
+                }
               },
               child: const Text("Estadisticas",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 25,
+                      fontFamily: 'Caudex'))),
+          const SizedBox(height: 60),
+          ElevatedButton(
+              style: GenericButton,
+              onPressed: () async {
+                if (await getEstadisticas(
+                    await getUserIDemail(User_instance.instance.email))) {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Statistics()));
+                }
+              },
+              child: const Text("Logros",
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 25,

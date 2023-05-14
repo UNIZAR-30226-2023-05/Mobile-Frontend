@@ -27,6 +27,14 @@ class User_instance {
   bool _estaEnPartida = false;
   bool _isMyTurn = false;
 
+  // Estadisticas de usuario
+  late String victorias;
+  late String ocas;
+  late String calaveras;
+  late String tiradas;
+  late String seises;
+  late String partidas;
+
   User_instance._(); // Constructor privado
 
   // Destructor de la clase  (utilizado al eliminar la instancia)
@@ -76,4 +84,22 @@ class User_instance {
 
   bool get isMyTurn => _isMyTurn;
   set isMyTurn(bool value) => _isMyTurn = value;
+
+  String get getVictorias => victorias;
+  set setVictorias(String value) => victorias = value;
+
+  String get getOcas => ocas;
+  set setOcas(String value) => ocas = value;
+
+  String get getCalaveras => calaveras;
+  set setCalaveras(String value) => calaveras = value;
+
+  String get getTiradas => tiradas;
+  set setTiradas(String value) => tiradas = value;
+
+  String get getSeises => seises;
+  set setSeises(String value) => seises = value;
+
+  String get getPartidas => partidas;
+  set setPartidas(String value) => partidas = value;
 }
