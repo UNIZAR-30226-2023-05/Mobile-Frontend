@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:oca_app/backend_funcs/peticiones_api.dart';
+import 'package:oca_app/components/User_instance.dart';
 
 class Statistics extends StatelessWidget {
   const Statistics({super.key});
@@ -7,7 +9,7 @@ class Statistics extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Color.fromARGB(255, 28, 100, 116),
       body: SafeArea(
@@ -41,7 +43,8 @@ class Statistics extends StatelessWidget {
                                         color: Colors.black,
                                         fontSize: 20,
                                         fontFamily: 'Caudex')),
-                                Text('0',
+                                Text(
+                                    User_instance.instance.victorias.toString(),
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 20,
@@ -67,12 +70,12 @@ class Statistics extends StatelessWidget {
                             color: Color.fromARGB(255, 195, 250, 254),
                             child: Column(
                               children: [
-                                Text('Monedas',
+                                Text('Partidas jugadas',
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 20,
                                         fontFamily: 'Caudex')),
-                                Text('0',
+                                Text(User_instance.instance.partidas.toString(),
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 20,
@@ -112,7 +115,7 @@ class Statistics extends StatelessWidget {
                                         color: Colors.black,
                                         fontSize: 20,
                                         fontFamily: 'Caudex')),
-                                Text('0',
+                                Text(User_instance.instance.ocas.toString(),
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 20,
@@ -143,7 +146,8 @@ class Statistics extends StatelessWidget {
                                         color: Colors.black,
                                         fontSize: 20,
                                         fontFamily: 'Caudex')),
-                                Text('0',
+                                Text(
+                                    User_instance.instance.calaveras.toString(),
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 20,
@@ -178,12 +182,12 @@ class Statistics extends StatelessWidget {
                             color: Color.fromARGB(255, 195, 250, 254),
                             child: Column(
                               children: [
-                                Text('Tiradas',
+                                Text('Seis',
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 20,
                                         fontFamily: 'Caudex')),
-                                Text('0',
+                                Text(User_instance.instance.seises.toString(),
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 20,
@@ -209,12 +213,12 @@ class Statistics extends StatelessWidget {
                             color: Color.fromARGB(255, 195, 250, 254),
                             child: Column(
                               children: [
-                                Text('Seis',
+                                Text('Monedas',
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 20,
                                         fontFamily: 'Caudex')),
-                                Text('0',
+                                Text(User_instance.instance.monedas.toString(),
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 20,

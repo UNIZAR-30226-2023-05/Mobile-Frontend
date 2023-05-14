@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:oca_app/components/User_instance.dart';
 
-const String baseUrl = 'http://192.168.1.51:3000';
+const String baseUrl = 'http://169.51.206.12:32021';
 
 //FUNCION GENERICA PARA USAR EL TOKEN, PUEDES AGREGAR MAS FUNCIONES
 Future<http.Response> getData(String token) async {
@@ -60,7 +60,7 @@ Future<int> getUserIDemail(String email) async {
 Future<int> getUserIDnickname(String nickname) async {
   var headers = {'Content-Type': 'application/json'};
   var request = http.Request('GET', Uri.parse('$baseUrl/users/register'));
-  
+
   request.body = json.encode({"nickname": nickname});
   request.headers.addAll(headers);
 
@@ -154,4 +154,41 @@ Future<Map<String, dynamic>> actualizarAtributosUsuario(
   }
 
   return retVal;
+}
+
+Future<bool> getEstadisticas(int userID) async {
+  var headers = {'Content-Type': 'application/json'};
+  var request =
+      http.Request('GET', Uri.parse('$baseUrl/users/estadisticas/$userID'));
+
+  //request.body = json.encode({"id_usuario": userID});
+  //request.headers.addAll(headers);
+
+  final response = await request.send();
+  final respStr = await response.stream.bytesToString();
+  var respJson = jsonDecode(respStr);
+
+  if (response.statusCode == 200) {
+    print("USER ID exitoso\n");
+    print(respStr);
+    //jsonDecode(response.body)['id'];
+
+    User_instance.instance.ocas = respJson["estadisticas"]["vecesoca"];
+    User_instance.instance.seises = respJson["estadisticas"]["vecesseis"];
+    User_instance.instance.partidas =
+        respJson["estadisticas"]["partidasjugadas"];
+    User_instance.instance.victorias =
+        respJson["estadisticas"]["partidasganadas"];
+    User_instance.instance.calaveras =
+        respJson["estadisticas"]["vecescalavera"];
+    return true;
+  } else {
+    // ignore: avoid_print, prefer_interpolation_to_compose_strings
+    print("Error en getEstadisticas " +
+        response.statusCode.toString() +
+        "\n" +
+        "\n" +
+        response.toString());
+    return false;
+  }
 }
