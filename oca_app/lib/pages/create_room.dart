@@ -22,7 +22,6 @@ class CreateRoomPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     int nPlayers = int.parse(NMINPLAYERS);
-    SocketSingleton ss = SocketSingleton.instance;
 
     return Scaffold(
       resizeToAvoidBottomInset: false,

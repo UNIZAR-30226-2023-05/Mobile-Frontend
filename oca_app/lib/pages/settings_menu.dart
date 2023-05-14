@@ -54,8 +54,8 @@ class SettingsMenu extends StatelessWidget {
           ElevatedButton(
               style: GenericButton,
               onPressed: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => Logros()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => Statistics()));
               },
               child: const Text("Logros",
                   style: TextStyle(

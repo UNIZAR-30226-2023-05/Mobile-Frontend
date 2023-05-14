@@ -1,11 +1,7 @@
-import 'dart:io';
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:oca_app/styles/buttons_styles.dart';
 import 'package:oca_app/components/fichas.dart';
 import 'package:oca_app/components/oca_game_grid.dart';
-import 'package:oca_app/components/global_stream_controller.dart';
 import 'package:oca_app/components/socket_class.dart';
 import 'package:oca_app/components/User_instance.dart';
 import 'package:rxdart/rxdart.dart';
@@ -29,7 +25,7 @@ class _Oca_gameState extends State<Oca_game> {
   User_instance userInstance = User_instance.instance;
   int _diceNumber = 1;
   late List<String> nombresJugadores;
-  
+
   // Gestión de chat de partida
   static final BehaviorSubject<ChatMessage> chatController =
       BehaviorSubject<ChatMessage>();

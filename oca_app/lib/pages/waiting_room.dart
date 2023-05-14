@@ -1,8 +1,5 @@
 // ignore_for_file: must_be_immutable
 
-import 'dart:async';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:oca_app/components/socket_class.dart';
 import 'package:oca_app/pages/main_menu.dart';
@@ -20,7 +17,6 @@ class WaitingRoom extends StatefulWidget {
 }
 
 class _WaitingRoomState extends State<WaitingRoom> {
-
   @override
   void initState() {
     super.initState();

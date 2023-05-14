@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:oca_app/pages/ifaceGame.dart';
 import 'package:oca_app/pages/login_page.dart';
 import 'package:oca_app/pages/oca_game.dart';
 import 'package:oca_app/pages/user_settings.dart';

@@ -2,8 +2,11 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import 'package:oca_app/components/User_instance.dart';
+import 'package:oca_app/components/global_stream_controller.dart';
 
 const String baseUrl = 'http://169.51.206.12:32021';
+
+final GlobalStreamController logrosController = GlobalStreamController();
 
 class ApiService {
   //FUNCION GENERICA PARA USAR EL TOKEN, PUEDES AGREGAR MAS FUNCIONES

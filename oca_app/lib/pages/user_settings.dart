@@ -5,7 +5,6 @@ import 'package:oca_app/backend_funcs/peticiones_api.dart';
 import 'package:oca_app/components/User_instance.dart';
 import 'package:oca_app/components/forms.dart';
 import 'package:oca_app/pages/login_page.dart';
-import 'package:oca_app/pages/main_menu.dart';
 import 'package:oca_app/styles/buttons_styles.dart';
 import 'package:rxdart/rxdart.dart';
 
