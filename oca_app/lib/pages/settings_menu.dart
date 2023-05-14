@@ -56,26 +56,15 @@ class SettingsMenu extends StatelessWidget {
                       fontSize: 25,
                       fontFamily: 'Caudex'))),
           const SizedBox(height: 60),
+
           ElevatedButton(
               style: GenericButton,
               onPressed: () async {
-                if (await getEstadisticas(
+                if (await getLogros(
                     await getUserIDemail(User_instance.instance.email))) {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Statistics()));
+                      MaterialPageRoute(builder: (context) => Logros()));
                 }
-              },
-              child: const Text("Logros",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 25,
-                      fontFamily: 'Caudex'))),
-          const SizedBox(height: 60),
-          ElevatedButton(
-              style: GenericButton,
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Statistics()));
               },
               child: const Text("Logros",
                   style: TextStyle(

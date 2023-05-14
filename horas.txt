@@ -68,6 +68,8 @@ Pablo López
 12.5h
 
 1h 30m    fin de partida y popups dinamicos              13/05/2023
+3h        Ayuda con los chats                            14/05/2023  
+2h 30m    Cambio de backend nube, reunion, estadisticas y logros p1 14/05/2023 
 
 
 TOTAL: 72h

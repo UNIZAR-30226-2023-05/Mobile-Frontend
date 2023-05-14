@@ -20,8 +20,6 @@ class _LosgrosState extends State<Logros> {
     super.initState();
   }
 
-  Future<void> fetchData() async {}
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,19 +41,6 @@ class _LosgrosState extends State<Logros> {
                       color: Colors.white,
                       fontSize: 30,
                       fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(left: 200, top: 10),
-                  child: IconButton(
-                    onPressed: () {
-                      fetchData();
-                    },
-                    icon: const Icon(
-                      Icons.search,
-                      color: Colors.white,
-                      size: 45,
                     ),
                   ),
                 ),
