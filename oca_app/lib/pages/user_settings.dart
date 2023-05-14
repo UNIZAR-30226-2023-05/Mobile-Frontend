@@ -236,6 +236,11 @@ class UserSettingsPage extends StatelessWidget {
                                       // }
                                     });
                                   }
+                                  // Limpiar campos de texto
+                                  nameCtrl.clear();
+                                  passwdCtrl.clear();
+                                  repeatpasswdCtrl.clear();
+                                  changedPhoto = false;
                                 },
                                 child: const Text("Confirmar",
                                     style: TextStyle(
@@ -407,7 +412,7 @@ class UserSettingsPage extends StatelessWidget {
 
     // Check cambio de foto de perfil
     if (changedPhoto) {
-      changes['prophilephoto'] = User_instance.instance.profile_pic;
+      changes['profilephoto'] = User_instance.instance.profile_pic;
     }
 
     // Check cambio de nombre

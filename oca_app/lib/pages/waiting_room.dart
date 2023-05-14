@@ -20,26 +20,14 @@ class WaitingRoom extends StatefulWidget {
 }
 
 class _WaitingRoomState extends State<WaitingRoom> {
-  List<dynamic> players = [];
-  StreamSubscription<dynamic>? streamSubscription;
 
   @override
   void initState() {
-    print("initState()");
-
     super.initState();
   }
 
   @override
   void dispose() async {
-    print("dispose()");
-    /*
-    try {
-      await streamSubscription!.cancel();
-      print('La suscripción se ha cancelado correctamente.');
-    } catch (e) {
-      print('Error al cancelar la suscripción: $e');
-    }*/
     super.dispose();
   }
 
@@ -188,29 +176,23 @@ class _WaitingRoomState extends State<WaitingRoom> {
                 alignment: Alignment.bottomCenter,
                 child: Column(
                   children: [
-                    ElevatedButton(
-                      onPressed: () async {
-                        await ss.empezarPartida(3000);
-                      },
-                      style: GenericButton,
-                      child: const Text(
-                        "Empezar partida",
-                        style: TextStyle(fontSize: 25),
-                      ),
-                    ),
+                    Visibility(
+                        visible: User_instance.instance.soyLider,
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            await ss.empezarPartida(3000);
+                          },
+                          style: GenericButton,
+                          child: const Text(
+                            "Empezar partida",
+                            style: TextStyle(fontSize: 25),
+                          ),
+                        )),
                     const SizedBox(
                       height: 30,
                     ),
                     ElevatedButton(
                       onPressed: () async {
-                        /*
-                        try {
-                          await streamSubscription!.cancel();
-                          print(
-                              'La suscripción se ha cancelado correctamente.');
-                        } catch (e) {
-                          print('Error al cancelar la suscripción: $e');
-                        }*/
                         User_instance.instance.soyLider
                             ? await ss.destroyRoom()
                             : await ss.leaveRoom();
