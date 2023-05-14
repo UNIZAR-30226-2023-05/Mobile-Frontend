@@ -65,6 +65,9 @@ Pablo López
 3h    Comunicacion juego y backend parte 2 y 3, ya funciona el juego 11/05/2023
 1h    Pruebas y dibujo del tablero 11/05/2023
 2h 30m    Fichas dinamicas + pruebas + mensajes on game  12/05/2023
-10h
+12.5h
+
+1h 30m    fin de partida y popups dinamicos              13/05/2023
+
 
 TOTAL: 72h

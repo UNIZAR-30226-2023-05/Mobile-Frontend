@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -28,8 +29,8 @@ class _Oca_gameState extends State<Oca_game> {
   User_instance userInstance = User_instance.instance;
   int _diceNumber = 1;
   late List<String> nombresJugadores;
-
-  // Añadido
+  
+  // Gestión de chat de partida
   static final BehaviorSubject<ChatMessage> chatController =
       BehaviorSubject<ChatMessage>();
   final TextEditingController msgCtrl = TextEditingController();
@@ -192,6 +193,7 @@ class _Oca_gameState extends State<Oca_game> {
 
   @override
   Widget build(BuildContext context) {
+    SocketSingleton.instance.setContext(context);
     /*
     FichaWidget ficha1 = FichaWidget(
         visible: true,
@@ -640,43 +642,54 @@ class _Oca_gameState extends State<Oca_game> {
                 ],
               ),
               if (userInstance.isMyTurn)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    InkWell(
-                      onTap: () async {
-                        SocketSingleton.instance
-                            .jugarTurno(context)
-                            .then((res) => actualizarJuego(res));
-                      },
-                      child: SizedBox(
+                Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
                         height: 50.0, // Ajusta el tamaño como necesites
                         width: 50.0, // Ajusta el tamaño como necesites
-                        child: Image.asset(
-                            'lib/images/dado_cara_$_diceNumber.png'),
+                        child: InkWell(
+                          onTap: () async {
+                            SocketSingleton.instance
+                                .jugarTurno(context)
+                                .then((res) => actualizarJuego(res));
+                          },
+                          child: Image.asset(
+                              'lib/images/dado_cara_$_diceNumber.png'),
+                        ),
                       ),
-                    ),
-                    SizedBox(width: 10), // Espaciado entre la imagen y el texto
-                    Text('Tirar dados'),
-                  ],
+                      SizedBox(
+                          width: 10), // Espaciado entre la imagen y el texto
+                      Container(
+                        width: 100, // Ajusta el ancho como necesites
+                        child: Text('Tirar dados'),
+                      ),
+                    ],
+                  ),
                 ),
               if (!userInstance.isMyTurn)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    InkWell(
-                      onTap: () async {},
-                      child: SizedBox(
+                Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
                         height: 50.0, // Ajusta el tamaño como necesites
                         width: 50.0, // Ajusta el tamaño como necesites
-                        child: Image.asset(
-                            'lib/images/dado_cara_$_diceNumber.png'),
+                        child: InkWell(
+                          onTap: () async {},
+                          child: Image.asset(
+                              'lib/images/dado_cara_$_diceNumber.png'),
+                        ),
                       ),
-                    ),
-                    const SizedBox(
-                        width: 10), // Espaciado entre la imagen y el texto
-                    const Text('Espera a tu turno'),
-                  ],
+                      SizedBox(
+                          width: 10), // Espaciado entre la imagen y el texto
+                      Container(
+                        width: 100, // Ajusta el ancho como necesites
+                        child: Text('Espera a tu turno'),
+                      ),
+                    ],
+                  ),
                 ),
             ],
           ),
