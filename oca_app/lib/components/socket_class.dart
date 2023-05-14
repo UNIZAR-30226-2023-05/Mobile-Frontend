@@ -100,7 +100,7 @@ class SocketSingleton {
 
       // Check tipo recibido correcto y envío JSON de
       // jugadores por stream de partida
-      if (data is List<String>) {
+      if (data is List<dynamic> && data.every((element) => element is String)) {
         List<Map<String, dynamic>> playerList =
             data.map((playerName) => {'nickname': playerName}).toList();
         globalStreamController.addData(playerList);
@@ -213,6 +213,14 @@ class SocketSingleton {
 
     socket.on("destroyingRoom",
         (message) => (print("respuesta del destroying $message")));
+
+    // ---- Eventos de chat ---
+    socket.on('roomMessage', (response) {
+      print("roomMessage  = $response");
+      if (response['message'] != "") {
+        Oca_game.chatMsgRecevied(response['user'], response['message']);
+      }
+    });
   }
 
   // -------- EVENTOS DE SALA --------
@@ -410,5 +418,26 @@ class SocketSingleton {
 
     // Devuelve el campo 'res'
     return response['res'];
+  }
+
+  // --------  FUNCIONES DE SALA ----------
+  Future<void> enviarMsgChatPartida(String msg) async {
+    final completer = Completer<Map<String, dynamic>>();
+    late Map<String, dynamic> response; // guarda respuesta del servidor
+
+    socket.emitWithAck('sendMessage', [User_instance.instance.idRoom, msg],
+        ack: (response) {
+      completer.complete(response);
+    });
+
+    response = await completer.future;
+    print("enviarMsgChatPartida --> $response");
+
+    if (response['status'] == 'ok') {
+      // print("Partida iniciada: ${response['message']}");
+    } else {
+      // print("Error al iniciar partida: ${response['message']}");
+      // Aquí puedes manejar el error, por ejemplo, mostrando un pop-up en la pantalla
+    }
   }
 }
