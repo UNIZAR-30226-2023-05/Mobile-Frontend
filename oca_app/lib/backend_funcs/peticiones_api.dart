@@ -60,6 +60,7 @@ Future<int> getUserIDemail(String email) async {
 Future<int> getUserIDnickname(String nickname) async {
   var headers = {'Content-Type': 'application/json'};
   var request = http.Request('GET', Uri.parse('$baseUrl/users/register'));
+  
   request.body = json.encode({"nickname": nickname});
   request.headers.addAll(headers);
 

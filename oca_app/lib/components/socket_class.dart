@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:oca_app/backend_funcs/peticiones_api.dart';
 import 'package:oca_app/components/ChatMessages.dart';
 import 'package:oca_app/components/User_instance.dart';
 import 'package:oca_app/pages/oca_game.dart';
@@ -509,9 +510,15 @@ class SocketSingleton {
   Future<void> getMessagesHistory(String friendName) async {
     final completer = Completer<Map<String, dynamic>>();
     late Map<String, dynamic> response; // guarda respuesta del servidor
+    // Obtener id de jugador
+    int idFriend = 0;
 
-    socket.emitWithAck(
-        'getPrivMessage', [User_instance.instance.nickname, friendName],
+    await getUserIDnickname(friendName).then((friendId) {
+      print("Id de $friendName = $friendId");
+      idFriend = friendId;
+    });
+
+    socket.emitWithAck('getPrivMessage', {User_instance.instance.id, idFriend},
         ack: (response) {
       completer.complete(response);
     });

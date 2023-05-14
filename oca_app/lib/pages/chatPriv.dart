@@ -23,7 +23,7 @@ class ChatPriv extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //SocketSingleton.instance.getMessagesHistory(friendNickname);   falla
+    SocketSingleton.instance.getMessagesHistory(friendNickname);
     return Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: const Color.fromARGB(255, 28, 100, 116),
