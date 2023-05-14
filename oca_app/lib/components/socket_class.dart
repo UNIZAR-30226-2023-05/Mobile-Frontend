@@ -10,7 +10,7 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:oca_app/components/global_stream_controller.dart';
 import 'package:oca_app/components/popups_partida.dart';
 
-const url = 'http://192.168.1.51:3000';
+const url = 'http://169.51.206.12:32021';
 
 typedef ActualizarEstadoCallback = Function();
 typedef ActualizarFicha1 = Function(int);

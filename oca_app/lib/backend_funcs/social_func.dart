@@ -120,7 +120,7 @@ Future<List<Map<String, dynamic>>> listaAmigos(int id_usuario) async {
 Future<bool> rechazarSolcitudAmistad(
     int id_usuario_envia, int id_usuario_recibe) async {
   print("Enviando datos");
-  const url = 'http://192.168.1.46:3000/social/friends';
+  const url = 'http://169.51.206.12:32021/social/friends';
   final body = {
     "id_usuario_envia": id_usuario_recibe,
     "id_usuario_recibe": id_usuario_envia
