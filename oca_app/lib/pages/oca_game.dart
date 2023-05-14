@@ -7,9 +7,16 @@ import 'package:oca_app/components/oca_game_grid.dart';
 import 'package:oca_app/components/global_stream_controller.dart';
 import 'package:oca_app/components/socket_class.dart';
 import 'package:oca_app/components/User_instance.dart';
+import 'package:rxdart/rxdart.dart';
+
+import '../components/ChatMessages.dart';
 
 class Oca_game extends StatefulWidget {
   Oca_game({Key? key}) : super(key: key);
+
+  static void chatMsgRecevied(String senderName, String msg) {
+    _Oca_gameState._chatMsgRecevied(senderName, msg);
+  }
 
   @override
   _Oca_gameState createState() => _Oca_gameState();
@@ -21,6 +28,13 @@ class _Oca_gameState extends State<Oca_game> {
   User_instance userInstance = User_instance.instance;
   int _diceNumber = 1;
   late List<String> nombresJugadores;
+
+  // Añadido
+  static final BehaviorSubject<ChatMessage> chatController =
+      BehaviorSubject<ChatMessage>();
+  final TextEditingController msgCtrl = TextEditingController();
+  List<ChatMessage> messages = [];
+  final ScrollController _scrollController = ScrollController();
 
   int posicionFicha1 = 0;
   double leftFicha1 = calcularCoordenadas(1, 9, 2)[0].toDouble();
@@ -310,18 +324,300 @@ class _Oca_gameState extends State<Oca_game> {
                   ),
                 ],
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 4.0),
-                    child: ElevatedButton(
-                        style: GenericButtonSmall,
-                        onPressed: () {},
-                        child: const Text('Abandonar sala')),
-                  )
-                ],
-              ),
+              Padding(
+                  padding: const EdgeInsets.only(right: 4.0, left: 4.0),
+                  // mainAxisAlignment: MainAxisAlignment.end,
+                  child: Row(children: [
+                    Expanded(
+                        child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: ElevatedButton(
+                                style: GenericButtonSmall,
+                                onPressed: () {
+                                  // Chat de partida
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      WidgetsBinding.instance
+                                          .addPostFrameCallback((_) {
+                                        _scrollController.jumpTo(
+                                            _scrollController
+                                                .position.maxScrollExtent);
+                                      });
+                                      return AlertDialog(
+                                          backgroundColor: const Color.fromARGB(
+                                              255, 31, 99, 128),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                          ),
+                                          titlePadding: const EdgeInsets.only(
+                                              top: 10, left: 10),
+                                          contentPadding:
+                                              const EdgeInsets.all(10),
+                                          title: const Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Text(
+                                                'Chat',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 25),
+                                              )),
+                                          content: Container(
+                                            height: 500,
+                                            width: 300,
+                                            decoration: BoxDecoration(
+                                                border: Border.all(
+                                                    color: const Color.fromARGB(
+                                                        255, 28, 100, 116),
+                                                    width: 2.0),
+                                                borderRadius:
+                                                    const BorderRadius.all(
+                                                        Radius.circular(10.0)),
+                                                color: const Color.fromARGB(
+                                                    255, 195, 250, 254)),
+                                            child: Column(
+                                              children: [
+                                                Expanded(
+                                                    child: StreamBuilder<
+                                                            ChatMessage>(
+                                                        stream: chatController
+                                                            .stream,
+                                                        builder: (BuildContext
+                                                                context,
+                                                            AsyncSnapshot<
+                                                                    ChatMessage>
+                                                                snapshot) {
+                                                          if (snapshot
+                                                              .hasData) {
+                                                            if (snapshot.data
+                                                                    ?.username !=
+                                                                User_instance
+                                                                    .instance
+                                                                    .nickname) {
+                                                              messages.add(
+                                                                  snapshot
+                                                                      .data!);
+                                                            }
+                                                          }
+                                                          WidgetsBinding
+                                                              .instance
+                                                              .addPostFrameCallback(
+                                                                  (_) {
+                                                            // Ajusta el scroll a la posición más reciente
+                                                            _scrollController
+                                                                .animateTo(
+                                                              _scrollController
+                                                                  .position
+                                                                  .maxScrollExtent,
+                                                              duration:
+                                                                  const Duration(
+                                                                      milliseconds:
+                                                                          300),
+                                                              curve: Curves
+                                                                  .easeOut,
+                                                            );
+                                                          });
+                                                          return ListView
+                                                              .builder(
+                                                            controller:
+                                                                _scrollController,
+                                                            itemCount:
+                                                                messages.length,
+                                                            shrinkWrap: true,
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    top: 10,
+                                                                    bottom: 10),
+                                                            physics:
+                                                                const AlwaysScrollableScrollPhysics(),
+                                                            itemBuilder:
+                                                                (context,
+                                                                    index) {
+                                                              return Container(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                            .only(
+                                                                        left:
+                                                                            14,
+                                                                        right:
+                                                                            14,
+                                                                        top: 10,
+                                                                        bottom:
+                                                                            10),
+                                                                child: Align(
+                                                                  alignment: (messages[index]
+                                                                              .messageType ==
+                                                                          "receiver"
+                                                                      ? Alignment
+                                                                          .topLeft
+                                                                      : Alignment
+                                                                          .topRight),
+                                                                  child: Container(
+                                                                      decoration: BoxDecoration(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(20),
+                                                                        color: (messages[index].messageType ==
+                                                                                "receiver"
+                                                                            ? Colors.grey.shade200
+                                                                            : Colors.blue[200]),
+                                                                      ),
+                                                                      padding: const EdgeInsets.all(16),
+                                                                      child: /*Text(
+                                                                      messages[
+                                                                              index]
+                                                                          .messageContent,
+                                                                      style: const TextStyle(
+                                                                          fontSize:
+                                                                              15),
+                                                                    ),*/
+                                                                          Container(
+                                                                        margin: const EdgeInsets.symmetric(
+                                                                            vertical:
+                                                                                8.0),
+                                                                        child:
+                                                                            Column(
+                                                                          crossAxisAlignment:
+                                                                              CrossAxisAlignment.start,
+                                                                          children: [
+                                                                            Text(
+                                                                              messages[index].username,
+                                                                              style: const TextStyle(fontSize: 12.0, fontWeight: FontWeight.bold),
+                                                                            ),
+                                                                            const SizedBox(height: 4.0),
+                                                                            Text(messages[index].messageContent),
+                                                                          ],
+                                                                        ),
+                                                                      )),
+                                                                ),
+                                                              );
+                                                            },
+                                                          );
+                                                        })),
+                                                Align(
+                                                  alignment:
+                                                      Alignment.bottomLeft,
+                                                  child: Container(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 10,
+                                                            bottom: 10,
+                                                            top: 10),
+                                                    height: 60,
+                                                    width: double.infinity,
+                                                    color: Colors.white,
+                                                    child: Row(
+                                                      children: <Widget>[
+                                                        GestureDetector(
+                                                          onTap: () {
+                                                            //
+                                                          },
+                                                          child: Container(
+                                                            height: 30,
+                                                            width: 30,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: Colors
+                                                                  .lightBlue,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          30),
+                                                            ),
+                                                            child: const Icon(
+                                                              Icons.add,
+                                                              color:
+                                                                  Colors.white,
+                                                              size: 20,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                          width: 15,
+                                                        ),
+                                                        Expanded(
+                                                          child: TextField(
+                                                            controller: msgCtrl,
+                                                            decoration: const InputDecoration(
+                                                                hintText:
+                                                                    "Escribe un mensaje",
+                                                                hintStyle: TextStyle(
+                                                                    color: Colors
+                                                                        .black54),
+                                                                border:
+                                                                    InputBorder
+                                                                        .none),
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                          width: 15,
+                                                        ),
+                                                        FloatingActionButton(
+                                                          onPressed: () {
+                                                            // Comunicación con el socket
+                                                            chatController.sink.add(ChatMessage(
+                                                                username:
+                                                                    User_instance
+                                                                        .instance
+                                                                        .nickname,
+                                                                messageContent:
+                                                                    msgCtrl
+                                                                        .text,
+                                                                messageType:
+                                                                    "receiver"));
+                                                            // Enviar mensaje a sala
+                                                            SocketSingleton
+                                                                .instance
+                                                                .enviarMsgChatPartida(
+                                                                    msgCtrl
+                                                                        .text);
+
+                                                            // Actualizando mis mensajes
+                                                            // debería comprobar que ha ido todo bien antes de añadirlo
+                                                            messages.add(ChatMessage(
+                                                                username:
+                                                                    User_instance
+                                                                        .instance
+                                                                        .nickname,
+                                                                messageContent:
+                                                                    msgCtrl
+                                                                        .text,
+                                                                messageType:
+                                                                    "sender"));
+                                                            // borra el mensaje de la TextBox
+                                                            msgCtrl.clear();
+                                                          },
+                                                          child: Icon(
+                                                            Icons.send,
+                                                            color: Colors.white,
+                                                            size: 18,
+                                                          ),
+                                                          backgroundColor:
+                                                              Colors.blue,
+                                                          elevation: 0,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ));
+                                    },
+                                  );
+                                },
+                                child: const Text('Chat')))),
+                    Expanded(
+                        child: Align(
+                      alignment: Alignment.centerRight,
+                      child: ElevatedButton(
+                          style: GenericButtonSmall,
+                          onPressed: () {},
+                          child: const Text('Abandonar sala')),
+                    ))
+                  ])),
               Stack(
                 children: [
                   Image.asset(
@@ -377,12 +673,18 @@ class _Oca_gameState extends State<Oca_game> {
                             'lib/images/dado_cara_$_diceNumber.png'),
                       ),
                     ),
-                    SizedBox(width: 10), // Espaciado entre la imagen y el texto
-                    Text('Espera a tu turno'),
+                    const SizedBox(
+                        width: 10), // Espaciado entre la imagen y el texto
+                    const Text('Espera a tu turno'),
                   ],
                 ),
             ],
           ),
         ));
+  }
+
+  static void _chatMsgRecevied(String senderName, String msg) {
+    chatController.sink.add(ChatMessage(
+        username: senderName, messageContent: msg, messageType: "receiver"));
   }
 }
