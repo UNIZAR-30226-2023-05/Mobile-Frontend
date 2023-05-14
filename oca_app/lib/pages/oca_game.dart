@@ -338,6 +338,12 @@ class _Oca_gameState extends State<Oca_game> {
                                   showDialog(
                                     context: context,
                                     builder: (BuildContext context) {
+                                      WidgetsBinding.instance
+                                          .addPostFrameCallback((_) {
+                                        _scrollController.jumpTo(
+                                            _scrollController
+                                                .position.maxScrollExtent);
+                                      });
                                       return AlertDialog(
                                           backgroundColor: const Color.fromARGB(
                                               255, 31, 99, 128),
