@@ -9,7 +9,9 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:oca_app/components/global_stream_controller.dart';
 import 'package:oca_app/components/popups_partida.dart';
 
-const url = 'http://169.51.206.12:32021';
+import '../backend_funcs/url.dart';
+
+const baseurl = url;
 
 typedef ActualizarEstadoCallback = Function();
 typedef ActualizarFicha1 = Function(int);
@@ -65,7 +67,7 @@ class SocketSingleton {
 
   // Inicialización de socket
   void _initSocket() {
-    socket = IO.io(url, <String, dynamic>{
+    socket = IO.io(baseurl, <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': false,
       'auth': {'token': User_instance.instance.token}
@@ -159,7 +161,7 @@ class SocketSingleton {
 
     socket.on('ordenTurnos', (data) {
       print(data);
-      if (_context != null && ui.estaEnPartida == false) {
+      if (ui.estaEnPartida == false) {
         ui.estaEnPartida = true;
         if (data != null &&
             data['ordenTurnos'] != null &&
@@ -169,6 +171,8 @@ class SocketSingleton {
           } else {
             ui.isMyTurn = false;
           }
+          turnController.clearData();
+          turnController.addData(data['ordenTurnos']);
         }
         Navigator.of(_context!)
             .push(MaterialPageRoute(builder: (_context) => Oca_game()));
@@ -248,11 +252,12 @@ class SocketSingleton {
       User_instance.instance.soyLider = true;
       retVal = {'status': true, 'idRoom': response['id']};
     } else {
-      retVal = {
-        'status': false,
-        'errorMsg':
-            "Ha habido un error al crear la sala. \n Inténtelo de nuevo más tarde"
-      };
+      print(response["sala"]);
+      if (response["sala"] != null) {
+        User_instance.instance.idRoom = response["sala"];
+        await leaveRoom();
+        await destroyRoom();
+      }
     }
     print(response);
 
@@ -264,7 +269,7 @@ class SocketSingleton {
   Future<Map<String, dynamic>> joinRoom(int idRoom) async {
     final completer = Completer<Map<String, dynamic>>();
     late Map<String, dynamic> response; // guarda respuesta del servidor
-    late Map<String, dynamic> retVal;
+    late Map<String, dynamic> retVal = {};
 
     Map<String, dynamic> miJson = {'nickname': User_instance.instance.nickname};
 
@@ -279,11 +284,10 @@ class SocketSingleton {
       User_instance.instance.soyLider = false;
       retVal = {'status': true, 'roomName': response['roomName']};
     } else {
-      retVal = {
-        'status': false,
-        'errorMsg':
-            "Ha habido un error al unirse a la sala. \n Inténtelo de nuevo más tarde"
-      };
+      if (response["sala"] != null) {
+        User_instance.instance.idRoom = response["sala"];
+        await leaveRoom();
+      }
     }
     print(response);
 

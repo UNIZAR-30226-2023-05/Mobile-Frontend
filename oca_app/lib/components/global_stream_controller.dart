@@ -22,6 +22,10 @@ class GlobalStreamController {
     playersStreamController.sink.add(data);
   }
 
+  void clearData() {
+    playersStreamController.sink.add([]);
+  }
+
   void dispose() {
     playersStreamController.close();
   }
