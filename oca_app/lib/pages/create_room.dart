@@ -130,6 +130,7 @@ class CreateRoomPage extends StatelessWidget {
                             if (roomNameCtrl.text == "") {
                               _showAlertDialogEmptyFields(context);
                             } else {
+                              //await SocketSingleton.instance.leaveRoom();
                               _createRoom(context, nPlayers);
                             }
                           },

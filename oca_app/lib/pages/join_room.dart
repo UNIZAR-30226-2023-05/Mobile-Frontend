@@ -78,6 +78,7 @@ class JoinRoomPage extends StatelessWidget {
                             if (idRoomCtrl.text == "") {
                               _alertEmptyFields(context);
                             } else {
+                              //await SocketSingleton.instance.leaveRoom();
                               _joinRoom(context, int.parse(idRoomCtrl.text));
                             }
                           },

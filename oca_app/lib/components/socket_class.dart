@@ -171,7 +171,7 @@ class SocketSingleton {
           }
         }
         Navigator.of(_context!)
-            .push(MaterialPageRoute(builder: (context) => Oca_game()));
+            .push(MaterialPageRoute(builder: (_context) => Oca_game()));
       } else {
         //gestion de los turnos
         if (data != null &&

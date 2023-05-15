@@ -149,6 +149,7 @@ void popUpVolverATirar(
 }
 
 void popUpVictoria(BuildContext context) {
+  print("PopUp Victoria");
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -172,6 +173,7 @@ void popUpVictoria(BuildContext context) {
 }
 
 void popUpOca(BuildContext context, int casillaCaida, int casillaNueva) {
+  print("PopUp Oca");
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -194,6 +196,7 @@ void popUpOca(BuildContext context, int casillaCaida, int casillaNueva) {
 }
 
 void popUpPenalizacion(BuildContext context) {
+  print("PopUp penalizacion");
   showDialog(
     context: context,
     builder: (BuildContext context) {

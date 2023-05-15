@@ -1,7 +1,8 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:oca_app/backend_funcs/url.dart';
 
-const baseUrl = 'http://169.51.206.12:32021';
+const baseUrl = url;
 
 class Registro {
   late String _nickname;

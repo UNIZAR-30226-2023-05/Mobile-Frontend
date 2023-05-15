@@ -3,8 +3,9 @@ import 'package:http/http.dart' as http;
 
 import 'package:oca_app/components/User_instance.dart';
 import 'package:oca_app/components/logros_class.dart';
+import 'package:oca_app/backend_funcs/url.dart';
 
-const String baseUrl = 'http://169.51.206.12:32021';
+const String baseUrl = url;
 
 //FUNCION GENERICA PARA USAR EL TOKEN, PUEDES AGREGAR MAS FUNCIONES
 Future<http.Response> getData(String token) async {

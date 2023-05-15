@@ -2,8 +2,9 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:oca_app/components/User_instance.dart';
 import 'package:oca_app/components/socket_class.dart';
+import 'package:oca_app/backend_funcs/url.dart';
 
-const baseUrl = 'http://169.51.206.12:32021';
+const baseUrl = url;
 
 class LogIn {
   late String _email;

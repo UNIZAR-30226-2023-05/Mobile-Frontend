@@ -34,28 +34,28 @@ class _Oca_gameState extends State<Oca_game> {
   final ScrollController _scrollController = ScrollController();
 
   int posicionFicha1 = 0;
-  double leftFicha1 = calcularCoordenadas(1, 9, 2)[0].toDouble();
-  double topFicha1 = calcularCoordenadas(1, 9, 2)[1].toDouble();
+  double leftFicha1 = calcularCoordenadas(1, 0, 6)[0].toDouble();
+  double topFicha1 = calcularCoordenadas(1, 0, 6)[1].toDouble();
 
   int posicionFicha2 = 0;
-  double leftFicha2 = calcularCoordenadas(2, 9, 2)[0].toDouble();
-  double topFicha2 = calcularCoordenadas(2, 9, 2)[1].toDouble();
+  double leftFicha2 = calcularCoordenadas(2, 0, 6)[0].toDouble();
+  double topFicha2 = calcularCoordenadas(2, 0, 6)[1].toDouble();
 
   int posicionFicha3 = 0;
-  double leftFicha3 = calcularCoordenadas(3, 9, 2)[0].toDouble();
-  double topFicha3 = calcularCoordenadas(3, 9, 2)[1].toDouble();
+  double leftFicha3 = calcularCoordenadas(3, 0, 6)[0].toDouble();
+  double topFicha3 = calcularCoordenadas(3, 0, 6)[1].toDouble();
 
   int posicionFicha4 = 0;
-  double leftFicha4 = calcularCoordenadas(4, 9, 2)[0].toDouble();
-  double topFicha4 = calcularCoordenadas(4, 9, 2)[1].toDouble();
+  double leftFicha4 = calcularCoordenadas(4, 0, 6)[0].toDouble();
+  double topFicha4 = calcularCoordenadas(4, 0, 6)[1].toDouble();
 
   int posicionFicha5 = 0;
-  double leftFicha5 = calcularCoordenadas(5, 9, 2)[0].toDouble();
-  double topFicha5 = calcularCoordenadas(5, 9, 2)[1].toDouble();
+  double leftFicha5 = calcularCoordenadas(5, 0, 6)[0].toDouble();
+  double topFicha5 = calcularCoordenadas(5, 0, 6)[1].toDouble();
 
   int posicionFicha6 = 0;
-  double leftFicha6 = calcularCoordenadas(6, 9, 2)[0].toDouble();
-  double topFicha6 = calcularCoordenadas(6, 9, 2)[1].toDouble();
+  double leftFicha6 = calcularCoordenadas(6, 0, 6)[0].toDouble();
+  double topFicha6 = calcularCoordenadas(6, 0, 6)[1].toDouble();
 
   void actualizarEstado() {
     setState(() {});
@@ -64,7 +64,7 @@ class _Oca_gameState extends State<Oca_game> {
 
   void actualizarJuego(Map<String, dynamic> res) {
     setState(() {
-      if (res != {}) {
+      if (res != {} && res != Null) {
         _diceNumber = res[
             'dice']; // Actualiza _diceNumber con el valor de 'dice' en 'res'
         //actualizarPosicionFicha1(res['afterDice']);
@@ -83,7 +83,9 @@ class _Oca_gameState extends State<Oca_game> {
       topFicha1 =
           calcularCoordenadas(1, posicionFicha1, njugadores)[1].toDouble();
 
-      print("posicion ficha 1: " + posicionFicha1.toString());
+      print("posicion ficha 1: " +
+          posicionFicha1.toString() +
+          njugadores.toString());
     });
   }
 
@@ -125,25 +127,25 @@ class _Oca_gameState extends State<Oca_game> {
 
   void actualizarPosicionFicha5(int afterDice) {
     setState(() {
-      posicionFicha4 = afterDice;
-      leftFicha4 =
-          calcularCoordenadas(5, posicionFicha4, njugadores)[0].toDouble();
+      posicionFicha5 = afterDice;
+      leftFicha5 =
+          calcularCoordenadas(5, posicionFicha5, njugadores)[0].toDouble();
       topFicha4 =
-          calcularCoordenadas(5, posicionFicha4, njugadores)[1].toDouble();
+          calcularCoordenadas(5, posicionFicha5, njugadores)[1].toDouble();
 
-      print(posicionFicha4);
+      print(posicionFicha5);
     });
   }
 
   void actualizarPosicionFicha6(int afterDice) {
     setState(() {
-      posicionFicha4 = afterDice;
-      leftFicha4 =
-          calcularCoordenadas(6, posicionFicha4, njugadores)[0].toDouble();
+      posicionFicha6 = afterDice;
+      leftFicha6 =
+          calcularCoordenadas(6, posicionFicha6, njugadores)[0].toDouble();
       topFicha4 =
-          calcularCoordenadas(6, posicionFicha4, njugadores)[1].toDouble();
+          calcularCoordenadas(6, posicionFicha6, njugadores)[1].toDouble();
 
-      print(posicionFicha4);
+      print(posicionFicha6);
     });
   }
 
@@ -239,7 +241,7 @@ class _Oca_gameState extends State<Oca_game> {
             visible: (1 <= njugadores),
             nombre: nombresJugadores[0],
             posicion: posicionFicha1,
-            imagen: Image.asset('lib/images/Skin_dorada.png',
+            imagen: Image.asset('lib/images/skin_azul.png',
                 width: 15, height: 15, fit: BoxFit.contain))
         : null;
 
@@ -248,7 +250,7 @@ class _Oca_gameState extends State<Oca_game> {
             visible: (2 <= njugadores),
             nombre: nombresJugadores[1],
             posicion: posicionFicha2,
-            imagen: Image.asset('lib/images/Skin_rosa.png',
+            imagen: Image.asset('lib/images/skin_verde.png',
                 width: 15, height: 15, fit: BoxFit.contain))
         : null;
 
@@ -257,7 +259,7 @@ class _Oca_gameState extends State<Oca_game> {
             visible: (3 <= njugadores),
             nombre: nombresJugadores[2],
             posicion: posicionFicha3,
-            imagen: Image.asset('lib/images/Skin_dorada.png',
+            imagen: Image.asset('lib/images/skin_negra.png',
                 width: 15, height: 15, fit: BoxFit.contain))
         : null;
 
@@ -266,25 +268,25 @@ class _Oca_gameState extends State<Oca_game> {
             visible: (4 <= njugadores),
             nombre: nombresJugadores[3],
             posicion: posicionFicha4,
-            imagen: Image.asset('lib/images/Skin_rosa.png',
+            imagen: Image.asset('lib/images/skin_roja.png',
                 width: 15, height: 15, fit: BoxFit.contain))
         : null;
 
     FichaWidget? ficha5 = (5 <= njugadores)
         ? FichaWidget(
             visible: (5 <= njugadores),
-            nombre: nombresJugadores[2],
+            nombre: nombresJugadores[5],
             posicion: posicionFicha5,
-            imagen: Image.asset('lib/images/Skin_dorada.png',
+            imagen: Image.asset('lib/images/skin_rosa.png',
                 width: 15, height: 15, fit: BoxFit.contain))
         : null;
 
     FichaWidget? ficha6 = (6 <= njugadores)
         ? FichaWidget(
             visible: (6 <= njugadores),
-            nombre: nombresJugadores[3],
+            nombre: nombresJugadores[6],
             posicion: posicionFicha6,
-            imagen: Image.asset('lib/images/Skin_rosa.png',
+            imagen: Image.asset('lib/images/skin_dorada.png',
                 width: 15, height: 15, fit: BoxFit.contain))
         : null;
 
