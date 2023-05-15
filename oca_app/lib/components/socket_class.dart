@@ -533,7 +533,6 @@ class SocketSingleton {
     if (response['status'] == 'ok') {
       if (response['messages'] != []) {
         messages = formatMessages(response['messages'], friendName);
-        print(messages[0].messageContent);
       }
       // print("Partida iniciada: ${response['message']}");
     } else {
