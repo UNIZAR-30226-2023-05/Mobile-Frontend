@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:oca_app/components/User_instance.dart';
+import 'package:oca_app/pages/logros.dart';
 import 'package:oca_app/pages/statistics.dart';
 import 'package:oca_app/styles/buttons_styles.dart';
 import 'package:oca_app/pages/user_settings.dart';
-import 'package:oca_app/pages/Logros.dart';
 import 'package:oca_app/backend_funcs/peticiones_api.dart';
 
 class SettingsMenu extends StatelessWidget {
@@ -61,9 +61,14 @@ class SettingsMenu extends StatelessWidget {
               style: GenericButton,
               onPressed: () async {
                 if (await getLogros(
-                    await getUserIDemail(User_instance.instance.email))) {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Logros()));
+                        await getUserIDemail(User_instance.instance.email)) !=
+                    []) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => LogrosScreen(
+                                userID: User_instance.instance.id,
+                              )));
                 }
               },
               child: const Text("Logros",

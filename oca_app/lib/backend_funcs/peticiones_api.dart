@@ -2,10 +2,9 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import 'package:oca_app/components/User_instance.dart';
-import 'package:oca_app/components/global_stream_controller.dart';
+import 'package:oca_app/components/logros_class.dart';
 
 const String baseUrl = 'http://169.51.206.12:32021';
-final GlobalStreamController logrosController = GlobalStreamController();
 
 //FUNCION GENERICA PARA USAR EL TOKEN, PUEDES AGREGAR MAS FUNCIONES
 Future<http.Response> getData(String token) async {
@@ -195,30 +194,32 @@ Future<bool> getEstadisticas(int userID) async {
   }
 }
 
-Future<bool> getLogros(int userID) async {
+Future<List<Logro>> getLogros(int userID) async {
   var headers = {'Content-Type': 'application/json'};
   var request = http.Request('GET', Uri.parse('$baseUrl/users/logros/$userID'));
-
-  //request.body = json.encode({"id_usuario": userID});
-  //request.headers.addAll(headers);
 
   final response = await request.send();
   final respStr = await response.stream.bytesToString();
   var respJson = jsonDecode(respStr);
 
+  List<Logro> logros = [];
+
   if (response.statusCode == 200) {
     print("getLogros exitoso\n");
     print(respStr);
-    //jsonDecode(response.body)['id'];
 
-    return true;
+    Map<String, dynamic> logrosMap = respJson['logros'];
+    logrosMap.forEach((key, value) {
+      logros.add(Logro(nombre: key, completado: value));
+    });
+
+    return logros;
   } else {
-    // ignore: avoid_print, prefer_interpolation_to_compose_strings
     print("Error en getLogros " +
         response.statusCode.toString() +
         "\n" +
         "\n" +
         response.toString());
-    return false;
+    return logros; // Devolvería una lista vacía en caso de error
   }
 }
