@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:oca_app/backend_funcs/peticiones_api.dart';
 import 'package:oca_app/components/ChatMessages.dart';
 import 'package:oca_app/components/User_instance.dart';
+import 'package:oca_app/pages/chatPriv.dart';
 import 'package:oca_app/pages/oca_game.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:oca_app/components/global_stream_controller.dart';
 import 'package:oca_app/components/popups_partida.dart';
 
-const url = 'http://169.51.206.12:32021';
+// const url = 'http://169.51.206.12:32021';
+const url = 'http://192.168.1.51:3000';
 
 typedef ActualizarEstadoCallback = Function();
 typedef ActualizarFicha1 = Function(int);
@@ -217,10 +219,8 @@ class SocketSingleton {
     });
 
     socket.on('privMessage', (response) {
-      print("roomMessage  = $response");
-      if (response['message'] != "") {
-        Oca_game.chatMsgRecevied(response['user'], response['message']);
-      }
+      print("privMessage  = $response");
+      ChatPriv.chatMsgRecevied(response['sender'], response['message']);
     });
   }
 
@@ -491,7 +491,7 @@ class SocketSingleton {
     late Map<String, dynamic> response; // guarda respuesta del servidor
 
     socket.emitWithAck(
-        'sendPrivMessage', [User_instance.instance.nickname, friendName, msg],
+        'sendPrivMessage', {User_instance.instance.nickname, friendName, msg},
         ack: (response) {
       completer.complete(response);
     });
@@ -507,11 +507,15 @@ class SocketSingleton {
     }
   }
 
-  Future<void> getMessagesHistory(String friendName) async {
+  // Se comuncica con el backend.
+  // Devuelve el historial de mensajes intercambiados entre el usuario y el jugador
+  // con nombre 'friendName' ordenados cronológicamente
+  Future<List<ChatMessage>> getMessagesHistory(String friendName) async {
     final completer = Completer<Map<String, dynamic>>();
     late Map<String, dynamic> response; // guarda respuesta del servidor
     // Obtener id de jugador
     int idFriend = 0;
+    List<ChatMessage> messages = [];
 
     await getUserIDnickname(friendName).then((friendId) {
       print("Id de $friendName = $friendId");
@@ -527,10 +531,30 @@ class SocketSingleton {
     print("getMessagesHistory --> $response");
 
     if (response['status'] == 'ok') {
+      if (response['messages'] != []) {
+        messages = formatMessages(response['messages'], friendName);
+        print(messages[0].messageContent);
+      }
       // print("Partida iniciada: ${response['message']}");
     } else {
       // print("Error al iniciar partida: ${response['message']}");
       // Aquí puedes manejar el error, por ejemplo, mostrando un pop-up en la pantalla
     }
+    return messages;
+  }
+
+  List<ChatMessage> formatMessages(
+      List<dynamic> messagesHistory, String friendName) {
+    List<ChatMessage> retMessages = [];
+    // Map<String,dymamic>
+    for (var msg in messagesHistory) {
+      retMessages.add(ChatMessage(
+          username: friendName,
+          messageContent: msg['contenido'],
+          messageType: User_instance.instance.id == msg['emisor']
+              ? "sender"
+              : "receiver"));
+    }
+    return retMessages;
   }
 }

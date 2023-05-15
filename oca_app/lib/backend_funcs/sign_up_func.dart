@@ -1,7 +1,8 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-const baseUrl = 'http://169.51.206.12:32021';
+// const baseUrl = 'http://169.51.206.12:32021';
+const baseUrl = 'http://192.168.1.51:3000';
 
 class Registro {
   late String _nickname;

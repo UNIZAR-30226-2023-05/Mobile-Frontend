@@ -16,14 +16,16 @@ class ChatPriv extends StatelessWidget {
 
   // Atributos para controlar el chat privado
   List<ChatMessage> messages = [];
-  /*static*/ final BehaviorSubject<ChatMessage> chatController =
+  static final BehaviorSubject<ChatMessage> chatController =
       BehaviorSubject<ChatMessage>();
   final TextEditingController msgCtrl = TextEditingController();
   final ScrollController _scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
-    SocketSingleton.instance.getMessagesHistory(friendNickname);
+    SocketSingleton.instance
+        .getMessagesHistory(friendNickname)
+        .then((messagesHistory) => {messages = messagesHistory});
     return Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: const Color.fromARGB(255, 28, 100, 116),
@@ -43,8 +45,7 @@ class ChatPriv extends StatelessWidget {
                       SocketSingleton.instance.cerrarSesionChat();
 
                       // Volver a lista de amigos
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Social()));
+                      Navigator.pop(context);
                     },
                     icon: const Icon(
                       Icons.arrow_back,
@@ -92,8 +93,10 @@ class ChatPriv extends StatelessWidget {
                       builder: (BuildContext context,
                           AsyncSnapshot<ChatMessage> snapshot) {
                         if (snapshot.hasData) {
-                          if (snapshot.data?.username !=
-                              User_instance.instance.nickname) {
+                          final name = snapshot.data?.username;
+                          // Si no es un msg mío o del jugador con el que tengo el chat, no se muestra
+                          if (name == User_instance.instance.nickname ||
+                              name == friendNickname) {
                             messages.add(snapshot.data!);
                           }
                         }
@@ -129,15 +132,7 @@ class ChatPriv extends StatelessWidget {
                                           : Colors.blue[200]),
                                     ),
                                     padding: const EdgeInsets.all(16),
-                                    child: /*Text(
-                                                                      messages[
-                                                                              index]
-                                                                          .messageContent,
-                                                                      style: const TextStyle(
-                                                                          fontSize:
-                                                                              15),
-                                                                    ),*/
-                                        Container(
+                                    child: Container(
                                       margin: const EdgeInsets.symmetric(
                                           vertical: 8.0),
                                       child: Column(
@@ -208,19 +203,13 @@ class ChatPriv extends StatelessWidget {
                           chatController.sink.add(ChatMessage(
                               username: User_instance.instance.nickname,
                               messageContent: msgCtrl.text,
-                              messageType: "receiver"));
+                              messageType: "sender"));
 
                           // Enviar mensaje a socket (actualización)
-                          // SocketSingleton.instance
-                          //     .enviarMsgChatPriv(friendNickname, msgCtrl.text);
+                          SocketSingleton.instance
+                              .enviarMsgChatPriv(friendNickname, msgCtrl.text);
 
-                          // Actualizando mis mensajes (esto no haría falta vd???)
-                          // debería comprobar que ha ido todo bien antes de añadirlo
-                          // messages.add(ChatMessage(
-                          //     username: User_instance.instance.nickname,
-                          //     messageContent: msgCtrl.text,
-                          //     messageType: "sender"));
-                          // borra el mensaje de la TextBox
+                          // Limpiar textBox
                           msgCtrl.clear();
                         },
                         child: Icon(
@@ -238,5 +227,10 @@ class ChatPriv extends StatelessWidget {
             ],
           ),
         )));
+  }
+
+  static void chatMsgRecevied(String friendName, String msg) {
+    ChatPriv.chatController.sink.add(ChatMessage(
+        username: friendName, messageContent: msg, messageType: "receiver"));
   }
 }

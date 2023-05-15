@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+const String baseUrl = 'http://192.168.1.51:3000';
+
 Future<bool> enviarSolicitudAmistad(
     int id_usuario_envia, int id_usuario_recibe) async {
   print("Enviando datos");
-  const url = 'http://169.51.206.12:32021/social/friends/';
+  const url = '$baseUrl/social/friends/';
   final body = {
     "id_usuario_envia": id_usuario_envia,
     "id_usuario_recibe": id_usuario_recibe
@@ -36,8 +38,7 @@ Future<bool> enviarSolicitudAmistad(
 
 Future<List<Map<String, dynamic>>> solicitudesPendientes(int id_usuario) async {
   print("Enviando datos");
-  var url =
-      'http://169.51.206.12:32021/social/friends/' + id_usuario.toString();
+  var url = '$baseUrl/social/friends/' + id_usuario.toString();
 
   final response = await http.put(
     Uri.parse(url),
@@ -79,8 +80,7 @@ Future<List<Map<String, dynamic>>> solicitudesPendientes(int id_usuario) async {
 
 Future<List<Map<String, dynamic>>> listaAmigos(int id_usuario) async {
   print("Enviando datos");
-  var url =
-      'http://169.51.206.12:32021/social/friends/' + id_usuario.toString();
+  var url = '$baseUrl/social/friends/' + id_usuario.toString();
 
   final response = await http.get(
     Uri.parse(url),
@@ -122,7 +122,7 @@ Future<List<Map<String, dynamic>>> listaAmigos(int id_usuario) async {
 Future<bool> rechazarSolcitudAmistad(
     int id_usuario_envia, int id_usuario_recibe) async {
   print("Enviando datos");
-  const url = 'http://169.51.206.12:32021/social/friends';
+  const url = '$baseUrl/social/friends';
   final body = {
     "id_usuario_envia": id_usuario_recibe,
     "id_usuario_recibe": id_usuario_envia

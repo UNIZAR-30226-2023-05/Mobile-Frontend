@@ -3,7 +3,8 @@ import 'package:http/http.dart' as http;
 
 import 'package:oca_app/components/User_instance.dart';
 
-const String baseUrl = 'http://169.51.206.12:32021';
+// const String baseUrl = 'http://169.51.206.12:32021';
+const String baseUrl = 'http://192.168.1.51:3000';
 
 //FUNCION GENERICA PARA USAR EL TOKEN, PUEDES AGREGAR MAS FUNCIONES
 Future<http.Response> getData(String token) async {
@@ -192,3 +193,5 @@ Future<bool> getEstadisticas(int userID) async {
     return false;
   }
 }
+
+
