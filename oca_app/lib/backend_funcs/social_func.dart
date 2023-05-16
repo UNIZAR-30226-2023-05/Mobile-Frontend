@@ -4,8 +4,6 @@ import 'package:oca_app/backend_funcs/url.dart';
 
 const baseUrl = url;
 
-const String baseUrl = 'http://192.168.1.51:3000';
-
 Future<bool> enviarSolicitudAmistad(
     int id_usuario_envia, int id_usuario_recibe) async {
   print("Enviando datos");

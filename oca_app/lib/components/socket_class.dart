@@ -179,6 +179,7 @@ class SocketSingleton {
           turnController.clearData();
           turnController.addData(data['ordenTurnos']);
         }
+        nombresJugadores = data['ordenTurnos'].cast<String>();
         Navigator.of(_context!)
             .push(MaterialPageRoute(builder: (context) => Oca_game()));
       } else {

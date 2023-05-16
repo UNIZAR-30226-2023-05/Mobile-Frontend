@@ -34,28 +34,28 @@ class _Oca_gameState extends State<Oca_game> {
   final ScrollController _scrollController = ScrollController();
 
   int posicionFicha1 = 0;
-  double leftFicha1 = 15;
-  double topFicha1 = 342;
+  double leftFicha1 = calcularCoordenadas(1, 0, 6)[0].toDouble();
+  double topFicha1 = calcularCoordenadas(1, 0, 6)[0].toDouble();
 
   int posicionFicha2 = 0;
-  double leftFicha2 = 20;
-  double topFicha2 = 342;
+  double leftFicha2 = calcularCoordenadas(2, 0, 6)[0].toDouble();
+  double topFicha2 = calcularCoordenadas(2, 0, 6)[0].toDouble();
 
   int posicionFicha3 = 0;
-  double leftFicha3 = 15;
-  double topFicha3 = 347;
+  double leftFicha3 = calcularCoordenadas(3, 0, 6)[0].toDouble();
+  double topFicha3 = calcularCoordenadas(3, 0, 6)[0].toDouble();
 
   int posicionFicha4 = 0;
-  double leftFicha4 = 20;
-  double topFicha4 = 347;
+  double leftFicha4 = calcularCoordenadas(4, 0, 6)[0].toDouble();
+  double topFicha4 = calcularCoordenadas(4, 0, 6)[0].toDouble();
 
   int posicionFicha5 = 0;
-  double leftFicha5 = 15;
-  double topFicha5 = 352;
+  double leftFicha5 = calcularCoordenadas(5, 0, 6)[0].toDouble();
+  double topFicha5 = calcularCoordenadas(5, 0, 6)[0].toDouble();
 
   int posicionFicha6 = 0;
-  double leftFicha6 = 20;
-  double topFicha6 = 352;
+  double leftFicha6 = calcularCoordenadas(6, 0, 6)[0].toDouble();
+  double topFicha6 = calcularCoordenadas(6, 0, 6)[0].toDouble();
 
   void actualizarEstado() {
     setState(() {});
@@ -303,7 +303,7 @@ class _Oca_gameState extends State<Oca_game> {
     FichaWidget? ficha5 = (5 <= njugadores)
         ? FichaWidget(
             visible: (5 <= njugadores),
-            nombre: nombresJugadores[5],
+            nombre: nombresJugadores[4],
             posicion: posicionFicha5,
             imagen: Image.asset(
               'lib/images/skin_rosa.png',
@@ -315,7 +315,7 @@ class _Oca_gameState extends State<Oca_game> {
     FichaWidget? ficha6 = (6 <= njugadores)
         ? FichaWidget(
             visible: (6 <= njugadores),
-            nombre: nombresJugadores[6],
+            nombre: nombresJugadores[5],
             posicion: posicionFicha6,
             imagen: Image.asset('lib/images/skin_dorada.png',
                 width: 15, height: 15, fit: BoxFit.contain))
