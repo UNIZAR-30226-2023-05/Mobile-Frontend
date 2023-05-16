@@ -72,7 +72,7 @@ class SettingsMenu extends StatelessWidget {
                               )));
                 }
               },
-              child: const Text("Ranking",
+              child: const Text("Logros",
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 25,
@@ -88,7 +88,7 @@ class SettingsMenu extends StatelessWidget {
                       MaterialPageRoute(builder: (context) => RankingScreen()));
                 }
               },
-              child: const Text("Logros",
+              child: const Text("Ranking",
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 25,
