@@ -15,7 +15,24 @@ Félix Ozcoz
 3h Implementación de creación de sala en 'Crear Sala': comunicación con backend
 1h Implementación de borrado y reinicio de información de usuario desde 'Ajustes'
 30min Arreglar bug desincronización en comunicación con websockets
-TOTAL 29h 30min
+2h 30m Implementación de interfaz gráfica de sala de espera para jugadores + primera aproximación de comunicación con websockets
+2h Reestructuración de almacenamiento datos de usuario
+5h Reestructuración de websockets, correción de fallos en salas
+3h Implementación de listado de jugadores en sala de espera
+3h 30 min Implementación de borrado y reinicio de información de usuario desde 'Ajustes'
+4h Correción de detalles interfaz en salas y ajustes
+2h Sesión de control y resolución de bugs
+2h Correción bug Ajustes cambios efectivos en atributos de usuario
+5h Implementación de interfaz de chat de partida y reestructuración de interfaz
+2h Reunión sesión de control y resolución de bugs
+4h Implementación de interfaz de mensajería privada + Primera aproximación de funcionalidad
+4h Funcionalidad completa de mensajería privada
+4h Correción de bugs en gestión de salas
+2h Corrección de detalles en mensajería privada
+2h Pruebas de mensajería, gestión de errores de sala y varios en la nube
+2h Creación de ranking
+
+TOTAL 83h
 ------------------------------------------------------
 Pablo López
 4h practica 1 , propuesta inicial, instalacion Flutter
