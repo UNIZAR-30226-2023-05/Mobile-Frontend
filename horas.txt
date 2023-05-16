@@ -73,4 +73,7 @@ Pablo López
 3h        pruebas y bugfixes sin probar (peto backend)              15/05/2023  
 10h
 
-TOTAL: 84.5h
+5h 30m    bots, bugfixes, cosas de sala, abandonar partida          16/05/2023
+5h 30m 
+
+TOTAL: 90h
