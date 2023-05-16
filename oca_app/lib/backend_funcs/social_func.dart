@@ -4,6 +4,8 @@ import 'package:oca_app/backend_funcs/url.dart';
 
 const baseUrl = url;
 
+const String baseUrl = 'http://192.168.1.51:3000';
+
 Future<bool> enviarSolicitudAmistad(
     int id_usuario_envia, int id_usuario_recibe) async {
   print("Enviando datos");
@@ -81,7 +83,8 @@ Future<List<Map<String, dynamic>>> solicitudesPendientes(int id_usuario) async {
 
 Future<List<Map<String, dynamic>>> listaAmigos(int id_usuario) async {
   print("Enviando datos");
-  var url = '$baseUrl/social/friends/$id_usuario';
+  var url =
+      'http://169.51.206.12:32021/social/friends/' + id_usuario.toString();
 
   final response = await http.get(
     Uri.parse(url),
