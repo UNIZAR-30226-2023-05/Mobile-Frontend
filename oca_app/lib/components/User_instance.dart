@@ -28,12 +28,12 @@ class User_instance {
   bool _isMyTurn = false;
 
   // Estadisticas de usuario
-  late String victorias;
-  late String ocas;
-  late String calaveras;
-  late String tiradas;
-  late String seises;
-  late String partidas;
+  late int victorias;
+  late int ocas;
+  late int calaveras;
+  late int tiradas;
+  late int seises;
+  late int partidas;
 
   User_instance._(); // Constructor privado
 
@@ -85,21 +85,21 @@ class User_instance {
   bool get isMyTurn => _isMyTurn;
   set isMyTurn(bool value) => _isMyTurn = value;
 
-  String get getVictorias => victorias;
-  set setVictorias(String value) => victorias = value;
+  int get getVictorias => victorias;
+  set setVictorias(int value) => victorias = value;
 
-  String get getOcas => ocas;
-  set setOcas(String value) => ocas = value;
+  int get getOcas => ocas;
+  set setOcas(int value) => ocas = value;
 
-  String get getCalaveras => calaveras;
-  set setCalaveras(String value) => calaveras = value;
+  int get getCalaveras => calaveras;
+  set setCalaveras(int value) => calaveras = value;
 
-  String get getTiradas => tiradas;
-  set setTiradas(String value) => tiradas = value;
+  int get getTiradas => tiradas;
+  set setTiradas(int value) => tiradas = value;
 
-  String get getSeises => seises;
-  set setSeises(String value) => seises = value;
+  int get getSeises => seises;
+  set setSeises(int value) => seises = value;
 
-  String get getPartidas => partidas;
-  set setPartidas(String value) => partidas = value;
+  int get getPartidas => partidas;
+  set setPartidas(int value) => partidas = value;
 }

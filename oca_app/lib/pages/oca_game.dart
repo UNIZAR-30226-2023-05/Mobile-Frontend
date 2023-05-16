@@ -34,28 +34,28 @@ class _Oca_gameState extends State<Oca_game> {
   final ScrollController _scrollController = ScrollController();
 
   int posicionFicha1 = 0;
-  double leftFicha1 = calcularCoordenadas(1, 0, 6)[0].toDouble();
-  double topFicha1 = calcularCoordenadas(1, 0, 6)[1].toDouble();
+  double leftFicha1 = 15;
+  double topFicha1 = 342;
 
   int posicionFicha2 = 0;
-  double leftFicha2 = calcularCoordenadas(2, 0, 6)[0].toDouble();
-  double topFicha2 = calcularCoordenadas(2, 0, 6)[1].toDouble();
+  double leftFicha2 = 20;
+  double topFicha2 = 342;
 
   int posicionFicha3 = 0;
-  double leftFicha3 = calcularCoordenadas(3, 0, 6)[0].toDouble();
-  double topFicha3 = calcularCoordenadas(3, 0, 6)[1].toDouble();
+  double leftFicha3 = 15;
+  double topFicha3 = 347;
 
   int posicionFicha4 = 0;
-  double leftFicha4 = calcularCoordenadas(4, 0, 6)[0].toDouble();
-  double topFicha4 = calcularCoordenadas(4, 0, 6)[1].toDouble();
+  double leftFicha4 = 20;
+  double topFicha4 = 347;
 
   int posicionFicha5 = 0;
-  double leftFicha5 = calcularCoordenadas(5, 0, 6)[0].toDouble();
-  double topFicha5 = calcularCoordenadas(5, 0, 6)[1].toDouble();
+  double leftFicha5 = 15;
+  double topFicha5 = 352;
 
   int posicionFicha6 = 0;
-  double leftFicha6 = calcularCoordenadas(6, 0, 6)[0].toDouble();
-  double topFicha6 = calcularCoordenadas(6, 0, 6)[1].toDouble();
+  double leftFicha6 = 20;
+  double topFicha6 = 352;
 
   void actualizarEstado() {
     setState(() {});
@@ -151,7 +151,6 @@ class _Oca_gameState extends State<Oca_game> {
 
   @override
   void initState() {
-    super.initState();
     SocketSingleton.instance.onActualizarEstado = actualizarEstado;
     SocketSingleton.instance.actualizarPosicionFicha1 =
         actualizarPosicionFicha1;
@@ -165,24 +164,41 @@ class _Oca_gameState extends State<Oca_game> {
         actualizarPosicionFicha5;
     SocketSingleton.instance.actualizarPosicionFicha6 =
         actualizarPosicionFicha6;
-    actualizarPosicionFicha1(0);
-    actualizarPosicionFicha2(0);
-    actualizarPosicionFicha3(0);
-    actualizarPosicionFicha4(0);
-    actualizarPosicionFicha5(0);
-    actualizarPosicionFicha6(0);
+    setState(() {
+      super.initState();
+      actualizarPosicionFicha1(0);
+      actualizarPosicionFicha2(0);
+      actualizarPosicionFicha3(0);
+      actualizarPosicionFicha4(0);
+      actualizarPosicionFicha5(0);
+      actualizarPosicionFicha6(0);
 
-    inicializarJuego();
+      inicializarJuego();
+    });
   }
 
   void inicializarJuego() {
     SocketSingleton ss = SocketSingleton.instance;
     var value = ss.turnController.playersStreamController.value;
-    if (value is List<Map<String, dynamic>>) {
-      nombresJugadores = value.map((map) => map['nickname'] as String).toList();
+    print('value: $value');
+    if (value != null) {
+      if (value is List) {
+        print('value es una lista');
+        if (value.every((item) => item is String)) {
+          print('Todos los elementos en value son Strings');
+          nombresJugadores = value.cast<String>();
+        } else {
+          print('No todos los elementos en value son Strings');
+          nombresJugadores = value.map((item) => item.toString()).toList();
+        }
+      } else {
+        print('value no es una lista');
+        // Handle error or set nombresJugadores to a default value
+      }
+
+      print('nombresJugadores: $nombresJugadores');
+
       njugadores = nombresJugadores.length;
-      //print('Nombres de los jugadores: $nombresJugadores');
-      //print('Número de jugadores: $njugadores');
     } else {
       print('Error al obtener el número de jugadores');
       // Handle error or set njugadores to a default value
@@ -241,8 +257,11 @@ class _Oca_gameState extends State<Oca_game> {
             visible: (1 <= njugadores),
             nombre: nombresJugadores[0],
             posicion: posicionFicha1,
-            imagen: Image.asset('lib/images/skin_azul.png',
-                width: 15, height: 15, fit: BoxFit.contain))
+            imagen: Image.asset(
+              'lib/images/skin_azul.png',
+              width: 15,
+              height: 15,
+            ))
         : null;
 
     FichaWidget? ficha2 = (2 <= njugadores)
@@ -250,8 +269,11 @@ class _Oca_gameState extends State<Oca_game> {
             visible: (2 <= njugadores),
             nombre: nombresJugadores[1],
             posicion: posicionFicha2,
-            imagen: Image.asset('lib/images/skin_verde.png',
-                width: 15, height: 15, fit: BoxFit.contain))
+            imagen: Image.asset(
+              'lib/images/skin_verde.png',
+              width: 15,
+              height: 15,
+            ))
         : null;
 
     FichaWidget? ficha3 = (3 <= njugadores)
@@ -259,8 +281,11 @@ class _Oca_gameState extends State<Oca_game> {
             visible: (3 <= njugadores),
             nombre: nombresJugadores[2],
             posicion: posicionFicha3,
-            imagen: Image.asset('lib/images/skin_negra.png',
-                width: 15, height: 15, fit: BoxFit.contain))
+            imagen: Image.asset(
+              'lib/images/skin_negra.png',
+              width: 15,
+              height: 15,
+            ))
         : null;
 
     FichaWidget? ficha4 = (4 <= njugadores)
@@ -268,8 +293,11 @@ class _Oca_gameState extends State<Oca_game> {
             visible: (4 <= njugadores),
             nombre: nombresJugadores[3],
             posicion: posicionFicha4,
-            imagen: Image.asset('lib/images/skin_roja.png',
-                width: 15, height: 15, fit: BoxFit.contain))
+            imagen: Image.asset(
+              'lib/images/skin_roja.png',
+              width: 15,
+              height: 15,
+            ))
         : null;
 
     FichaWidget? ficha5 = (5 <= njugadores)
@@ -277,8 +305,11 @@ class _Oca_gameState extends State<Oca_game> {
             visible: (5 <= njugadores),
             nombre: nombresJugadores[5],
             posicion: posicionFicha5,
-            imagen: Image.asset('lib/images/skin_rosa.png',
-                width: 15, height: 15, fit: BoxFit.contain))
+            imagen: Image.asset(
+              'lib/images/skin_rosa.png',
+              width: 15,
+              height: 15,
+            ))
         : null;
 
     FichaWidget? ficha6 = (6 <= njugadores)
@@ -626,17 +657,17 @@ class _Oca_gameState extends State<Oca_game> {
                     height: 400,
                   ),
                   if (ficha1 != null)
-                    Positioned(child: ficha1, left: leftFicha1, top: topFicha1),
+                    Positioned(left: leftFicha1, top: topFicha1, child: ficha1),
                   if (ficha2 != null)
-                    Positioned(child: ficha2, left: leftFicha2, top: topFicha2),
+                    Positioned(left: leftFicha2, top: topFicha2, child: ficha2),
                   if (ficha3 != null)
-                    Positioned(child: ficha3, left: leftFicha3, top: topFicha3),
+                    Positioned(left: leftFicha3, top: topFicha3, child: ficha3),
                   if (ficha4 != null)
-                    Positioned(child: ficha4, left: leftFicha4, top: topFicha4),
+                    Positioned(left: leftFicha4, top: topFicha4, child: ficha4),
                   if (ficha5 != null)
-                    Positioned(child: ficha5, left: leftFicha5, top: topFicha5),
+                    Positioned(left: leftFicha5, top: topFicha5, child: ficha5),
                   if (ficha6 != null)
-                    Positioned(child: ficha6, left: leftFicha6, top: topFicha6),
+                    Positioned(left: leftFicha6, top: topFicha6, child: ficha6),
                 ],
               ),
               if (userInstance.isMyTurn)

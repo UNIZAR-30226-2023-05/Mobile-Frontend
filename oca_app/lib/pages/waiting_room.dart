@@ -29,8 +29,8 @@ class _WaitingRoomState extends State<WaitingRoom> {
 
   @override
   Widget build(BuildContext context) {
-    SocketSingleton ss = SocketSingleton.instance;
-    ss.setContext(context);
+    SocketSingleton.instance.setContext(context);
+    User_instance.instance.estaEnPartida = false;
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -140,8 +140,10 @@ class _WaitingRoomState extends State<WaitingRoom> {
                                               onPressed: () {
                                                 print(
                                                     players[index]['nickname']);
-                                                ss.removePlayerFromRoom(
-                                                    players[index]['nickname']);
+                                                SocketSingleton.instance
+                                                    .removePlayerFromRoom(
+                                                        players[index]
+                                                            ['nickname']);
                                               },
                                               child: Text("Expulsar"),
                                             ),
@@ -176,7 +178,7 @@ class _WaitingRoomState extends State<WaitingRoom> {
                         visible: User_instance.instance.soyLider,
                         child: ElevatedButton(
                           onPressed: () async {
-                            await ss.empezarPartida(3000);
+                            await SocketSingleton.instance.empezarPartida(3000);
                           },
                           style: GenericButton,
                           child: const Text(
@@ -190,8 +192,8 @@ class _WaitingRoomState extends State<WaitingRoom> {
                     ElevatedButton(
                       onPressed: () async {
                         User_instance.instance.soyLider
-                            ? await ss.destroyRoom()
-                            : await ss.leaveRoom();
+                            ? await SocketSingleton.instance.destroyRoom()
+                            : await SocketSingleton.instance.leaveRoom();
                         // Volver a pantalla de inicio
                         // ignore: use_build_context_synchronously
                         Navigator.push(

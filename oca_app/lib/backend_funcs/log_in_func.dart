@@ -32,6 +32,8 @@ class LogIn {
       print(token);
 
       User_instance.instance.token = token;
+      User_instance.instance.soyLider = false;
+      User_instance.instance.isMyTurn = false;
 
       SocketSingleton(); // inicializar el socket al logearse
 

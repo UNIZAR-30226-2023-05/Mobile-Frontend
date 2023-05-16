@@ -56,6 +56,10 @@ class SocketSingleton {
     _context = context;
   }
 
+  BuildContext getContext() {
+    return _context!;
+  }
+
   // Constructor privado
   SocketSingleton._internal();
 
@@ -175,7 +179,7 @@ class SocketSingleton {
           turnController.addData(data['ordenTurnos']);
         }
         Navigator.of(_context!)
-            .push(MaterialPageRoute(builder: (_context) => Oca_game()));
+            .push(MaterialPageRoute(builder: (context) => Oca_game()));
       } else {
         //gestion de los turnos
         if (data != null &&
@@ -259,7 +263,7 @@ class SocketSingleton {
         await destroyRoom();
       }
     }
-    print(response);
+    print("response createRoom: $response");
 
     return retVal;
   }
@@ -289,7 +293,7 @@ class SocketSingleton {
         await leaveRoom();
       }
     }
-    print(response);
+    print("response joinRoom: $response");
 
     return retVal;
   }

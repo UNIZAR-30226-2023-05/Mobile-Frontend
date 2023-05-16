@@ -28,13 +28,4 @@ class FichaWidget extends StatelessWidget {
       ),
     );
   }
-
-  double calcularX(int posicion) {
-    // código para calcular la posición horizontal de la ficha en el tablero
-    return 3;
-  }
-
-  double calcularY(int posicion) {
-    return 3;
-  }
 }
