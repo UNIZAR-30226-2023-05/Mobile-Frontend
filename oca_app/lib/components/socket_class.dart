@@ -220,13 +220,20 @@ class SocketSingleton {
 
     socket.on("serverRoomMessage", (message) {
       print("ServerRoomMessage actualizado: $message");
-      if (!User_instance.instance.soyLider) {
-        WaitingRoom.expulsadoDeSala();
+      if (message['message'] !=
+          "Partida finalizada, se va a cerrar la sala en 10 segundos") {
+        if (!User_instance.instance.soyLider) {
+          WaitingRoom.expulsadoDeSala();
+        }
+      } else if (message['message'] ==
+          "Partida finalizada, se va a cerrar la sala en 10 segundos") {
+        User_instance.instance.estaEnPartida = false;
       }
     });
 
     socket.on('destroyingRoom', (message) {
-      if (!User_instance.instance.soyLider) {
+      if (!User_instance.instance.soyLider &&
+          User_instance.instance.estaEnPartida) {
         print("destroyingRoom:  $message");
         WaitingRoom.salaDestruida();
       }

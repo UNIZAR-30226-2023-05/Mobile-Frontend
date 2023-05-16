@@ -26,7 +26,7 @@ class SettingsMenu extends StatelessWidget {
           const Text('Menu de ajustes',
               style: TextStyle(
                   color: Colors.white, fontSize: 40, fontFamily: 'Caudex')),
-          const SizedBox(height: 70),
+          const SizedBox(height: 50),
           //MyButton(onPressed: goToUserSettings, textoAMostrar: "Ajustes del perfil"),
           ElevatedButton(
               style: GenericButton,
@@ -41,7 +41,7 @@ class SettingsMenu extends StatelessWidget {
                       color: Colors.white,
                       fontSize: 25,
                       fontFamily: 'Caudex'))),
-          const SizedBox(height: 60),
+          const SizedBox(height: 40),
           ElevatedButton(
               style: GenericButton,
               onPressed: () async {
@@ -56,7 +56,7 @@ class SettingsMenu extends StatelessWidget {
                       color: Colors.white,
                       fontSize: 25,
                       fontFamily: 'Caudex'))),
-          const SizedBox(height: 60),
+          const SizedBox(height: 40),
 
           ElevatedButton(
               style: GenericButton,
@@ -78,7 +78,7 @@ class SettingsMenu extends StatelessWidget {
                       fontSize: 25,
                       fontFamily: 'Caudex'))),
 
-          const SizedBox(height: 60),
+          const SizedBox(height: 40),
 
           ElevatedButton(
               style: GenericButton,
