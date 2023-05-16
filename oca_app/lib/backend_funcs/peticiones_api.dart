@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:oca_app/components/User_instance.dart';
 import 'package:oca_app/components/logros_class.dart';
 import 'package:oca_app/backend_funcs/url.dart';
+import 'package:oca_app/components/ranking_class.dart';
 
 const String baseUrl = url;
 
@@ -222,5 +223,31 @@ Future<List<Logro>> getLogros(int userID) async {
         "\n" +
         response.toString());
     return logros; // Devolvería una lista vacía en caso de error
+  }
+}
+
+Future<RankingResponse> getRanking() async {
+  var headers = {'Content-Type': 'application/json'};
+  var request = http.Request('GET', Uri.parse('$baseUrl/users/ranking/ocas'));
+
+  final response = await request.send();
+  final respStr = await response.stream.bytesToString();
+
+  if (response.statusCode == 200) {
+    print("getRanking exitoso\n");
+    print(respStr);
+
+    var respJson = jsonDecode(respStr);
+    RankingResponse rankingResponse = RankingResponse.fromJson(respJson);
+
+    return rankingResponse;
+  } else {
+    print("Error en getRanking " +
+        response.statusCode.toString() +
+        "\n" +
+        "\n" +
+        response.toString());
+
+    throw Exception("Error en getRanking: ${response.statusCode}");
   }
 }

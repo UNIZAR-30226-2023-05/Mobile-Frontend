@@ -5,6 +5,7 @@ import 'package:oca_app/pages/statistics.dart';
 import 'package:oca_app/styles/buttons_styles.dart';
 import 'package:oca_app/pages/user_settings.dart';
 import 'package:oca_app/backend_funcs/peticiones_api.dart';
+import 'package:oca_app/pages/ranking.dart';
 
 class SettingsMenu extends StatelessWidget {
   const SettingsMenu({super.key});
@@ -69,6 +70,22 @@ class SettingsMenu extends StatelessWidget {
                           builder: (context) => LogrosScreen(
                                 userID: User_instance.instance.id,
                               )));
+                }
+              },
+              child: const Text("Ranking",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 25,
+                      fontFamily: 'Caudex'))),
+
+          const SizedBox(height: 60),
+
+          ElevatedButton(
+              style: GenericButton,
+              onPressed: () async {
+                if (await getRanking() != []) {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => RankingScreen()));
                 }
               },
               child: const Text("Logros",
