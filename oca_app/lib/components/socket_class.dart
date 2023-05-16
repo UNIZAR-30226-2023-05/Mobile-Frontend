@@ -425,7 +425,6 @@ class SocketSingleton {
           context, response['res']['afterDice'], response['res']['finalCell']);
     }
 
-    // Devuelve el campo 'res'
     return response['res'];
   }
 
@@ -443,10 +442,9 @@ class SocketSingleton {
     print("enviarMsgChatPartida --> $response");
 
     if (response['status'] == 'ok') {
-      // print("Partida iniciada: ${response['message']}");
+      // do something
     } else {
-      // print("Error al iniciar partida: ${response['message']}");
-      // Aquí puedes manejar el error, por ejemplo, mostrando un pop-up en la pantalla
+      // do something
     }
   }
 
@@ -466,10 +464,9 @@ class SocketSingleton {
     print("abrirSesionChat --> $response");
 
     if (response['status'] == 'ok') {
-      // print("Partida iniciada: ${response['message']}");
+      // do something
     } else {
-      // print("Error al iniciar partida: ${response['message']}");
-      // Aquí puedes manejar el error, por ejemplo, mostrando un pop-up en la pantalla
+      // do something
     }
   }
 
@@ -487,10 +484,9 @@ class SocketSingleton {
     print("cerrarSesionChat --> $response");
 
     if (response['status'] == 'ok') {
-      // print("Partida iniciada: ${response['message']}");
+      // do something
     } else {
-      // print("Error al iniciar partida: ${response['message']}");
-      // Aquí puedes manejar el error, por ejemplo, mostrando un pop-up en la pantalla
+      // do something
     }
   }
 
@@ -508,10 +504,9 @@ class SocketSingleton {
     print("enviarMsgChatPriv --> $response");
 
     if (response['status'] == 'ok') {
-      // print("Partida iniciada: ${response['message']}");
+      // do something
     } else {
-      // print("Error al iniciar partida: ${response['message']}");
-      // Aquí puedes manejar el error, por ejemplo, mostrando un pop-up en la pantalla
+      // do something
     }
   }
 
@@ -542,11 +537,7 @@ class SocketSingleton {
       if (response['messages'] != []) {
         messages = formatMessages(response['messages'], friendName);
       }
-      // print("Partida iniciada: ${response['message']}");
-    } else {
-      // print("Error al iniciar partida: ${response['message']}");
-      // Aquí puedes manejar el error, por ejemplo, mostrando un pop-up en la pantalla
-    }
+    } else {}
     return messages;
   }
 
@@ -556,7 +547,9 @@ class SocketSingleton {
     // Map<String,dymamic>
     for (var msg in messagesHistory) {
       retMessages.add(ChatMessage(
-          username: friendName,
+          username: User_instance.instance.id == msg['emisor']
+              ? User_instance.instance.nickname
+              : friendName,
           messageContent: msg['contenido'],
           messageType: User_instance.instance.id == msg['emisor']
               ? "sender"

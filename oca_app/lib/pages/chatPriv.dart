@@ -28,7 +28,7 @@ class ChatPriv extends StatelessWidget {
     completer
         .complete(SocketSingleton.instance.getMessagesHistory(friendNickname));
     messages = await completer.future;
-    print("Se acaba de obtener el valor = ${messages.length}");
+
     return messages;
   }
 
@@ -39,7 +39,7 @@ class ChatPriv extends StatelessWidget {
         builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
-                child: 
+                child:
                     CircularProgressIndicator()); // O cualquier otro indicador de carga
           } else {
             return Scaffold(
@@ -109,7 +109,6 @@ class ChatPriv extends StatelessWidget {
                               stream: chatController.stream,
                               builder: (BuildContext context,
                                   AsyncSnapshot<ChatMessage> snapshot) {
-                                print(messages.length);
                                 if (snapshot.hasData) {
                                   final name = snapshot.data?.username;
                                   // Si no es un msg mío o del jugador con el que tengo el chat, no se muestra
@@ -231,18 +230,21 @@ class ChatPriv extends StatelessWidget {
                               ),
                               FloatingActionButton(
                                 onPressed: () {
-                                  // Comunicación con el stream (actualización local)
-                                  chatController.sink.add(ChatMessage(
-                                      username: User_instance.instance.nickname,
-                                      messageContent: msgCtrl.text,
-                                      messageType: "sender"));
+                                  if (msgCtrl.text != "") {
+                                    // Comunicación con el stream (actualización local)
+                                    chatController.sink.add(ChatMessage(
+                                        username:
+                                            User_instance.instance.nickname,
+                                        messageContent: msgCtrl.text,
+                                        messageType: "sender"));
 
-                                  // Enviar mensaje a socket (actualización)
-                                  SocketSingleton.instance.enviarMsgChatPriv(
-                                      friendNickname, msgCtrl.text);
+                                    // Enviar mensaje a socket (actualización)
+                                    SocketSingleton.instance.enviarMsgChatPriv(
+                                        friendNickname, msgCtrl.text);
 
-                                  // Limpiar textBox
-                                  msgCtrl.clear();
+                                    // Limpiar textBox
+                                    msgCtrl.clear();
+                                  }
                                 },
                                 child: Icon(
                                   Icons.send,
