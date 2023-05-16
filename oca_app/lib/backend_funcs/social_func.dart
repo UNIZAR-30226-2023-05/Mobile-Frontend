@@ -81,8 +81,7 @@ Future<List<Map<String, dynamic>>> solicitudesPendientes(int id_usuario) async {
 
 Future<List<Map<String, dynamic>>> listaAmigos(int id_usuario) async {
   print("Enviando datos");
-  var url =
-      'http://169.51.206.12:32021/social/friends/' + id_usuario.toString();
+  var url = '$baseUrl/social/friends/' + id_usuario.toString();
 
   final response = await http.get(
     Uri.parse(url),
