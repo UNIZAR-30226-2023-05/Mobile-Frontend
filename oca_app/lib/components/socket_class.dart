@@ -220,11 +220,8 @@ class SocketSingleton {
 
     socket.on("serverRoomMessage", (message) {
       print("ServerRoomMessage actualizado: $message");
-      if (message['message'] !=
-          "Partida finalizada, se va a cerrar la sala en 10 segundos") {
-        if (!User_instance.instance.soyLider) {
-          WaitingRoom.expulsadoDeSala();
-        }
+      if (message['message'] == "Has sido eliminado de la sala") {
+        WaitingRoom.expulsadoDeSala();
       } else if (message['message'] ==
           "Partida finalizada, se va a cerrar la sala en 10 segundos") {
         User_instance.instance.estaEnPartida = false;
