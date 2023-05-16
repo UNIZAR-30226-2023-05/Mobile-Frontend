@@ -645,7 +645,9 @@ class _Oca_gameState extends State<Oca_game> {
                       alignment: Alignment.centerRight,
                       child: ElevatedButton(
                           style: GenericButtonSmall,
-                          onPressed: () {},
+                          onPressed: () {
+                            SocketSingleton.instance.leaveRoom();
+                          },
                           child: const Text('Abandonar sala')),
                     ))
                   ])),

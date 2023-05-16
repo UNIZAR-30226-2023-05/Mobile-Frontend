@@ -9,6 +9,7 @@ import 'package:oca_app/pages/oca_game.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:oca_app/components/global_stream_controller.dart';
 import 'package:oca_app/components/popups_partida.dart';
+import 'package:oca_app/pages/main_menu.dart';
 
 import '../backend_funcs/url.dart';
 
@@ -320,6 +321,8 @@ class SocketSingleton {
       print("Error: ${response['message']}");
       // Falta manejar el error, puede ser mostrar un pop-up por pantalla
     }
+    Navigator.push(
+        _context!, MaterialPageRoute(builder: (context) => Main_Menu_Page()));
     print(response);
   }
 

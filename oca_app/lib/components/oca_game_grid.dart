@@ -1,6 +1,7 @@
 // Matriz de coordenadas para el tablero de la oca, sumar para añadir jugadores
 List<List<int>> matrizCoordenadas = [
   [15, 342],
+  [15, 342],
   [114, 342],
   [146, 342],
   [178, 342],
