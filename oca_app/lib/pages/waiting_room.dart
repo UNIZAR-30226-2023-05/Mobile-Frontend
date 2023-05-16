@@ -212,6 +212,16 @@ class _WaitingRoomState extends State<WaitingRoom> {
                               style: TextStyle(fontSize: 25),
                             ),
                     ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Text(
+                        "Código de la sala: " +
+                            User_instance.instance.idRoom.toString(),
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontFamily: 'Caudex')),
                   ],
                 ),
               ),
