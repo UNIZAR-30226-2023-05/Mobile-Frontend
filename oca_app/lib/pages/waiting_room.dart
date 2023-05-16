@@ -10,10 +10,19 @@ import '../components/User_instance.dart';
 
 class WaitingRoom extends StatefulWidget {
   final String roomName; // nombre de la sala
+
   const WaitingRoom({Key? key, required this.roomName}) : super(key: key);
 
   @override
   State<WaitingRoom> createState() => _WaitingRoomState();
+
+  static void salaDestruida() {
+    _WaitingRoomState._salaDestruida();
+  }
+
+  static void expulsadoDeSala() {
+    _WaitingRoomState._expulsadoDeSala();
+  }
 }
 
 class _WaitingRoomState extends State<WaitingRoom> {
@@ -114,6 +123,7 @@ class _WaitingRoomState extends State<WaitingRoom> {
                         return const Center(child: CircularProgressIndicator());
                       default:
                         if (snapshot.hasData) {
+                          // Comprobar si se ha destruido la sala
                           List<dynamic> players = snapshot.data;
                           bool isLeader = User_instance.instance.soyLider;
 
@@ -138,8 +148,6 @@ class _WaitingRoomState extends State<WaitingRoom> {
                                                       .instance.nickname)
                                             TextButton(
                                               onPressed: () {
-                                                print(
-                                                    players[index]['nickname']);
                                                 SocketSingleton.instance
                                                     .removePlayerFromRoom(
                                                         players[index]
@@ -194,12 +202,6 @@ class _WaitingRoomState extends State<WaitingRoom> {
                         User_instance.instance.soyLider
                             ? await SocketSingleton.instance.destroyRoom()
                             : await SocketSingleton.instance.leaveRoom();
-                        // Volver a pantalla de inicio
-                        // ignore: use_build_context_synchronously
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Main_Menu_Page()));
                       },
                       style: GenericButton,
                       child: User_instance.instance.soyLider
@@ -235,6 +237,58 @@ class _WaitingRoomState extends State<WaitingRoom> {
                     Navigator.of(context).pop();
                   },
                   child: const Text("OK"),
+                )
+              ],
+            ));
+  }
+
+  static void _salaDestruida() {
+    print("Sala destruida, volviendo...");
+    showDialog(
+        barrierDismissible: false,
+        barrierColor: Colors.black54,
+        context: SocketSingleton.instance.getContext(),
+        builder: (builder) => AlertDialog(
+              title: const Text(
+                "AVISO",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              content: const Text("La sala ha sido destruida"),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                        SocketSingleton.instance.getContext(),
+                        MaterialPageRoute(
+                            builder: (context) => Main_Menu_Page()));
+                  },
+                  child: const Text("Volver atrás"),
+                )
+              ],
+            ));
+  }
+
+  static void _expulsadoDeSala() {
+    print("Expulsado de la sala, volviendo...");
+    showDialog(
+        barrierDismissible: false,
+        barrierColor: Colors.black54,
+        context: SocketSingleton.instance.getContext(),
+        builder: (builder) => AlertDialog(
+              title: const Text(
+                "AVISO",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              content: const Text("Has sido expulsado de la sala"),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                        SocketSingleton.instance.getContext(),
+                        MaterialPageRoute(
+                            builder: (context) => Main_Menu_Page()));
+                  },
+                  child: const Text("Volver atrás"),
                 )
               ],
             ));
