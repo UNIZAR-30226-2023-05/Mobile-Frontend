@@ -211,7 +211,9 @@ class SocketSingleton {
     socket.on('finPartida', (data) {
       print("Fin partida: $data");
       String ganador = data['ganador'];
-      popUpOtroGanador(_context, ganador);
+      if (ganador != User_instance.instance.nickname) {
+        popUpOtroGanador(_context, ganador);
+      }
     });
     socket.on(
         "serverRoomMessage", (message) => ("ServerRoomMessage: $message"));
